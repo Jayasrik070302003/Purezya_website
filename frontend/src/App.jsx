@@ -1,0 +1,195 @@
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { AuthProvider } from './context/AuthContext';
+import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Wishlist from './pages/Wishlist';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import Catalogue from './pages/Catalogue';
+import { ToastProvider } from './context/ToastContext';
+import { ShopProvider } from './context/ShopContext';
+import MaltBeverages from './pages/MaltBeverages';
+import OrganicAtta from './pages/OrganicAtta';
+import SnacksAndSweets from './pages/SnacksAndSweets';
+import NoodlesAndPasta from './pages/NoodlesAndPasta';
+import WellnessProducts from './pages/WellnessProducts';
+import ProductDetail from './pages/ProductDetail';
+import Profile from './pages/Profile';
+import OrderHistory from './pages/OrderHistory';
+import AdminDashboard from './pages/AdminDashboard';
+import ScrollToTop from './components/ScrollToTop';
+import axios from 'axios';
+
+// Ensure fresh data on every request
+axios.interceptors.request.use(config => {
+  config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+  config.headers['Pragma'] = 'no-cache';
+  config.headers['Expires'] = '0';
+  // Add timestamp to query to force browser to treat as new request
+  config.params = { ...config.params, _t: Date.now() };
+  console.log(`[API] ${config.method.toUpperCase()} request to ${config.url}`);
+  return config;
+});
+const AppContent = () => {
+  const location = useLocation();
+  const hideNavbarPaths = ['/login', '/register', '/admin'];
+  const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
+
+  useEffect(() => {
+    // Ping backend on every route change to ensure freshness/connectivity
+    // and satisfy the user's need to see network activity.
+    const logNavigation = async () => {
+      try {
+        await axios.get('http://localhost:5001/api/products?ping=true&limit=1');
+      } catch (e) {
+        console.error("Navigation ping failed");
+      }
+    };
+    logNavigation();
+  }, [location.pathname]);
+
+  return (
+    <div className="min-h-screen bg-earthy-50">
+      {!shouldHideNavbar && <Navbar />}
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/catalogue"
+          element={
+            <ProtectedRoute>
+              <Catalogue />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/malt-beverages"
+          element={
+            <ProtectedRoute>
+              <MaltBeverages />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/organic-atta"
+          element={
+            <ProtectedRoute>
+              <OrganicAtta />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/snacks-sweets"
+          element={
+            <ProtectedRoute>
+              <SnacksAndSweets />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/noodles-pasta"
+          element={
+            <ProtectedRoute>
+              <NoodlesAndPasta />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/wellness-products"
+          element={
+            <ProtectedRoute>
+              <WellnessProducts />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/product/:id"
+          element={
+            <ProtectedRoute>
+              <ProductDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <OrderHistory />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <ToastProvider>
+        <ShopProvider>
+          <Router>
+            <ScrollToTop />
+            <AppContent />
+          </Router>
+        </ShopProvider>
+      </ToastProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
