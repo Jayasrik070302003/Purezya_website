@@ -1,5 +1,5 @@
 import { ShoppingCart, Trash2, ArrowRight, Leaf } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useShop } from '../context/ShopContext';
@@ -10,7 +10,7 @@ const Cart = () => {
     const { cart, removeFromCart, clearCart } = useShop();
     const { showToast } = useToast();
     const navigate = useNavigate();
-
+    const [itemToDelete, setItemToDelete] = useState(null);
     const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
     const handleCheckout = () => {
@@ -149,7 +149,7 @@ const Cart = () => {
 
                                         {/* Delete Icon - Positioned naturally in flow but pushed right */}
                                         <button
-                                            onClick={() => removeFromCart(item.id)}
+                                            onClick={() => setItemToDelete(item.id)}
                                             className="text-earthy-300 hover:text-red-500 transition-colors p-1 md:p-2 hover:bg-red-50 rounded-full active:scale-95"
                                             title="Remove Item"
                                         >
@@ -211,6 +211,45 @@ const Cart = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Confirmation Modal */}
+            <AnimatePresence>
+                {itemToDelete && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-gray-100"
+                        >
+                            <h3 className="text-xl font-display font-bold text-earthy-900 mb-2">Remove Item?</h3>
+                            <p className="text-earthy-600 mb-6 text-sm font-medium">Are you sure you want to remove this item from your cart?</p>
+                            <div className="flex gap-3 justify-end">
+                                <button
+                                    onClick={() => setItemToDelete(null)}
+                                    className="px-5 py-2.5 rounded-xl text-earthy-600 hover:bg-earthy-50 font-bold transition-colors text-sm"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        removeFromCart(itemToDelete);
+                                        setItemToDelete(null);
+                                    }}
+                                    className="px-5 py-2.5 rounded-xl bg-red-500 text-white hover:bg-red-600 font-bold transition-colors shadow-md shadow-red-500/20 text-sm"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

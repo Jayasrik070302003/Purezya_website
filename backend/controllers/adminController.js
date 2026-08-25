@@ -14,15 +14,13 @@ exports.getStats = async (req, res) => {
     try {
         const { rows: users } = await pool.query('SELECT COUNT(*) as count FROM users');
         const { rows: orders } = await pool.query('SELECT COUNT(*) as count, SUM(total_amount) as revenue FROM orders');
-
-        // Mock product count for now since it's hardcoded in controller
-        const productCount = 8; // Based on productController.js
+        const { rows: products } = await pool.query('SELECT COUNT(*) as count FROM products');
 
         res.json({
             totalUsers: users[0].count,
             totalOrders: orders[0].count,
             totalRevenue: orders[0].revenue || 0,
-            totalProducts: productCount
+            totalProducts: products[0].count
         });
     } catch (error) {
         console.error('Error fetching stats:', error);

@@ -401,12 +401,12 @@ const AdminDashboard = () => {
     const SidebarItem = ({ id, icon: Icon, label }) => (
         <button
             onClick={() => setActiveTab(id)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${activeTab === id
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 group ${activeTab === id
                 ? 'bg-organic-600 text-white shadow-lg shadow-organic-600/30'
                 : 'text-earthy-600 hover:bg-earthy-100'
                 }`}
         >
-            <Icon size={20} className={`transition-transform duration-300 ${activeTab === id ? 'scale-110' : 'group-hover:scale-110'}`} />
+            <Icon size={18} className={`transition-transform duration-300 ${activeTab === id ? 'scale-110' : 'group-hover:scale-110'}`} />
             <span className="font-medium">{label}</span>
             {activeTab === id && (
                 <motion.div layoutId="activeIndicator" className="ml-auto w-1.5 h-1.5 rounded-full bg-white" />
@@ -420,24 +420,24 @@ const AdminDashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay, duration: 0.5 }}
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className="group relative overflow-hidden p-6 rounded-[2rem] bg-white border border-earthy-100 shadow-xl hover:shadow-2xl transition-all"
+            className="group relative overflow-hidden p-5 rounded-2xl bg-white border border-earthy-100 shadow-lg hover:shadow-xl transition-all"
         >
             {/* Decorative Background Blob */}
             <div className={`absolute -right-6 -top-6 w-32 h-32 rounded-full opacity-10 transition-transform group-hover:scale-150 duration-700 ${color.split(' ')[1]}`} /> {/* Assumes bg-color is 2nd class */}
 
-            <div className="relative z-10 flex justify-between items-start mb-4">
-                <div className={`p-4 rounded-2xl ${color} shadow-sm group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon size={26} strokeWidth={2} />
+            <div className="relative z-10 flex justify-between items-start mb-3">
+                <div className={`p-3 rounded-xl ${color} shadow-sm group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon size={22} strokeWidth={2} />
                 </div>
                 {/* Optional: Add a small action button or indicator here if needed */}
             </div>
 
             <div className="relative z-10">
-                <h3 className="text-4xl font-display font-bold text-earthy-900 mb-1 tracking-tight">{value}</h3>
-                <p className="text-earthy-500 font-medium text-sm border-l-2 border-earthy-200 pl-3 uppercase tracking-wider">{title}</p>
+                <h3 className="text-3xl font-display font-bold text-earthy-900 mb-1 tracking-tight">{value}</h3>
+                <p className="text-earthy-500 font-medium text-xs border-l-2 border-earthy-200 pl-3 uppercase tracking-wider">{title}</p>
             </div>
 
-            <div className="mt-6 flex items-center gap-2 text-sm font-bold text-emerald-600 bg-emerald-50 w-fit px-3 py-1 rounded-full border border-emerald-100">
+            <div className="mt-4 flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 w-fit px-3 py-1 rounded-full border border-emerald-100">
                 <TrendingUp size={14} />
                 <span>+12% vs last month</span>
             </div>
@@ -513,7 +513,7 @@ const AdminDashboard = () => {
                     {/* Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                         <div>
-                            <h1 className="text-3xl font-display font-bold text-earthy-900">
+                            <h1 className="text-2xl font-display font-bold text-earthy-900">
                                 {activeTab === 'dashboard' && 'Overview'}
                                 {activeTab === 'orders' && 'Order Management'}
                                 {activeTab === 'users' && 'User Management'}
@@ -573,17 +573,17 @@ const AdminDashboard = () => {
                                 {/* Analytics & Insights Grid */}
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                     {/* Monthly Sales Analytics */}
-                                    <div className="lg:col-span-2 bg-white rounded-[2rem] p-8 border border-earthy-100 shadow-xl relative overflow-hidden group">
+                                    <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-earthy-100 shadow-lg relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-50 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-50" />
 
-                                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 relative z-10 gap-4">
+                                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 relative z-10 gap-4">
                                             <div>
-                                                <h2 className="text-xl font-bold text-earthy-900 font-display flex items-center gap-3">
-                                                    <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
+                                                <h2 className="text-lg font-bold text-earthy-900 font-display flex items-center gap-3">
+                                                    <div className="w-1.5 h-5 bg-emerald-500 rounded-full" />
                                                     Revenue Analytics
                                                 </h2>
                                                 <div className="flex items-end gap-2 mt-2 ml-4.5">
-                                                    <span className="text-3xl font-bold text-earthy-900 font-display">₹12,450</span>
+                                                    <span className="text-2xl font-bold text-earthy-900 font-display">₹12,450</span>
                                                     <span className="text-sm font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full mb-1">+12.5%</span>
                                                 </div>
                                             </div>
@@ -680,10 +680,10 @@ const AdminDashboard = () => {
                                     </div>
 
                                     {/* Top Selling Products */}
-                                    <div className="bg-white rounded-[2rem] p-8 border border-earthy-100 shadow-xl relative overflow-hidden flex flex-col">
+                                    <div className="bg-white rounded-2xl p-6 border border-earthy-100 shadow-lg relative overflow-hidden flex flex-col">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-50" />
-                                        <h2 className="text-xl font-bold text-earthy-900 mb-6 font-display flex items-center gap-3 relative z-10">
-                                            <div className="w-1.5 h-6 bg-orange-500 rounded-full" />
+                                        <h2 className="text-lg font-bold text-earthy-900 mb-5 font-display flex items-center gap-3 relative z-10">
+                                            <div className="w-1.5 h-5 bg-orange-500 rounded-full" />
                                             Top Products
                                         </h2>
                                         <div className="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-2 relative z-10">
@@ -710,11 +710,12 @@ const AdminDashboard = () => {
                                             <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                         </button>
                                     </div>
-                                </div>{/* Recent Activity */}
-                                <div className="bg-white rounded-[2rem] p-8 border border-earthy-100 shadow-xl relative overflow-hidden">
+                                </div>
+                                {/* Recent Activity */}
+                                <div className="bg-white rounded-2xl p-6 border border-earthy-100 shadow-lg relative overflow-hidden mt-8">
                                     <div className="absolute top-0 right-0 w-64 h-64 bg-earthy-50 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-                                    <h2 className="text-xl font-bold text-earthy-900 mb-8 font-display flex items-center gap-3">
-                                        <div className="w-1.5 h-6 bg-organic-500 rounded-full" />
+                                    <h2 className="text-lg font-bold text-earthy-900 mb-6 font-display flex items-center gap-3">
+                                        <div className="w-1.5 h-5 bg-organic-500 rounded-full" />
                                         Recent System Activity
                                     </h2>
                                     <div className="space-y-6 relative z-10">

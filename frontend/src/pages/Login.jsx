@@ -96,22 +96,22 @@ const Login = () => {
                 className="w-full max-w-[480px] relative z-10"
             >
                 {/* Main Card */}
-                <div className="bg-white/80 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_40px_80px_-12px_rgba(0,0,0,0.25)] border border-white/40 p-6 md:p-12 relative overflow-hidden ring-1 ring-white/60 isolation-auto">
+                <div className="bg-white/80 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_40px_80px_-12px_rgba(0,0,0,0.25)] border border-white/40 p-6 md:px-10 md:py-8 relative overflow-hidden ring-1 ring-white/60 isolation-auto">
 
                     {/* Decorative Elements inside Card */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-[40px] pointer-events-none" />
                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-500/10 rounded-full blur-[40px] pointer-events-none" />
 
                     {/* Header Section */}
-                    <div className="flex flex-col items-center mb-8 relative z-10">
+                    <div className="flex flex-col items-center mb-6 relative z-10">
                         <motion.div
                             initial={{ scale: 0.5, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="relative mb-4 group cursor-pointer"
+                            className="relative mb-3 group cursor-pointer"
                         >
                             <div className="absolute inset-0 bg-gradient-to-tr from-green-600 to-amber-400 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500" />
-                            <div className="relative w-24 h-24 rounded-full p-1 bg-white/50 backdrop-blur-sm border border-white/50 shadow-lg">
+                            <div className="relative w-20 h-20 rounded-full p-1 bg-white/50 backdrop-blur-sm border border-white/50 shadow-lg">
                                 <img
                                     src="/purezya-logo.png"
                                     alt="Purezya Life Logo"
@@ -144,7 +144,7 @@ const Login = () => {
                     </AnimatePresence>
 
                     {/* Form Section */}
-                    <form onSubmit={handleSubmit} noValidate className="space-y-6 relative z-10">
+                    <form onSubmit={handleSubmit} noValidate className="space-y-4 relative z-10">
 
                         {/* Email Input */}
                         <div className="space-y-2">
@@ -206,7 +206,7 @@ const Login = () => {
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading}
-                            className="w-full mt-4 bg-gradient-to-r from-[#1A3B28] to-[#2E5C3E] hover:to-[#3A6B46] text-white h-14 rounded-2xl font-serif text-lg tracking-wide shadow-lg hover:shadow-xl hover:shadow-green-900/20 transition-all flex items-center justify-center gap-3 relative overflow-hidden group"
+                            className="w-full bg-gradient-to-r from-[#1A3B28] to-[#2E5C3E] hover:to-[#3A6B46] text-white h-12 mt-2 rounded-2xl font-serif text-lg tracking-wide shadow-lg hover:shadow-xl hover:shadow-green-900/20 transition-all flex items-center justify-center gap-3 relative overflow-hidden group"
                         >
                             <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 rounded-2xl" />
                             {loading ? <Loader2 className="animate-spin" /> : (
@@ -220,7 +220,7 @@ const Login = () => {
                     </form>
 
                     {/* Footer */}
-                    <div className="mt-8 pt-6 border-t border-[#1A3C28]/10 text-center">
+                    <div className="mt-6 pt-5 border-t border-[#1A3C28]/10 text-center">
                         <p className="text-[#5C7A63] text-sm">
                             Don't have an account?{' '}
                             <Link to="/register" className="font-bold text-[#1A3C28] hover:text-[#4A7A45] transition-colors underline decoration-dotted underline-offset-4">

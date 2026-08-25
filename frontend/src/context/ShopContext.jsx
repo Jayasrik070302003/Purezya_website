@@ -6,16 +6,23 @@ const ShopContext = createContext();
 export const useShop = () => useContext(ShopContext);
 
 export const ShopProvider = ({ children }) => {
-    const [cart, setCart] = useState([]);
-    const [wishlist, setWishlist] = useState([]);
+    const [cart, setCart] = useState(() => {
+        try {
+            const item = localStorage.getItem('purezya_cart');
+            return item ? JSON.parse(item) : [];
+        } catch (error) {
+            return [];
+        }
+    });
 
-    // Load from local storage on init
-    useEffect(() => {
-        const storedCart = localStorage.getItem('purezya_cart');
-        const storedWishlist = localStorage.getItem('purezya_wishlist');
-        if (storedCart) setCart(JSON.parse(storedCart));
-        if (storedWishlist) setWishlist(JSON.parse(storedWishlist));
-    }, []);
+    const [wishlist, setWishlist] = useState(() => {
+        try {
+            const item = localStorage.getItem('purezya_wishlist');
+            return item ? JSON.parse(item) : [];
+        } catch (error) {
+            return [];
+        }
+    });
 
     // Save to local storage on change
     useEffect(() => {
@@ -56,12 +63,20 @@ export const ShopProvider = ({ children }) => {
     };
 
     const toggleWishlist = (product) => {
+        const safeProduct = {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image || product.image_url,
+            description: typeof product.description === 'string' ? product.description : ''
+        };
+
         setWishlist(prev => {
-            const exists = prev.find(item => item.id === product.id);
+            const exists = prev.find(item => item.id === safeProduct.id);
             if (exists) {
-                return prev.filter(item => item.id !== product.id);
+                return prev.filter(item => item.id !== safeProduct.id);
             }
-            return [...prev, product];
+            return [...prev, safeProduct];
         });
     };
 
