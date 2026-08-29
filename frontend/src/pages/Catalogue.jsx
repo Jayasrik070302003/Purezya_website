@@ -171,8 +171,8 @@ const Catalogue = () => {
                                 </motion.div>
 
                                 {/* Heading */}
-                                <h1 className="text-xl sm:text-3xl md:text-fluid-6xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#F1F8E9] via-[#E8F5E9] to-[#C8E6C9] leading-[1.15] mb-1.5 md:mb-fluid-lg tracking-tight drop-shadow-sm">
-                                    Purest of Nature, <br />
+                                <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white text-center leading-tight md:leading-[1.25] mb-3 md:mb-6 tracking-tight drop-shadow-md">
+                                    <span className="block text-white mb-1">Purest of Nature,</span>
                                     <span className="font-serif italic font-light text-[#A5D6A7] relative inline-block">
                                         Delivered Fresh.
                                         <motion.svg
