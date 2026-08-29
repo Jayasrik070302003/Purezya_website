@@ -120,6 +120,19 @@ const initDb = async () => {
             )
         `);
 
+        // Seed default Admin user if not exists
+        const { rows: adminRows } = await client.query("SELECT * FROM users WHERE email = 'admin@gmail.com'");
+        if (adminRows.length === 0) {
+            const bcrypt = require('bcryptjs');
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash('admin123', salt);
+            await client.query(
+                "INSERT INTO users (name, email, phone, password_hash) VALUES ($1, $2, $3, $4)",
+                ['Admin Purazya', 'admin@gmail.com', '9876543210', hashedPassword]
+            );
+            console.log('✅ Default Admin account seeded (admin@gmail.com / admin123)');
+        }
+
         await client.query('COMMIT');
         client.release();
         console.log('Database schema verified via Neon Postgres');

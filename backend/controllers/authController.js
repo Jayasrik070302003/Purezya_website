@@ -90,10 +90,12 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
+        const JWT_SECRET = process.env.JWT_SECRET || 'purazya_super_secure_jwt_secret_2026_default_key';
+
         // Create token
         const token = jwt.sign(
             { id: user.id, email: user.email, name: user.name },
-            process.env.JWT_SECRET,
+            JWT_SECRET,
             { expiresIn: '24h' }
         );
 
@@ -108,8 +110,8 @@ exports.login = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error during login' });
+        console.error('❌ Login error:', error);
+        res.status(500).json({ message: 'Server error during login', error: error.message });
     }
 };
 
