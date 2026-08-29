@@ -11,8 +11,9 @@ exports.getDashboardData = async (req, res) => {
         const pendingOrders = orderStatsResult[0].count;
         const totalOrders = totalOrdersResult[0].count;
 
+        const userName = req.user?.name || 'Friend';
         const data = {
-            welcomeMessage: `Welcome back, ${req.user.name}!`,
+            welcomeMessage: `Welcome to Purazya, ${userName}!`,
             stats: [
                 { title: 'Total Products', value: totalProducts.toLocaleString(), color: '#059669' },
                 { title: 'Active Orders', value: totalOrders.toLocaleString(), color: '#10b981' },

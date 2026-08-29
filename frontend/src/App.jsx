@@ -59,100 +59,26 @@ const AppContent = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/wishlist"
-          element={
-            <ProtectedRoute>
-              <Wishlist />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          }
-        />
+
+        {/* Public Routes (Accessible by all visitors freely) */}
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/catalogue" element={<Catalogue />} />
+        <Route path="/malt-beverages" element={<MaltBeverages />} />
+        <Route path="/organic-atta" element={<OrganicAtta />} />
+        <Route path="/snacks-sweets" element={<SnacksAndSweets />} />
+        <Route path="/noodles-pasta" element={<NoodlesAndPasta />} />
+        <Route path="/wellness-products" element={<WellnessProducts />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+
+        {/* Protected Routes (Requires Login) */}
         <Route
           path="/checkout"
           element={
             <ProtectedRoute>
               <Checkout />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/catalogue"
-          element={
-            <ProtectedRoute>
-              <Catalogue />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/malt-beverages"
-          element={
-            <ProtectedRoute>
-              <MaltBeverages />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/organic-atta"
-          element={
-            <ProtectedRoute>
-              <OrganicAtta />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/snacks-sweets"
-          element={
-            <ProtectedRoute>
-              <SnacksAndSweets />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/noodles-pasta"
-          element={
-            <ProtectedRoute>
-              <NoodlesAndPasta />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/wellness-products"
-          element={
-            <ProtectedRoute>
-              <WellnessProducts />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/product/:id"
-          element={
-            <ProtectedRoute>
-              <ProductDetail />
             </ProtectedRoute>
           }
         />
@@ -172,7 +98,17 @@ const AppContent = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
