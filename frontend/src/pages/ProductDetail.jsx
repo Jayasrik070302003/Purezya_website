@@ -766,16 +766,6 @@ const ProductDetail = () => {
                             <h1 className="text-xl sm:text-2xl md:text-4xl font-display font-bold text-earthy-900 leading-snug">
                                 {product.name}
                             </h1>
-
-                            {/* Rating */}
-                            <div className="flex items-center gap-2 md:gap-3 mt-1">
-                                <div className="flex items-center gap-1 text-yellow-500 bg-yellow-50 px-2 py-0.5 rounded-full md:bg-transparent md:p-0">
-                                    <Star fill="currentColor" className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-                                    <span className="font-bold text-xs sm:text-sm md:text-lg text-earthy-800 ml-0.5">{product.rating}</span>
-                                </div>
-                                <span className="text-earthy-300 text-xs">|</span>
-                                <span className="text-earthy-500 font-medium text-xs sm:text-sm md:text-base underline cursor-pointer hover:text-earthy-800 transition-colors whitespace-nowrap">{product.reviews} Reviews</span>
-                            </div>
                         </div>
 
                         {/* Price */}
