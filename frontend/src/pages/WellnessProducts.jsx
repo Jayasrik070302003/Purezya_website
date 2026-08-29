@@ -6,6 +6,7 @@ import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
 import { fetchWithCache } from '../utils/apiCache';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
+import { handleProductImageError, productFallbackImages } from '../utils/productImages';
 import { API_URL } from '../config/api';
 
 const WellnessProducts = () => {
@@ -25,7 +26,7 @@ const WellnessProducts = () => {
                         description: p.description,
                         price: p.price,
                         rating: p.rating || 4.9,
-                        image: getOptimizedImageUrl(p.image_url, 400) || '/placeholder-well.jpg',
+                        image: getOptimizedImageUrl(p.image_url, 400) || productFallbackImages.wellness,
                         category: p.category,
                         isDynamic: true
                     }));
@@ -203,20 +204,21 @@ const WellnessProducts = () => {
                 </div>
 
                 {/* Product Grid */}
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,140px),1fr))] md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-fluid-md">
+                <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-2.5 sm:gap-4 md:gap-fluid-md">
                     {allProducts.map((product, idx) => (
                         <motion.div
                             key={product.id}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.1 }}
-                            className="bg-white rounded-fluid-2xl p-[clamp(0.5rem,2vw,1.5rem)] shadow-xl hover:shadow-2xl transition-all duration-300 group border border-transparent hover:border-green-100 flex flex-col"
+                            className="bg-white rounded-fluid-2xl p-2 sm:p-3 md:p-[clamp(0.5rem,2vw,1.5rem)] shadow-xl hover:shadow-2xl transition-all duration-300 group border border-transparent hover:border-green-100 flex flex-col min-w-0"
                         >
                             <Link to={`/product/${product.id}`} className="block relative aspect-square md:aspect-auto md:h-[clamp(12rem,25vw,16rem)] rounded-fluid-xl overflow-hidden mb-[clamp(0.5rem,2vw,1.5rem)] bg-earthy-50 group-hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
                                 <img
                                     src={product.image}
                                     alt={product.name}
                                     loading="lazy"
+                                    onError={handleProductImageError(productFallbackImages.wellness)}
                                     className="w-full h-full object-cover"
                                 />
                                 <button
