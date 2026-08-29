@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const cloudinary = require('../config/cloudinary');
-const auth = require('../middleware/auth');
+const requireAdmin = require('../middleware/adminAuth');
 const fs = require('fs');
 const path = require('path');
 
@@ -30,7 +30,7 @@ const uploadToCloudinary = (fileBuffer) => {
     });
 };
 
-router.post('/', auth, upload.single('image'), async (req, res) => {
+router.post('/', requireAdmin, upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'No image file uploaded' });

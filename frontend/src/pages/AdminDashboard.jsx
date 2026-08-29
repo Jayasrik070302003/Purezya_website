@@ -20,6 +20,11 @@ const AdminDashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
+    const isAdminUser = (currentUser) => {
+        const email = currentUser?.email?.trim().toLowerCase();
+        return email === 'admin@purazya.com' || email === 'admin@gmail.com';
+    };
+
     // Category Management State (Product Groups)
     const [categories, setCategories] = useState([
         { id: 1, name: 'Malt Beverages', status: 'Active', stock: 'High', count: 0 },
@@ -230,7 +235,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         if (!authLoading) {
             // Check for admin role
-            if (!user || user.role !== 'admin') {
+            if (!isAdminUser(user)) {
                 navigate('/dashboard');
                 return;
             }

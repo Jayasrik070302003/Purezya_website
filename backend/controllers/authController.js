@@ -9,6 +9,8 @@ exports.register = async (req, res) => {
         console.log('Request headers:', req.headers);
 
         const { name, email, phone, password } = req.body;
+        const normalizedEmail = email ? email.trim().toLowerCase() : '';
+        const normalizedName = name ? name.trim().toLowerCase() : '';
 
         console.log('Extracted fields:', {
             name: name ? `"${name}" (type: ${typeof name})` : 'MISSING',
@@ -31,6 +33,10 @@ exports.register = async (req, res) => {
             });
         }
 
+        if (normalizedName === 'purazya' || normalizedEmail === 'admin@purazya.com' || normalizedEmail === 'admin@gmail.com') {
+            return res.status(400).json({ message: 'This account name is reserved' });
+        }
+
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
@@ -46,7 +52,7 @@ exports.register = async (req, res) => {
 
         // Check if user exists
         console.log('Checking if user exists with email:', email);
-        const { rows: existingUsers } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        const { rows: existingUsers } = await pool.query('SELECT * FROM users WHERE LOWER(email) = LOWER($1)', [email]);
         if (existingUsers.length > 0) {
             console.error('Validation failed: User already exists');
             return res.status(400).json({ message: 'User already exists with this email' });
@@ -102,7 +108,8 @@ exports.login = async (req, res) => {
         const JWT_SECRET = process.env.JWT_SECRET || 'purazya_super_secure_jwt_secret_2026_default_key';
 
         // Check admin role
-        const isAdmin = user.email === 'admin@purazya.com' || user.email === 'admin@gmail.com' || user.name.toLowerCase() === 'purazya';
+        const userEmail = (user.email || '').trim().toLowerCase();
+        const isAdmin = userEmail === 'admin@purazya.com' || userEmail === 'admin@gmail.com';
 
         // Create token
         const token = jwt.sign(

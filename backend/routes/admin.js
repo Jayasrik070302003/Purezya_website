@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const requireAdmin = require('../middleware/adminAuth');
+
+router.use(requireAdmin);
 
 // @route   GET api/admin/users
 // @desc    Get all users
