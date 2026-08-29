@@ -1,7 +1,7 @@
 /**
  * Centralized API Configuration
  * Automatically uses VITE_API_URL in production (Render) or localhost:5001 in development.
- * Guarantees proper https:// protocol prefix if host string is injected by cloud providers.
+ * Guarantees proper https:// and .onrender.com domain resolution.
  */
 
 const getApiBaseUrl = () => {
@@ -11,6 +11,12 @@ const getApiBaseUrl = () => {
     }
 
     let url = rawUrl.trim().replace(/\/+$/, '');
+
+    // If a raw service name was injected (e.g. 'purazya-backend' or 'purezya-backend') without a dot/TLD
+    if (!url.includes('.') && !url.includes('localhost')) {
+        url = `${url}.onrender.com`;
+    }
+
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
         url = `https://${url}`;
     }
