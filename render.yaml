@@ -6,9 +6,9 @@ services:
   # 1. Backend Web Service (Node.js Express + Neon PostgreSQL)
   - type: web
     name: purezya-backend
-    env: node
-    rootDir: backend
+    runtime: node
     plan: free
+    rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
     healthCheckPath: /health
@@ -32,12 +32,10 @@ services:
       - key: SENDER_NAME
         value: Purezya Organic Foods
 
-  # 2. Frontend Web Service (Vite React SPA)
-  - type: web
+  # 2. Frontend Static Site (Vite React SPA - Always 100% Free on Render)
+  - type: static
     name: purezya-frontend
-    env: static
     rootDir: frontend
-    plan: free
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     routes:
