@@ -1,11 +1,11 @@
 # ==========================================================
-# Render Blueprint Specification for Purezya Organic Foods
+# Render Blueprint Specification for Purazya Organic Foods
 # ==========================================================
 
 services:
   # 1. Backend Web Service (Node.js Express + Neon PostgreSQL)
   - type: web
-    name: purezya-backend
+    name: purazya-backend
     env: node
     plan: free
     rootDir: backend
@@ -28,13 +28,13 @@ services:
       - key: BREVO_API_KEY
         sync: false
       - key: SENDER_EMAIL
-        value: support@purezya.com
+        value: support@purazya.com
       - key: SENDER_NAME
-        value: Purezya Organic Foods
+        value: Purazya Organic Foods
 
   # 2. Frontend Static Site (Vite React SPA - 100% Free on Render)
   - type: web
-    name: purezya-frontend
+    name: purazya-frontend
     env: static
     rootDir: frontend
     buildCommand: npm install && npm run build
@@ -47,5 +47,5 @@ services:
       - key: VITE_API_URL
         fromService:
           type: web
-          name: purezya-backend
+          name: purazya-backend
           property: host

@@ -101,7 +101,7 @@ const OrderHistory = () => {
                         </div>
                     )}
                     {filteredOrders.map((order, idx) => {
-                        const itemsSummary = (order.items || []).map(i => `${i.product_name} (x${i.quantity})`).join(', ') || 'Purezya organic item';
+                        const itemsSummary = (order.items || []).map(i => `${i.product_name} (x${i.quantity})`).join(', ') || 'Purazya organic item';
                         const orderDate = new Date(order.created_at || Date.now()).toLocaleDateString('en-IN', {
                             year: 'numeric', month: 'short', day: 'numeric'
                         });
