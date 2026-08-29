@@ -111,7 +111,7 @@ const SnacksAndSweets = () => {
                                     <Link to={`/product/${product.id}`} className="block w-full h-full">
                                         <img
                                             src={product.image}
-                                            alt={product.name}
+                                            alt=""
                                             loading="lazy"
                                             onError={handleProductImageError(productFallbackImages.snacks)}
                                             className="w-full h-full object-cover"

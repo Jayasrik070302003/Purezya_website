@@ -1,12 +1,26 @@
+import { API_BASE_URL } from '../config/api';
+
 export const getOptimizedImageUrl = (url, width = 400) => {
     if (!url || typeof url !== 'string') {
         return url;
     }
 
-    const imageUrl = url.trim();
+    let imageUrl = url.trim();
+
+    if (imageUrl.startsWith('/uploads/')) {
+        return `${API_BASE_URL}${imageUrl}`;
+    }
+
+    imageUrl = imageUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1):\d+(\/uploads\/.*)$/i, `${API_BASE_URL}$2`);
 
     if (!imageUrl.includes('cloudinary.com')) {
         return imageUrl; // Return original if not Cloudinary
+    }
+
+    if (imageUrl.startsWith('//')) {
+        imageUrl = `https:${imageUrl}`;
+    } else if (!/^https?:\/\//i.test(imageUrl)) {
+        imageUrl = `https://${imageUrl.replace(/^\/+/, '')}`;
     }
 
     const secureUrl = imageUrl.replace(/^http:\/\//i, 'https://');
@@ -24,5 +38,5 @@ export const getOptimizedImageUrl = (url, width = 400) => {
     // Actually, checking if there's a '/' before the next part is enough to see if transformations exist, but Cloudinary versions start with 'v' and numbers.
     // A safe way is to just inject `/q_auto,f_auto,w_${width}/` right after `/upload/`
     
-    return `${base}q_auto,f_auto,w_${width}/${rest}`;
+    return `${base}q_auto,w_${width}/${rest}`;
 };

@@ -1,5 +1,15 @@
 const pool = require('../config/db');
 
+const normalizeImageUrl = (imageUrl, req) => {
+    if (!imageUrl || typeof imageUrl !== 'string') {
+        return imageUrl;
+    }
+
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.get('host');
+    return imageUrl.trim().replace(/^https?:\/\/(localhost|127\.0\.0\.1):\d+(\/uploads\/.*)$/i, `${protocol}://${host}$2`);
+};
+
 // Get products (with optional category and limit)
 exports.getAllProducts = async (req, res) => {
     try {
@@ -60,6 +70,7 @@ exports.getProductById = async (req, res) => {
 // Create a new product
 exports.createProduct = async (req, res) => {
     const { name, category, description, price, stock, image_url } = req.body;
+    const productImageUrl = normalizeImageUrl(image_url, req);
 
     // Basic validation
     if (!name || !category || !price) {
@@ -69,7 +80,7 @@ exports.createProduct = async (req, res) => {
     try {
         const result = await pool.query(
             'INSERT INTO products (name, category, description, price, stock, image_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-            [name, category, description, price, stock || 0, image_url]
+            [name, category, description, price, stock || 0, productImageUrl]
         );
 
         const newProduct = {
@@ -79,7 +90,7 @@ exports.createProduct = async (req, res) => {
             description,
             price,
             stock,
-            image_url,
+            image_url: productImageUrl,
             created_at: new Date()
         };
 
@@ -112,18 +123,19 @@ exports.deleteProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     const { id } = req.params;
     const { name, category, description, price, stock, image_url } = req.body;
+    const productImageUrl = normalizeImageUrl(image_url, req);
 
     try {
         const result = await pool.query(
             'UPDATE products SET name = $1, category = $2, description = $3, price = $4, stock = $5, image_url = $6 WHERE id = $7',
-            [name, category, description, price, stock, image_url, id]
+            [name, category, description, price, stock, productImageUrl, id]
         );
 
         if (result.rowCount === 0) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        res.json({ id, name, category, description, price, stock, image_url });
+        res.json({ id, name, category, description, price, stock, image_url: productImageUrl });
     } catch (error) {
         console.error('Error updating product:', error);
         res.status(500).json({ message: 'Server error updating product' });

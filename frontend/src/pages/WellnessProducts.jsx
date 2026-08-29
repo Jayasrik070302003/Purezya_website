@@ -216,7 +216,7 @@ const WellnessProducts = () => {
                             <Link to={`/product/${product.id}`} className="block relative aspect-square md:aspect-auto md:h-[clamp(12rem,25vw,16rem)] rounded-fluid-xl overflow-hidden mb-[clamp(0.5rem,2vw,1.5rem)] bg-earthy-50 group-hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
                                 <img
                                     src={product.image}
-                                    alt={product.name}
+                                    alt=""
                                     loading="lazy"
                                     onError={handleProductImageError(productFallbackImages.wellness)}
                                     className="w-full h-full object-cover"
