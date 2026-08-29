@@ -12,7 +12,7 @@ const Navbar = () => {
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-earthy-100 transition-all duration-300">
             <div className="w-full max-w-[95%] mx-auto">
-                <div className="flex justify-between items-center h-16 md:h-24">
+                <div className="flex justify-between items-center h-[clamp(4rem,8vw,6rem)]">
                     {/* Logo Section */}
                     <Link to="/dashboard" className="flex items-center gap-4 group cursor-pointer z-50 relative">
                         <div className="relative">
@@ -20,7 +20,7 @@ const Navbar = () => {
                             <img
                                 src="/purezya-logo.png"
                                 alt="Purezya Life Logo"
-                                className="h-10 w-10 md:h-14 md:w-14 rounded-full object-cover shadow-sm relative z-10 transition-transform group-hover:scale-105"
+                                className="h-[clamp(2.5rem,5vw,3.5rem)] w-[clamp(2.5rem,5vw,3.5rem)] rounded-full object-cover shadow-sm relative z-10 transition-transform group-hover:scale-105"
                             />
                         </div>
                         <motion.div
@@ -28,7 +28,7 @@ const Navbar = () => {
                             animate={{ opacity: 1, x: 0 }}
                             className="hidden xl:block border-l-2 border-earthy-200 pl-4"
                         >
-                            <p className="font-serif font-bold text-lg md:text-xl text-[#2F4F2C] tracking-wide whitespace-nowrap">
+                            <p className="font-serif font-bold text-fluid-lg text-[#2F4F2C] tracking-wide whitespace-nowrap">
                                 Where purity becomes a habit.
                             </p>
                         </motion.div>
@@ -63,11 +63,11 @@ const Navbar = () => {
                                         <p className="text-sm font-black text-earthy-900 leading-none">{user.name}</p>
                                         <p className="text-[10px] font-bold text-organic-600 uppercase tracking-wider mt-1">Verified Member</p>
                                     </div>
-                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white flex items-center justify-center text-earthy-900 border border-earthy-200 group-hover:border-organic-300 group-hover:shadow-md transition-all overflow-hidden relative">
+                                    <div className="w-[clamp(2.5rem,4vw,3rem)] h-[clamp(2.5rem,4vw,3rem)] rounded-fluid-xl bg-white flex items-center justify-center text-earthy-900 border border-earthy-200 group-hover:border-organic-300 group-hover:shadow-md transition-all overflow-hidden relative">
                                         {user.profile_picture || user.avatar ? (
                                             <img src={user.profile_picture || user.avatar} alt={user.name} className="w-full h-full object-cover" />
                                         ) : (
-                                            <User size={20} className="md:w-6 md:h-6" />
+                                            <User className="w-[clamp(1.25rem,2vw,1.5rem)] h-[clamp(1.25rem,2vw,1.5rem)]" />
                                         )}
                                     </div>
                                     <ChevronDown className={`text-earthy-400 transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''}`} size={16} />
@@ -80,7 +80,7 @@ const Navbar = () => {
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                             exit={{ opacity: 0, y: 10, scale: 0.96 }}
                                             transition={{ duration: 0.2 }}
-                                            className="absolute right-0 top-full mt-4 w-72 bg-white/95 backdrop-blur-xl rounded-[2rem] shadow-[0_32px_64px_-12px_rgba(20,40,20,0.15)] border border-white/60 p-2 overflow-hidden ring-1 ring-black/5 z-50"
+                                            className="absolute right-0 top-full mt-4 w-[clamp(18rem,25vw,22rem)] bg-white/95 backdrop-blur-xl rounded-fluid-2xl shadow-[0_32px_64px_-12px_rgba(20,40,20,0.15)] border border-white/60 p-2 overflow-hidden ring-1 ring-black/5 z-50"
                                         >
                                             <div className="px-6 py-5 border-b border-gray-100/50 mb-2">
                                                 <p className="text-[10px] font-black text-organic-800 uppercase tracking-widest mb-1">Signed in as</p>
@@ -131,7 +131,7 @@ const Navbar = () => {
                             {/* Mobile User Icon */}
                             {user && (
                                 <Link to="/profile" className="relative group/avatar">
-                                    <div className="w-8 h-8 rounded-full overflow-hidden border border-earthy-200 group-hover/avatar:border-organic-300 transition-colors">
+                                    <div className="w-[clamp(2rem,4vw,2.5rem)] h-[clamp(2rem,4vw,2.5rem)] rounded-full overflow-hidden border border-earthy-200 group-hover/avatar:border-organic-300 transition-colors">
                                         <img src={user.profile_picture || user.avatar || "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=500&q=80"} alt="User" className="w-full h-full object-cover" />
                                     </div>
                                     <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
@@ -143,7 +143,7 @@ const Navbar = () => {
 
                             <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                                className="w-9 h-9 flex items-center justify-center rounded-full text-earthy-700 hover:bg-earthy-50 transition-colors active:scale-95 group/menu"
+                                className="w-[clamp(2.25rem,4vw,2.75rem)] h-[clamp(2.25rem,4vw,2.75rem)] flex items-center justify-center rounded-full text-earthy-700 hover:bg-earthy-50 transition-colors active:scale-95 group/menu"
                                 aria-label="Toggle menu"
                             >
                                 <motion.div
@@ -169,7 +169,7 @@ const Navbar = () => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -20 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="lg:hidden absolute top-20 right-4 left-auto w-[260px] bg-white/95 backdrop-blur-2xl rounded-[1.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.2)] border border-white/60 z-40 overflow-hidden ring-1 ring-black/5 pb-2"
+                        className="lg:hidden absolute top-[calc(100%+0.5rem)] right-2 sm:right-4 left-auto w-[clamp(16rem,88vw,22rem)] max-w-[calc(100vw-1rem)] bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-[1.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.2)] border border-white/60 z-50 overflow-hidden ring-1 ring-black/5 pb-2"
                     >
                         <div className="p-2 space-y-1">
                             <motion.div
@@ -178,28 +178,27 @@ const Navbar = () => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.1 }}
                             >
-                                <p className="text-[10px] font-black text-earthy-300 uppercase tracking-[0.25em] mb-0.5 pl-3">Navigation</p>
-                                <Link onClick={() => setIsMenuOpen(false)} to="/dashboard" className="flex items-center gap-3 px-3 py-1 hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                    <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center group-hover:bg-organic-600 group-hover:text-white transition-colors shadow-sm">
+                                <p className="text-[10px] font-black text-earthy-400 uppercase tracking-[0.25em] mb-1 pl-3">Navigation</p>
+                                <Link onClick={() => setIsMenuOpen(false)} to="/dashboard" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
+                                    <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center group-hover:bg-organic-600 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
                                         <Home size={14} />
                                     </div>
                                     <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">Home</span>
                                 </Link>
-                                <Link onClick={() => setIsMenuOpen(false)} to="/catalogue" className="flex items-center gap-3 px-3 py-1 hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                    <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center group-hover:bg-organic-600 group-hover:text-white transition-colors shadow-sm">
+                                <Link onClick={() => setIsMenuOpen(false)} to="/catalogue" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
+                                    <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center group-hover:bg-organic-600 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
                                         <Store size={14} />
-                                        {/* Optional "Premium" Tag inline if needed, simplified for clean menu */}
                                     </div>
                                     <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">Catalogue</span>
                                 </Link>
-                                <Link onClick={() => setIsMenuOpen(false)} to="/wishlist" className="flex items-center gap-3 px-3 py-1 hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                    <div className="w-7 h-7 rounded-full bg-red-50 text-red-500 flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition-colors shadow-sm">
+                                <Link onClick={() => setIsMenuOpen(false)} to="/wishlist" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
+                                    <div className="w-7 h-7 rounded-full bg-red-50 text-red-500 flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
                                         <Heart size={14} />
                                     </div>
                                     <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">Wishlist</span>
                                 </Link>
-                                <Link onClick={() => setIsMenuOpen(false)} to="/cart" className="flex items-center gap-3 px-3 py-1 hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                    <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors shadow-sm">
+                                <Link onClick={() => setIsMenuOpen(false)} to="/cart" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
+                                    <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
                                         <ShoppingCart size={14} />
                                     </div>
                                     <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">Cart</span>
@@ -213,21 +212,21 @@ const Navbar = () => {
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.2 }}
                                 >
-                                    <p className="text-[10px] font-black text-earthy-300 uppercase tracking-[0.25em] mb-0.5 pl-3">Account</p>
-                                    <Link onClick={() => setIsMenuOpen(false)} to="/profile" className="flex items-center gap-3 px-3 py-1 hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                        <div className="relative">
+                                    <p className="text-[10px] font-black text-earthy-400 uppercase tracking-[0.25em] mb-1 pl-3">Account</p>
+                                    <Link onClick={() => setIsMenuOpen(false)} to="/profile" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
+                                        <div className="relative flex-shrink-0">
                                             <div className="w-7 h-7 rounded-full bg-earthy-50 flex items-center justify-center text-organic-600 shadow-sm border border-earthy-100 overflow-hidden">
                                                 {(user.profile_picture || user.avatar) ? <img src={user.profile_picture || user.avatar} className="w-full h-full object-cover" /> : <User size={14} />}
                                             </div>
-                                            <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></div>
+                                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border border-white rounded-full"></div>
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col min-w-0 flex-1">
                                             <span className="font-bold text-earthy-900 text-sm">My Profile</span>
-                                            <span className="text-[10px] text-earthy-500 font-medium truncate max-w-[140px]">{user.email}</span>
+                                            <span className="text-[10px] text-earthy-500 font-medium truncate max-w-[130px] sm:max-w-[160px]">{user.email}</span>
                                         </div>
                                     </Link>
-                                    <Link onClick={() => setIsMenuOpen(false)} to="/orders" className="flex items-center gap-3 px-3 py-1 hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                        <div className="w-7 h-7 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-white transition-colors shadow-sm">
+                                    <Link onClick={() => setIsMenuOpen(false)} to="/orders" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
+                                        <div className="w-7 h-7 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
                                             <Package size={14} />
                                         </div>
                                         <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">My Orders</span>
@@ -235,7 +234,7 @@ const Navbar = () => {
 
                                     <button
                                         onClick={() => { setIsMenuOpen(false); logout(); }}
-                                        className="w-full py-1.5 mt-1 text-red-500 font-bold text-xs bg-red-50 hover:bg-red-500 hover:text-white rounded-2xl flex items-center justify-center gap-2 transition-all shadow-sm border border-red-100 group"
+                                        className="w-full py-2 min-h-[42px] mt-1 text-red-500 font-bold text-xs bg-red-50 hover:bg-red-500 hover:text-white rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 transition-all shadow-sm border border-red-100 group"
                                     >
                                         <LogOut size={14} className="group-hover:stroke-current" /> Sign Out
                                     </button>
@@ -244,13 +243,13 @@ const Navbar = () => {
 
                             {!user && (
                                 <motion.div
-                                    className="grid grid-cols-2 gap-3 mt-1 pt-1.5 border-t border-gray-100/80"
+                                    className="grid grid-cols-2 gap-2 mt-1 pt-1.5 border-t border-gray-100/80"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.2 }}
                                 >
-                                    <Link onClick={() => setIsMenuOpen(false)} to="/login" className="w-full py-1.5 text-center font-bold text-earthy-600 bg-earthy-50 hover:bg-earthy-100 rounded-2xl text-xs transition-colors border border-earthy-200">Log In</Link>
-                                    <Link onClick={() => setIsMenuOpen(false)} to="/register" className="w-full py-1.5 text-center font-bold text-white bg-[#1A2E16] hover:bg-[#2F4F2C] rounded-2xl shadow-lg shadow-organic-900/20 text-xs transition-all">Sign Up</Link>
+                                    <Link onClick={() => setIsMenuOpen(false)} to="/login" className="w-full py-2 min-h-[42px] flex items-center justify-center text-center font-bold text-earthy-600 bg-earthy-50 hover:bg-earthy-100 rounded-xl sm:rounded-2xl text-xs transition-colors border border-earthy-200">Log In</Link>
+                                    <Link onClick={() => setIsMenuOpen(false)} to="/register" className="w-full py-2 min-h-[42px] flex items-center justify-center text-center font-bold text-white bg-[#1A2E16] hover:bg-[#2F4F2C] rounded-xl sm:rounded-2xl shadow-lg shadow-organic-900/20 text-xs transition-all">Sign Up</Link>
                                 </motion.div>
                             )}
                         </div>

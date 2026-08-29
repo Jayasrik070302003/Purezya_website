@@ -106,12 +106,12 @@ const Catalogue = () => {
 
                 {/* Hero / Header Section - Conditionally Rendered */}
                 {!searchQuery ? (
-                    <div className="mb-3 md:mb-16">
+                    <div className="mb-fluid-2xl">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="relative rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-2xl shadow-[#122A14]/20 min-h-[280px] md:min-h-[550px] flex flex-col items-center justify-center text-center group isolate bg-[#0F2411]"
+                            className="relative rounded-fluid-2xl overflow-hidden shadow-2xl shadow-[#122A14]/20 min-h-[clamp(280px,45vw,550px)] flex flex-col items-center justify-center text-center group isolate bg-[#0F2411]"
                         >
                             {/* Background Image with Slow Zoom */}
                             <div className="absolute inset-0 overflow-hidden">
@@ -162,14 +162,14 @@ const Catalogue = () => {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.3 }}
-                                    className="inline-flex items-center gap-1.5 md:gap-2 px-2 py-0.5 md:px-4 md:py-1.5 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-[#E8F5E9] text-[8px] md:text-xs font-bold tracking-widest uppercase shadow-lg mb-3 md:mb-8 hover:bg-white/20 transition-colors cursor-default"
+                                    className="inline-flex items-center gap-fluid-sm p-fluid-sm bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-[#E8F5E9] text-fluid-xs font-bold tracking-widest uppercase shadow-lg mb-fluid-md hover:bg-white/20 transition-colors cursor-default"
                                 >
-                                    <Sparkles size={10} className="md:w-3 md:h-3 text-[#69F0AE]" />
+                                    <Sparkles className="w-[clamp(0.75rem,2vw,1.5rem)] h-[clamp(0.75rem,2vw,1.5rem)] text-[#69F0AE]" />
                                     <span>Premium Selection</span>
                                 </motion.div>
 
                                 {/* Heading */}
-                                <h1 className="text-2xl md:text-7xl lg:text-8xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#F1F8E9] via-[#E8F5E9] to-[#C8E6C9] leading-[1.1] mb-2 md:mb-8 tracking-tight drop-shadow-sm">
+                                <h1 className="text-fluid-6xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-[#F1F8E9] via-[#E8F5E9] to-[#C8E6C9] leading-[1.1] mb-fluid-lg tracking-tight drop-shadow-sm">
                                     Purest of Nature, <br />
                                     <span className="font-serif italic font-light text-[#A5D6A7] relative inline-block">
                                         Delivered Fresh.
@@ -192,12 +192,12 @@ const Catalogue = () => {
                                 </h1>
 
                                 {/* Subtext */}
-                                <p className="text-[#E8F5E9]/90 text-xs md:text-xl font-medium mb-4 md:mb-12 leading-relaxed max-w-2xl text-center mx-auto drop-shadow px-2">
+                                <p className="text-[#E8F5E9]/90 text-fluid-lg font-medium mb-fluid-xl leading-relaxed max-w-2xl text-center mx-auto drop-shadow px-2">
                                     Experience the true taste of earth. Certified organic, sustainably sourced, and delivered with unconditional care.
                                 </p>
 
                                 {/* Search Bar (Hidden when searching globally, but good to keep or remove contextually - keeping for now as global finder) */}
-                                <div className="w-3/4 max-w-[240px] md:w-full md:max-w-lg relative group/search">
+                                <div className="w-full max-w-[280px] sm:max-w-md md:max-w-lg relative group/search">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-[#2E7D32] to-[#69F0AE] opacity-0 group-focus-within/search:opacity-40 blur-xl transition-all duration-500 rounded-full" />
                                     <div className="relative flex items-center bg-white/95 backdrop-blur-md rounded-full p-1.5 pl-4 md:p-2 md:pl-6 shadow-2xl transform transition-transform group-focus-within/search:scale-[1.02]">
                                         <Search className="text-[#122A14]/40 mr-2 md:mr-3 w-4 h-4 md:w-5 md:h-5" />
@@ -206,9 +206,9 @@ const Catalogue = () => {
                                             placeholder="Search..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="flex-1 bg-transparent text-[#122A14] placeholder-[#122A14]/40 font-medium outline-none text-xs md:text-lg py-1"
+                                            className="flex-1 bg-transparent text-[#122A14] placeholder-[#122A14]/40 font-medium outline-none text-xs md:text-lg py-1 min-w-0"
                                         />
-                                        <button className="bg-[#122A14] text-white p-1.5 md:p-3.5 rounded-full hover:bg-[#2E7D32] transition-all shadow-lg hover:shadow-[#2E7D32]/50 active:scale-95 flex items-center justify-center">
+                                        <button className="bg-[#122A14] text-white p-2 md:p-3.5 rounded-full hover:bg-[#2E7D32] transition-all shadow-lg hover:shadow-[#2E7D32]/50 active:scale-95 flex items-center justify-center shrink-0 min-w-[34px] min-h-[34px]">
                                             <ArrowRight className="w-3.5 h-3.5 md:w-5 md:h-5" />
                                         </button>
                                     </div>
@@ -254,7 +254,7 @@ const Catalogue = () => {
 
                 {/* Filters */}
                 <div className="sticky top-24 z-30 py-0.5 md:py-4 mb-2 md:mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
-                    <div className="bg-white/70 backdrop-blur-xl border border-white/60 shadow-lg rounded-full px-1.5 py-1.5 md:px-2 md:py-2 flex overflow-x-auto gap-1.5 md:gap-2 scrollbar-hide [&::-webkit-scrollbar]:hidden max-w-max mx-auto md:mx-0">
+                    <div className="bg-white/70 backdrop-blur-xl border border-white/60 shadow-lg rounded-full px-1.5 py-1.5 md:px-2 md:py-2 flex overflow-x-auto gap-1.5 md:gap-2 scrollbar-hide [&::-webkit-scrollbar]:hidden max-w-full sm:max-w-max mx-auto md:mx-0">
                         <button className="hidden md:flex px-5 py-3 rounded-full hover:bg-white transition-all items-center gap-2 text-[#122A14] font-bold text-sm group">
                             <div className="bg-[#F1F8E9] p-1.5 rounded-full group-hover:bg-[#E8F5E9] transition-colors">
                                 <Filter size={16} className="text-[#2E7D32]" />
@@ -266,7 +266,7 @@ const Catalogue = () => {
                             <button
                                 key={filter}
                                 onClick={() => setActiveFilter(filter)}
-                                className={`px-3 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold whitespace-nowrap transition-all duration-300 relative overflow-hidden shrink-0 ${activeFilter === filter
+                                className={`px-3 py-2 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold whitespace-nowrap transition-all duration-300 relative overflow-hidden shrink-0 min-h-[36px] flex items-center justify-center ${activeFilter === filter
                                     ? 'text-white shadow-lg shadow-[#2E7D32]/25'
                                     : 'text-[#455A64] hover:bg-white/80 hover:text-[#122A14]'
                                     }`}
@@ -285,7 +285,7 @@ const Catalogue = () => {
                     variants={containerVariants}
                     initial="hidden"
                     animate="show"
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                    className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,260px),1fr))] gap-fluid-lg"
                 >
                     {filteredCategories.map((item) => (
                         <Link to={`/product/${item.id}`} key={item.id} className="group h-full">
@@ -296,7 +296,7 @@ const Catalogue = () => {
                                 className="h-full relative bg-white rounded-[2rem] p-3 flex flex-col shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-transparent hover:border-[#4CAF50]/10"
                             >
                                 {/* Image Container with Parallax Zoom */}
-                                <div className="relative h-[280px] rounded-[1.5rem] overflow-hidden bg-gray-100 mb-4">
+                                <div className="relative h-[clamp(200px,30vw,280px)] rounded-fluid-xl overflow-hidden bg-gray-100 mb-4">
                                     <motion.img
                                         src={item.image_url || item.image}
                                         alt={item.name}
@@ -331,10 +331,10 @@ const Catalogue = () => {
                                                     showToast("Added to wishlist");
                                                 }
                                             }}
-                                            className={`hidden md:flex w-8 h-8 rounded-full backdrop-blur-md border border-white/30 items-center justify-center transition-colors shadow-lg ${
+                                            className={`flex w-8 h-8 rounded-full backdrop-blur-md border border-white/30 items-center justify-center transition-colors shadow-lg ${
                                                 isInWishlist(item.id) 
                                                     ? 'bg-white text-[#E91E63]' 
-                                                    : 'bg-white/20 text-white hover:bg-white hover:text-[#E91E63]'
+                                                    : 'bg-white/40 text-white hover:bg-white hover:text-[#E91E63]'
                                             }`}
                                         >
                                             <Heart size={16} fill={isInWishlist(item.id) ? "currentColor" : "none"} />

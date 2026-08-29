@@ -78,7 +78,7 @@ const Dashboard = () => {
                 {/* Hero Banner Section */}
                 {/* Hero Banner Section */}
                 {/* Hero Banner Section */}
-                <div className="relative rounded-[2rem] md:rounded-[3rem] bg-[#1a3c1e] overflow-hidden p-4 md:p-10 mb-6 md:mb-20 shadow-[0_40px_80px_-20px_rgba(20,50,20,0.4)] border border-white/10 group isolation-auto">
+                <div className="relative rounded-fluid-2xl bg-[#1a3c1e] overflow-hidden p-fluid-xl mb-fluid-2xl shadow-[0_40px_80px_-20px_rgba(20,50,20,0.4)] border border-white/10 group isolation-auto">
                     {/* Rich Animated Gradient Background */}
                     <div className="absolute inset-0 bg-gradient-to-br from-[#1A3C1E] via-[#2D5A27] to-[#142915] z-0" />
 
@@ -160,13 +160,13 @@ const Dashboard = () => {
                                 transition={{ duration: 0.8, ease: "easeOut" }}
                             >
                                 {/* Greeting Badge */}
-                                <div className="inline-flex items-center gap-2 mt-2 mb-2 md:mb-6 px-2.5 py-1 md:px-4 md:py-2 bg-white/10 backdrop-blur-xl rounded-full border border-white/10 shadow-lg ring-1 ring-white/5 mr-auto w-fit z-20 relative">
-                                    <span className="animate-pulse w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-organic-400 shadow-[0_0_10px_#4ade80]"></span>
-                                    <span className="text-organic-100 text-[9px] md:text-xs font-bold uppercase tracking-[0.2em]">{hour < 12 ? 'Fresh Start' : hour < 17 ? 'Sun-Kissed' : 'Unwind'}</span>
+                                <div className="inline-flex items-center gap-2 mt-2 mb-fluid-md p-fluid-sm bg-white/10 backdrop-blur-xl rounded-full border border-white/10 shadow-lg ring-1 ring-white/5 mr-auto w-fit z-20 relative">
+                                    <span className="animate-pulse w-[clamp(0.375rem,1vw,0.5rem)] h-[clamp(0.375rem,1vw,0.5rem)] rounded-full bg-organic-400 shadow-[0_0_10px_#4ade80]"></span>
+                                    <span className="text-organic-100 text-fluid-xs font-bold uppercase tracking-[0.2em]">{hour < 12 ? 'Fresh Start' : hour < 17 ? 'Sun-Kissed' : 'Unwind'}</span>
                                 </div>
 
-                                <div className="mb-2 md:mb-6 relative text-left z-20">
-                                    <h1 className="text-2xl md:text-5xl lg:text-6xl font-sans font-bold text-white leading-tight tracking-tight drop-shadow-sm flex flex-row items-center justify-start gap-2 md:gap-3 mb-1 md:mb-0">
+                                <div className="mb-fluid-md relative text-left z-20">
+                                    <h1 className="text-fluid-4xl font-sans font-bold text-white leading-tight tracking-tight drop-shadow-sm flex flex-row items-center justify-start gap-fluid-sm mb-1 md:mb-0">
                                         <span>{greetingText},</span>
                                         <motion.span
                                             animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
@@ -177,13 +177,13 @@ const Dashboard = () => {
                                         </motion.span>
                                     </h1>
                                     <div className="mt-1 md:mt-2 px-0.5">
-                                        <span className="block pt-0.5 text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8E7] via-[#F5E6D3] to-[#E6B800] font-serif italic font-medium tracking-wide text-3xl md:text-5xl lg:text-6xl filter drop-shadow-md opacity-100 leading-normal">
+                                        <span className="block pt-0.5 text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8E7] via-[#F5E6D3] to-[#E6B800] font-serif italic font-medium tracking-wide text-fluid-5xl filter drop-shadow-md opacity-100 leading-normal">
                                             {user?.name || 'Nature Lover'}
                                         </span>
                                     </div>
                                 </div>
 
-                                <p className="text-[#dcfce7]/90 text-xs md:text-lg mb-4 md:mb-8 w-full max-w-none md:max-w-lg font-medium leading-relaxed text-left">
+                                <p className="text-[#dcfce7]/90 text-fluid-base mb-fluid-lg w-full max-w-none md:max-w-lg font-medium leading-relaxed text-left">
                                     Step into your personal organic sanctuary.
                                     <span className="text-white block mt-0.5 md:mt-1">We've curated the season's finest harvest just for you.</span>
                                 </p>
@@ -193,14 +193,14 @@ const Dashboard = () => {
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ duration: 0.5, delay: 0.1 }}
-                                    className="relative w-[90%] z-10 mr-auto mb-6 block lg:hidden"
+                                    className="relative w-full z-10 mr-auto mb-6 block lg:hidden"
                                 >
                                     <div className="absolute inset-0 bg-organic-400/20 rounded-3xl blur-2xl transform scale-100" />
                                     <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] border border-white/20 bg-[#fdfcf8]">
                                         <img
                                             src="/hero-products.jpg"
                                             alt="Purezya Organic Products"
-                                            className="w-full h-56 object-cover transform hover:scale-105 transition-transform duration-700"
+                                            className="w-full h-[clamp(14rem,35vw,20rem)] object-cover transform hover:scale-105 transition-transform duration-700"
                                         />
 
                                         {/* Floating Gold Dots Overlay */}
@@ -238,15 +238,15 @@ const Dashboard = () => {
 
                                 {/* Floating Search Bar */}
                                 <div className="flex justify-start w-full">
-                                    <div className="group relative bg-white/10 backdrop-blur-2xl p-1 md:p-2 rounded-[2rem] shadow-[0_20px_40px_-5px_rgba(0,0,0,0.2)] border border-white/20 flex items-center w-[90%] md:w-full max-w-xl transition-all duration-500 hover:bg-white/15 focus-within:bg-white/20 focus-within:shadow-[0_0_30px_rgba(74,222,128,0.2)] ring-1 ring-white/10 focus-within:ring-2 focus-within:ring-organic-300/60 overflow-hidden">
+                                    <div className="group relative bg-white/10 backdrop-blur-2xl p-fluid-xs rounded-fluid-xl shadow-[0_20px_40px_-5px_rgba(0,0,0,0.2)] border border-white/20 flex items-center w-full max-w-xl transition-all duration-500 hover:bg-white/15 focus-within:bg-white/20 focus-within:shadow-[0_0_30px_rgba(74,222,128,0.2)] ring-1 ring-white/10 focus-within:ring-2 focus-within:ring-organic-300/60 overflow-hidden">
                                         {/* Shimmer Effect */}
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out pointer-events-none" />
 
-                                        <div className="pl-3 md:pl-6 text-organic-200 shrink-0 transition-transform duration-300 group-focus-within:scale-110 group-focus-within:text-organic-300">
-                                            <Search className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2.5} />
+                                        <div className="pl-[clamp(0.75rem,2vw,1.5rem)] text-organic-200 shrink-0 transition-transform duration-300 group-focus-within:scale-110 group-focus-within:text-organic-300">
+                                            <Search className="w-[clamp(1.25rem,2.5vw,1.5rem)] h-[clamp(1.25rem,2.5vw,1.5rem)]" strokeWidth={2.5} />
                                         </div>
                                         <input
-                                            className="w-full px-3 md:px-5 py-1.5 md:py-4 text-xs md:text-base text-white placeholder-organic-200/60 outline-none font-medium bg-transparent min-w-0 relative z-10"
+                                            className="w-full px-[clamp(0.75rem,2vw,1.25rem)] py-[clamp(0.375rem,1.5vw,1rem)] text-fluid-sm text-white placeholder-organic-200/60 outline-none font-medium bg-transparent min-w-0 relative z-10"
                                             placeholder="Search products..."
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -254,21 +254,32 @@ const Dashboard = () => {
                                         />
                                         <button
                                             onClick={handleSearch}
-                                            className="shrink-0 relative z-10 bg-gradient-to-r from-organic-500 to-organic-600 hover:from-organic-400 hover:to-organic-500 text-white w-7 h-7 md:w-14 md:h-14 rounded-full md:rounded-[1.5rem] transition-all flex items-center justify-center shadow-lg hover:shadow-organic-500/50 hover:scale-105 active:scale-95 group/btn"
+                                            className="shrink-0 relative z-10 bg-gradient-to-r from-organic-500 to-organic-600 hover:from-organic-400 hover:to-organic-500 text-white w-[clamp(2.25rem,4vw,3.5rem)] h-[clamp(2.25rem,4vw,3.5rem)] min-w-[38px] min-h-[38px] rounded-full transition-all flex items-center justify-center shadow-lg hover:shadow-organic-500/50 hover:scale-105 active:scale-95 group/btn"
+                                            aria-label="Search"
                                         >
-                                            <ArrowRight className="w-3.5 h-3.5 md:w-6 md:h-6 transition-transform group-hover/btn:translate-x-0.5" />
+                                            <ArrowRight className="w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)] transition-transform group-hover/btn:translate-x-0.5" />
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* Quick Chips */}
-                                <div className="relative z-20 flex flex-nowrap md:flex-wrap items-center justify-start md:justify-start gap-2 mt-3 md:mt-8 overflow-x-auto no-scrollbar pb-1.5 w-[calc(100%+32px)] md:w-auto mx-[-16px] md:mx-0 pl-4 pr-12 md:px-0 scroll-smooth max-w-[100vw]">
+                                <div className="relative z-20 flex flex-nowrap md:flex-wrap items-center justify-start md:justify-start gap-fluid-sm mt-fluid-md overflow-x-auto no-scrollbar pb-1.5 w-full max-w-full scroll-smooth">
                                     {['🥤 Malt Beverages', '🌾 Organic Atta', '🍪 Snacks & Sweets', '🍝 Noodles & Pasta', '🧘 Wellness'].map((chip, i) => (
                                         <motion.button
                                             key={i}
                                             whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="px-2 md:px-4 py-1 md:py-2 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 text-[#f0fdf4] text-[7px] md:text-sm font-semibold transition-all shadow-sm backdrop-blur-sm whitespace-nowrap shrink-0"
+                                            onClick={() => {
+                                                const catMap = {
+                                                    '🥤 Malt Beverages': '/malt-beverages',
+                                                    '🌾 Organic Atta': '/organic-atta',
+                                                    '🍪 Snacks & Sweets': '/snacks-sweets',
+                                                    '🍝 Noodles & Pasta': '/noodles-pasta',
+                                                    '🧘 Wellness': '/wellness-products'
+                                                };
+                                                if (catMap[chip]) navigate(catMap[chip]);
+                                            }}
+                                            className="px-3 py-2 rounded-fluid-lg bg-white/10 hover:bg-white/20 border border-white/15 text-[#f0fdf4] text-fluid-xs font-semibold transition-all shadow-sm backdrop-blur-sm whitespace-nowrap shrink-0 min-h-[36px]"
                                         >
                                             {chip}
                                         </motion.button>
@@ -284,25 +295,25 @@ const Dashboard = () => {
                                 initial={{ opacity: 0, scale: 0.9, rotate: 2 }}
                                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                                 transition={{ duration: 1, delay: 0.2 }}
-                                className="relative w-[70%] md:w-full max-w-xl z-10 mr-auto lg:mx-0"
+                                className="relative w-full max-w-xl z-10 mx-auto lg:mx-0"
                             >
                                 {/* Glowing Backdrop for Image */}
-                                <div className="absolute inset-0 bg-organic-400/30 rounded-[2.5rem] blur-3xl transform rotate-3 scale-105" />
+                                <div className="absolute inset-0 bg-organic-400/30 rounded-fluid-2xl blur-3xl transform rotate-3 scale-105" />
 
-                                <div className="relative rounded-[2.5rem] overflow-hidden shadow-[0_45px_80px_-10px_rgba(0,0,0,0.6)] border-4 border-white/10 bg-[#fdfcf8]">
+                                <div className="relative rounded-fluid-2xl overflow-hidden shadow-[0_45px_80px_-10px_rgba(0,0,0,0.6)] border-4 border-white/10 bg-[#fdfcf8]">
                                     <img
                                         src="/hero-products.jpg"
                                         alt="Purezya Organic Products"
-                                        className="w-full h-56 md:h-auto object-cover transform hover:scale-105 transition-transform duration-700"
+                                        className="w-full h-[clamp(14rem,30vw,35rem)] object-cover transform hover:scale-105 transition-transform duration-700"
                                     />
                                     {/* Overlay Gradient on Image */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
 
                                     {/* Floating Tag inside Image */}
-                                    <div className="absolute top-3 right-3 md:top-6 md:right-6 origin-top-right transform scale-75 md:scale-100">
-                                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-lg flex items-center gap-1.5 md:gap-2">
-                                            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse" />
-                                            <span className="text-earthy-900 text-[10px] md:text-xs font-bold uppercase tracking-wider whitespace-nowrap">100% Certified</span>
+                                    <div className="absolute top-[clamp(0.75rem,2vw,1.5rem)] right-[clamp(0.75rem,2vw,1.5rem)] origin-top-right transform">
+                                        <div className="bg-white/90 backdrop-blur-md px-[clamp(0.75rem,2vw,1rem)] py-[clamp(0.375rem,1vw,0.5rem)] rounded-full shadow-lg flex items-center gap-[clamp(0.375rem,1vw,0.5rem)]">
+                                            <div className="w-[clamp(0.375rem,1vw,0.5rem)] h-[clamp(0.375rem,1vw,0.5rem)] bg-green-500 rounded-full animate-pulse" />
+                                            <span className="text-earthy-900 text-[clamp(0.625rem,1.2vw,0.75rem)] font-bold uppercase tracking-wider whitespace-nowrap">100% Certified</span>
                                         </div>
                                     </div>
                                 </div>
@@ -339,19 +350,19 @@ const Dashboard = () => {
 
                 {/* Categories Section - Cinematic Grid */}
                 <section>
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 border-b border-earthy-100 pb-6 gap-4">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-fluid-xl border-b border-earthy-100 pb-fluid-md gap-fluid-md">
                         <div>
-                            <span className="text-organic-600 font-bold tracking-widest uppercase text-xs mb-2 block">Curated For You</span>
-                            <h2 className="text-3xl md:text-4xl font-display font-bold text-earthy-900">
+                            <span className="text-organic-600 font-bold tracking-widest uppercase text-fluid-xs mb-2 block">Curated For You</span>
+                            <h2 className="text-fluid-3xl font-display font-bold text-earthy-900">
                                 Explore Collections
                             </h2>
                         </div>
-                        <Link to="/catalogue" className="flex items-center justify-center gap-2 text-organic-700 font-bold hover:text-organic-900 transition-colors group px-6 py-3 bg-organic-50 hover:bg-organic-100 rounded-2xl w-full md:w-auto">
+                        <Link to="/catalogue" className="flex items-center justify-center gap-2 text-organic-700 font-bold hover:text-organic-900 transition-colors group px-6 py-3 bg-organic-50 hover:bg-organic-100 rounded-2xl w-full md:w-auto min-h-[44px]">
                             View Catalogue <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,250px),1fr))] gap-fluid-lg">
                         {data?.categories.map((cat, idx) => (
                             <motion.div
                                 key={cat.id}
@@ -359,7 +370,7 @@ const Dashboard = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 + (idx * 0.1) }}
                                 whileHover={{ y: -10 }}
-                                className="group relative h-[320px] rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl cursor-pointer transition-all duration-500"
+                                className="group relative h-[clamp(280px,40vw,350px)] rounded-fluid-2xl overflow-hidden shadow-lg hover:shadow-2xl cursor-pointer transition-all duration-500"
                             >
                                 <Link to={cat.id === 1 ? '/malt-beverages' : cat.id === 2 ? '/organic-atta' : cat.id === 3 ? '/snacks-sweets' : cat.id === 4 ? '/noodles-pasta' : cat.id === 5 ? '/wellness-products' : '/catalogue'} className="block w-full h-full">
                                     <img

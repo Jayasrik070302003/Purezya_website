@@ -641,7 +641,7 @@ const ProductDetail = () => {
             </div>
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-fluid-2xl items-start">
 
                     {/* LEFT COLUMN: Visuals & Trust */}
                     <motion.div
@@ -746,61 +746,62 @@ const ProductDetail = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        <div className="flex flex-row md:flex-col justify-between items-center md:items-start mb-4 md:mb-6">
-                            <h1 className="text-2xl md:text-4xl font-display font-bold text-earthy-900 leading-tight">
+                        <div className="flex flex-col items-start gap-1 md:gap-2 mb-fluid-md">
+                            <h1 className="text-fluid-4xl font-display font-bold text-earthy-900 leading-tight">
                                 {product.name}
                             </h1>
 
                             {/* Rating */}
-                            <div className="flex items-center gap-2 md:gap-4 mt-1 md:mt-2">
+                            <div className="flex items-center gap-2 md:gap-4 mt-0.5 md:mt-1">
                                 <div className="flex items-center gap-1 text-yellow-500 bg-yellow-50 px-2 py-0.5 rounded-full md:bg-transparent md:p-0">
                                     <Star fill="currentColor" className="w-3.5 h-3.5 md:w-5 md:h-5" />
                                     <span className="font-bold text-xs md:text-lg text-earthy-800 ml-0.5 md:ml-1">{product.rating}</span>
                                 </div>
                                 <span className="text-earthy-300 text-xs hidden md:inline">|</span>
-                                <span className="text-earthy-500 font-medium text-[10px] md:text-base underline cursor-pointer hover:text-earthy-800 transition-colors text-nowrap">{product.reviews} Reviews</span>
+                                <span className="text-earthy-500 font-medium text-xs md:text-base underline cursor-pointer hover:text-earthy-800 transition-colors whitespace-nowrap">{product.reviews} Reviews</span>
                             </div>
                         </div>
 
                         {/* Price */}
-                        <div className="flex items-center md:items-end gap-2 md:gap-4 mb-5 md:mb-8">
-                            <span className="text-2xl md:text-4xl font-black text-organic-700 tracking-tight">₹{product.price}</span>
-                            <span className="text-xs md:text-base text-earthy-400 font-medium line-through decoration-earthy-300 md:mb-1">₹{Math.floor(product.price * 1.2)}</span>
-                            <span className="text-[10px] md:text-sm font-bold text-organic-700 bg-organic-50 border border-organic-100 px-2 py-0.5 md:px-3 md:py-1 rounded-full md:mb-2 shadow-sm">20% OFF</span>
+                        <div className="flex items-center md:items-end gap-fluid-sm mb-fluid-lg flex-wrap">
+                            <span className="text-fluid-4xl font-black text-organic-700 tracking-tight">₹{product.price}</span>
+                            <span className="text-fluid-base text-earthy-400 font-medium line-through decoration-earthy-300 mb-0.5">₹{Math.floor(product.price * 1.2)}</span>
+                            <span className="text-fluid-xs font-bold text-organic-700 bg-organic-50 border border-organic-100 px-2.5 py-0.5 rounded-full shadow-sm">20% OFF</span>
                         </div>
 
                         {/* Description */}
-                        <p className="text-earthy-600 text-xs md:text-lg leading-relaxed mb-6 md:mb-8 border-l-[3px] md:border-l-4 border-organic-200 pl-4 md:pl-6">
+                        <p className="text-earthy-600 text-fluid-base leading-relaxed mb-fluid-xl border-l-[3px] md:border-l-4 border-organic-200 pl-fluid-md">
                             {product.description}
                         </p>
 
                         {/* Benefits Grid */}
-                        {/* Benefits Grid */}
-                        <div className="grid grid-cols-2 gap-2 md:gap-4 mb-6 md:mb-10">
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,130px),1fr))] gap-fluid-sm mb-fluid-2xl">
                             {product.benefits && product.benefits.map((benefit, idx) => (
-                                <div key={idx} className="flex items-center gap-2 md:gap-3 bg-white p-2.5 md:p-4 rounded-xl shadow-sm border border-earthy-100">
-                                    <div className="text-organic-600 bg-organic-50 p-1.5 md:p-2 rounded-lg shrink-0">
+                                <div key={idx} className="flex items-center gap-fluid-sm bg-white p-fluid-sm rounded-fluid-xl shadow-sm border border-earthy-100">
+                                    <div className="text-organic-600 bg-organic-50 p-fluid-xs rounded-fluid-lg shrink-0">
                                         {benefit.icon}
                                     </div>
-                                    <span className="font-bold text-earthy-700 text-xs md:text-sm leading-tight">{benefit.text}</span>
+                                    <span className="font-bold text-earthy-700 text-fluid-sm leading-tight">{benefit.text}</span>
                                 </div>
                             ))}
                         </div>
 
                         {/* Actions */}
-                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-6 md:mb-12 py-4 md:py-8 border-t border-b border-earthy-100">
+                        <div className="flex flex-col sm:flex-row gap-fluid-sm mb-fluid-xl py-fluid-xl border-t border-b border-earthy-100">
                             {/* Quantity */}
-                            <div className="flex items-center justify-between bg-white border border-earthy-200 rounded-full px-4 py-2 md:px-6 md:py-3 min-w-[120px] md:min-w-[160px]">
+                            <div className="flex items-center justify-between bg-white border border-earthy-200 rounded-full px-4 py-2.5 md:px-6 md:py-3 min-w-[120px] md:min-w-[160px] min-h-[48px]">
                                 <button
                                     onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                                    className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center text-earthy-400 hover:text-organic-600 transition-colors"
+                                    className="w-8 h-8 flex items-center justify-center text-earthy-500 hover:text-organic-600 transition-colors active:scale-95"
+                                    aria-label="Decrease quantity"
                                 >
                                     <Minus className="w-4 h-4 md:w-5 md:h-5" />
                                 </button>
                                 <span className="text-lg md:text-xl font-bold text-earthy-900">{quantity}</span>
                                 <button
                                     onClick={() => setQuantity(q => q + 1)}
-                                    className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center text-earthy-400 hover:text-organic-600 transition-colors"
+                                    className="w-8 h-8 flex items-center justify-center text-earthy-500 hover:text-organic-600 transition-colors active:scale-95"
+                                    aria-label="Increase quantity"
                                 >
                                     <Plus className="w-4 h-4 md:w-5 md:h-5" />
                                 </button>
@@ -809,18 +810,18 @@ const ProductDetail = () => {
                             {/* Add To Cart */}
                             <button
                                 onClick={handleAddToCart}
-                                className="flex-1 bg-[#1A2E16] text-white rounded-full px-6 py-3 md:px-8 md:py-4 font-bold text-sm md:text-lg tracking-wide hover:bg-[#2F4F2C] transition-all shadow-xl hover:shadow-2xl active:scale-95 flex items-center justify-center gap-2 md:gap-3"
+                                className="flex-1 bg-[#1A2E16] text-white rounded-full px-6 py-3.5 md:p-fluid-md font-bold text-fluid-base tracking-wide hover:bg-[#2F4F2C] transition-all shadow-xl hover:shadow-2xl active:scale-95 flex items-center justify-center gap-fluid-sm min-h-[48px]"
                             >
-                                <ShoppingCart className="w-[18px] h-[18px] md:w-[22px] md:h-[22px]" />
+                                <ShoppingCart className="w-[clamp(1.125rem,2.5vw,1.375rem)] h-[clamp(1.125rem,2.5vw,1.375rem)]" />
                                 ADD TO CART
                             </button>
                         </div>
 
                         {/* Extra Details */}
-                        <div className="space-y-4 md:space-y-6">
+                        <div className="space-y-fluid-lg">
                             <div>
-                                <h3 className="text-base md:text-lg font-bold text-earthy-900 mb-2 md:mb-3 flex items-center gap-2">
-                                    <Leaf className="w-4 h-4 md:w-[18px] md:h-[18px] text-organic-500" /> Ingredients
+                                <h3 className="text-fluid-lg font-bold text-earthy-900 mb-fluid-sm flex items-center gap-fluid-sm">
+                                    <Leaf className="w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)] text-organic-500" /> Ingredients
                                 </h3>
                                 <div className="flex flex-wrap gap-1.5 md:gap-2">
                                     {product.ingredients.map((ing, i) => (
@@ -832,10 +833,10 @@ const ProductDetail = () => {
                             </div>
 
                             <div>
-                                <h3 className="text-base md:text-lg font-bold text-earthy-900 mb-2 md:mb-3 flex items-center gap-2">
-                                    <Activity className="w-4 h-4 md:w-[18px] md:h-[18px] text-organic-500" /> Nutrition Highlights (Per 100g)
+                                <h3 className="text-fluid-lg font-bold text-earthy-900 mb-fluid-sm flex items-center gap-fluid-sm">
+                                    <Activity className="w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)] text-organic-500" /> Nutrition Highlights (Per 100g)
                                 </h3>
-                                <div className="grid grid-cols-4 gap-1.5 md:gap-2">
+                                <div className="grid grid-cols-[repeat(auto-fit,minmax(70px,1fr))] gap-fluid-sm">
                                     {Object.entries(product.nutrition).map(([key, value]) => (
                                         <div key={key} className="bg-white p-2 md:p-3 rounded-xl text-center shadow-sm border border-earthy-50">
                                             <p className="text-earthy-400 text-[10px] md:text-xs uppercase font-bold tracking-wider mb-0.5 md:mb-1">{key}</p>

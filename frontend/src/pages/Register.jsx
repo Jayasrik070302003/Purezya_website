@@ -70,7 +70,7 @@ const Register = () => {
     ];
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 lg:p-8 bg-[#FDFCF8] relative overflow-hidden font-sans selection:bg-organic-100 selection:text-organic-900">
+        <div className="min-h-screen flex items-center justify-center px-[clamp(1rem,4vw,2rem)] py-[clamp(2rem,6vw,4rem)] bg-[#FDFCF8] relative overflow-hidden font-sans selection:bg-organic-100 selection:text-organic-900">
             {/* Background Decorations */}
             <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-gradient-to-b from-organic-100/40 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
             <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-gradient-to-t from-earthy-100/60 to-transparent rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
@@ -79,10 +79,10 @@ const Register = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="w-full max-w-[1200px] z-10 grid grid-cols-1 lg:grid-cols-12 bg-white rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden border border-white/50"
+                className="w-full max-w-[min(1200px,100%)] z-10 grid grid-cols-1 lg:grid-cols-12 bg-white rounded-fluid-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden border border-white/50"
             >
                 {/* Left Side: Brand & Benefits */}
-                <div className="lg:col-span-5 relative bg-organic-900 p-6 lg:p-10 text-white overflow-hidden flex flex-col justify-between min-h-[400px] lg:min-h-auto">
+                <div className="lg:col-span-5 relative bg-organic-900 p-[clamp(1.5rem,4vw,2.5rem)] text-white overflow-hidden flex flex-col justify-between min-h-[400px] lg:min-h-auto">
                     {/* Decorative Patterns */}
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cube-coat.png')] opacity-5" />
                     <div className="absolute -right-20 -top-20 text-white/5 rotate-12 transform scale-150 pointer-events-none">
@@ -98,32 +98,32 @@ const Register = () => {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                            className="inline-flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl mb-6 border border-white/10 shadow-lg"
+                            className="inline-flex items-center justify-center w-[clamp(2.5rem,6vw,3rem)] h-[clamp(2.5rem,6vw,3rem)] bg-white/10 backdrop-blur-md rounded-2xl mb-fluid-md border border-white/10 shadow-lg"
                         >
-                            <Leaf size={24} className="text-organic-300" />
+                            <Leaf className="text-organic-300 w-[clamp(1.25rem,2vw,1.5rem)] h-[clamp(1.25rem,2vw,1.5rem)]" />
                         </motion.div>
 
-                        <h1 className="text-3xl lg:text-4xl font-display font-bold leading-[1.15] mb-4 tracking-tight">
+                        <h1 className="text-fluid-4xl font-display font-bold leading-[1.15] mb-fluid-sm tracking-tight">
                             Embrace the <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-organic-300 to-organic-100">Organic</span> Way
                         </h1>
-                        <p className="text-organic-100/90 text-base leading-relaxed max-w-sm mb-8">
+                        <p className="text-organic-100/90 text-fluid-base leading-relaxed max-w-sm mb-fluid-lg">
                             Join thousands of families choosing purity over process. Real food, real health, real fast.
                         </p>
 
-                        <div className="space-y-3">
+                        <div className="space-y-fluid-xs">
                             {benefits.map((item, idx) => (
                                 <motion.div
                                     key={idx}
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.4 + (idx * 0.1) }}
-                                    className="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/5 hover:bg-white/10 transition-colors group"
+                                    className="flex items-center gap-fluid-xs p-[clamp(0.5rem,1.5vw,0.75rem)] rounded-fluid-xl bg-white/5 backdrop-blur-sm border border-white/5 hover:bg-white/10 transition-colors group"
                                 >
-                                    <div className="w-8 h-8 rounded-full bg-organic-500/20 flex items-center justify-center text-organic-300 group-hover:scale-110 transition-transform duration-300">
-                                        <item.icon size={16} />
+                                    <div className="w-[clamp(1.5rem,3vw,2rem)] h-[clamp(1.5rem,3vw,2rem)] rounded-full bg-organic-500/20 flex items-center justify-center text-organic-300 group-hover:scale-110 transition-transform duration-300">
+                                        <item.icon className="w-[clamp(0.875rem,1.5vw,1rem)] h-[clamp(0.875rem,1.5vw,1rem)]" />
                                     </div>
-                                    <span className="font-medium text-sm text-organic-50 tracking-wide">{item.text}</span>
+                                    <span className="font-medium text-fluid-sm text-organic-50 tracking-wide">{item.text}</span>
                                 </motion.div>
                             ))}
                         </div>
@@ -142,26 +142,26 @@ const Register = () => {
                 </div>
 
                 {/* Right Side: Form */}
-                <div className="lg:col-span-7 bg-white p-6 lg:p-10 flex items-center">
+                <div className="lg:col-span-7 bg-white p-[clamp(1.5rem,4vw,2.5rem)] flex items-center">
                     <div className="w-full max-w-md mx-auto">
-                        <div className="mb-6 text-center lg:text-left">
-                            <h2 className="text-2xl lg:text-3xl font-display font-bold text-earthy-900 mb-2">Create Account</h2>
-                            <p className="text-earthy-500 text-base">Sign up to start your organic journey</p>
+                        <div className="mb-fluid-xl text-center lg:text-left">
+                            <h2 className="text-fluid-3xl font-display font-bold text-earthy-900 mb-fluid-xs">Create Account</h2>
+                            <p className="text-earthy-500 text-fluid-base">Sign up to start your organic journey</p>
                         </div>
 
                         {error && (
                             <motion.div
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
-                                className="p-3 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100 font-medium mb-4 flex items-center gap-3"
+                                className="p-[clamp(0.75rem,2vw,1rem)] bg-red-50 text-red-600 rounded-fluid-xl text-fluid-sm border border-red-100 font-medium mb-fluid-md flex items-center gap-fluid-sm"
                             >
-                                <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                                <div className="w-[clamp(0.25rem,0.5vw,0.375rem)] h-[clamp(0.25rem,0.5vw,0.375rem)] rounded-full bg-red-500" />
                                 {error}
                             </motion.div>
                         )}
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <form onSubmit={handleSubmit} className="space-y-fluid-md">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-sm">
                                 <FormInput
                                     label="Full Name"
                                     icon={User}
@@ -190,7 +190,7 @@ const Register = () => {
                                 onChange={handleChange}
                             />
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-sm">
                                 <FormInput
                                     label="Password"
                                     icon={Lock}
@@ -216,14 +216,14 @@ const Register = () => {
                                 whileTap={{ scale: 0.99 }}
                                 type="submit"
                                 disabled={loading}
-                                className="w-full h-12 bg-gradient-to-r from-organic-800 to-organic-700 hover:from-organic-900 hover:to-organic-800 text-white rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_-5px_rgba(22,101,52,0.3)] flex items-center justify-center gap-2 mt-4"
+                                className="w-full h-[clamp(2.5rem,6vw,3.25rem)] min-h-[46px] bg-gradient-to-r from-organic-800 to-organic-700 hover:from-organic-900 hover:to-organic-800 text-white rounded-fluid-xl font-bold transition-all duration-300 shadow-[0_10px_20px_-5px_rgba(22,101,52,0.3)] flex items-center justify-center gap-fluid-xs mt-fluid-xl text-fluid-base active:scale-95"
                             >
-                                {loading ? <Loader2 className="animate-spin" /> : <>Complete Registration <ArrowRight size={18} /></>}
+                                {loading ? <Loader2 className="animate-spin" /> : <>Complete Registration <ArrowRight className="w-[clamp(1rem,1.5vw,1.125rem)] h-[clamp(1rem,1.5vw,1.125rem)]" /></>}
                             </motion.button>
                         </form>
 
-                        <div className="mt-4 text-center">
-                            <p className="text-earthy-500 text-sm">
+                        <div className="mt-fluid-xl text-center">
+                            <p className="text-earthy-500 text-fluid-sm">
                                 Already have an account? {' '}
                                 <Link to="/login" className="text-organic-700 font-bold hover:text-organic-800 hover:underline decoration-2 underline-offset-4 transition-all">Sign In</Link>
                             </p>
@@ -241,23 +241,23 @@ const FormInput = ({ label, icon: Icon, type = "text", ...props }) => {
     const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
     return (
-        <div className="space-y-1 group">
-            <label className="text-[10px] font-bold text-earthy-500 uppercase tracking-wider ml-1 group-focus-within:text-organic-600 transition-colors duration-300">{label}</label>
+        <div className="space-y-fluid-xs group">
+            <label className="text-fluid-xs font-bold text-earthy-500 uppercase tracking-wider ml-1 group-focus-within:text-organic-600 transition-colors duration-300">{label}</label>
             <div className="relative">
-                <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-earthy-400 group-focus-within:text-organic-600 transition-colors duration-300" size={16} />
+                <Icon className="absolute left-[clamp(0.75rem,1.5vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 group-focus-within:text-organic-600 transition-colors duration-300 w-[clamp(1rem,1.5vw,1.125rem)] h-[clamp(1rem,1.5vw,1.125rem)]" />
                 <input
                     type={inputType}
                     required
-                    className={`w-full pl-9 ${isPassword ? 'pr-10' : 'pr-4'} py-2.5 rounded-xl border border-earthy-200 bg-earthy-50/50 focus:bg-white focus:ring-[3px] focus:ring-organic-100 focus:border-organic-500 outline-none transition-all duration-300 font-medium text-sm text-earthy-900 placeholder:text-earthy-300`}
+                    className={`w-full pl-[clamp(2.25rem,4vw,2.75rem)] ${isPassword ? 'pr-[clamp(2.5rem,4vw,3rem)]' : 'pr-[clamp(1rem,2vw,1.5rem)]'} py-[clamp(0.625rem,1.5vw,0.875rem)] rounded-fluid-xl border border-earthy-200 bg-earthy-50/50 focus:bg-white focus:ring-[3px] focus:ring-organic-100 focus:border-organic-500 outline-none transition-all duration-300 font-medium text-fluid-sm text-earthy-900 placeholder:text-earthy-300`}
                     {...props}
                 />
                 {isPassword && (
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-earthy-400 hover:text-earthy-600 focus:text-organic-600 transition-colors outline-none"
+                        className="absolute right-[clamp(0.75rem,1.5vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 hover:text-earthy-600 focus:text-organic-600 transition-colors outline-none"
                     >
-                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showPassword ? <EyeOff className="w-[clamp(1rem,1.5vw,1.125rem)] h-[clamp(1rem,1.5vw,1.125rem)]" /> : <Eye className="w-[clamp(1rem,1.5vw,1.125rem)] h-[clamp(1rem,1.5vw,1.125rem)]" />}
                     </button>
                 )}
             </div>

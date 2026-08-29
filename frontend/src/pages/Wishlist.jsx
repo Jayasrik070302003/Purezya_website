@@ -1,16 +1,18 @@
 import { Heart, Trash2, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop } from '../context/ShopContext';
+import { useToast } from '../context/ToastContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 const Wishlist = () => {
     const { wishlist, toggleWishlist, addToCart } = useShop();
+    const { showToast } = useToast();
     const [itemToDelete, setItemToDelete] = useState(null);
 
     if (wishlist.length === 0) {
         return (
-            <div className="min-h-screen pt-24 md:pt-32 pb-20 px-4 sm:px-8 lg:px-12 bg-[#FAF9F6] relative overflow-hidden flex items-center justify-center">
+            <div className="min-h-screen pt-[clamp(6rem,12vw,8rem)] pb-[clamp(3rem,8vw,5rem)] px-[clamp(1rem,4vw,3rem)] bg-[#FAF9F6] relative overflow-hidden flex items-center justify-center">
                 <div className="absolute top-0 left-0 -z-10 translate-y-[-20%] translate-x-[-10%] w-[600px] h-[600px] bg-organic-100/40 rounded-full blur-[120px] pointer-events-none" />
 
                 <motion.div
@@ -19,15 +21,15 @@ const Wishlist = () => {
                     transition={{ duration: 0.6 }}
                     className="text-center max-w-lg mx-auto"
                 >
-                    <div className="w-16 h-16 md:w-24 md:h-24 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-red-400">
-                        <Heart size={32} fill="currentColor" className="opacity-20 md:w-12 md:h-12" />
+                    <div className="w-[clamp(4rem,10vw,6rem)] h-[clamp(4rem,10vw,6rem)] bg-red-50 rounded-full flex items-center justify-center mx-auto mb-fluid-md text-red-400">
+                        <Heart className="opacity-20 w-[clamp(2rem,5vw,3rem)] h-[clamp(2rem,5vw,3rem)]" fill="currentColor" />
                     </div>
-                    <h1 className="text-2xl md:text-4xl font-display font-bold text-earthy-900 mb-2 md:mb-4">Your Wishlist is Empty</h1>
-                    <p className="text-earthy-600 text-sm md:text-lg mb-6 md:mb-8">
+                    <h1 className="text-fluid-4xl font-display font-bold text-earthy-900 mb-fluid-sm">Your Wishlist is Empty</h1>
+                    <p className="text-earthy-600 text-fluid-lg mb-fluid-xl">
                         It looks like you haven't added any organic goodies to your wishlist yet.
                         Explore our catalogue to find fresh produce you'll love!
                     </p>
-                    <Link to="/catalogue" className="inline-block bg-[#1A2E16] text-[#F3F6F1] px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-sm tracking-widest hover:bg-[#2F4F2C] transition-colors shadow-lg">
+                    <Link to="/catalogue" className="inline-block bg-[#1A2E16] text-[#F3F6F1] px-[clamp(1.5rem,4vw,2rem)] py-[clamp(0.75rem,2vw,1rem)] rounded-full font-bold text-fluid-sm tracking-widest hover:bg-[#2F4F2C] transition-colors shadow-lg">
                         EXPLORE PRODUCTS
                     </Link>
                 </motion.div>
@@ -36,11 +38,11 @@ const Wishlist = () => {
     }
 
     return (
-        <div className="min-h-screen pt-32 pb-20 px-4 sm:px-8 lg:px-12 bg-[#FAF9F6] relative overflow-hidden">
+        <div className="min-h-screen pt-[clamp(6rem,12vw,8rem)] pb-[clamp(3rem,8vw,5rem)] px-[clamp(1rem,4vw,3rem)] bg-[#FAF9F6] relative overflow-hidden">
             <div className="max-w-[1400px] mx-auto z-10 relative">
-                <h1 className="text-2xl md:text-3xl font-display font-bold text-earthy-900 mb-8">Your Wishlist ({wishlist.length})</h1>
+                <h1 className="text-fluid-3xl font-display font-bold text-earthy-900 mb-fluid-xl">Your Wishlist ({wishlist.length})</h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,250px),1fr))] gap-fluid-lg">
                     {wishlist.map((item, idx) => (
                         <motion.div
                             key={item.id}
@@ -48,9 +50,9 @@ const Wishlist = () => {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: idx * 0.05 }}
-                            className="bg-white rounded-[2.5rem] p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group"
+                            className="bg-white rounded-fluid-2xl p-fluid-md shadow-xl hover:shadow-2xl transition-all duration-300 group flex flex-col"
                         >
-                            <div className="relative h-48 rounded-[2rem] overflow-hidden mb-6 bg-earthy-50">
+                            <div className="relative h-[clamp(12rem,25vw,14rem)] rounded-fluid-xl overflow-hidden mb-fluid-md bg-earthy-50">
                                 <img
                                     src={item.image || item.image_url}
                                     alt={item.name}
@@ -58,22 +60,23 @@ const Wishlist = () => {
                                 />
                                 <button
                                     onClick={() => setItemToDelete(item)}
-                                    className="absolute top-4 right-4 w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                                    className="absolute top-3 right-3 w-9 h-9 bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm active:scale-95"
+                                    aria-label="Delete item"
                                 >
-                                    <Trash2 size={18} />
+                                    <Trash2 size={16} />
                                 </button>
                             </div>
 
-                            <div className="px-2">
-                                <h3 className="text-base md:text-lg font-bold text-earthy-900 leading-tight mb-1.5">{item.name}</h3>
-                                <p className="text-lg md:text-xl font-black text-organic-700 mb-3">₹{item.price}</p>
+                            <div className="px-1 flex flex-col flex-1">
+                                <h3 className="text-fluid-lg font-bold text-earthy-900 leading-tight mb-1.5">{item.name}</h3>
+                                <p className="text-fluid-xl font-black text-organic-700 mb-fluid-sm">₹{item.price}</p>
 
                                 <button
                                     onClick={() => {
                                         addToCart(item);
-                                        alert('Added to cart!');
+                                        showToast(`${item.name} moved to cart!`);
                                     }}
-                                    className="w-full bg-organic-50 text-organic-800 py-2.5 rounded-lg flex items-center justify-center gap-2 font-semibold text-sm hover:bg-organic-600 hover:text-white transition-colors"
+                                    className="w-full mt-auto bg-organic-50 text-organic-800 py-2.5 px-4 rounded-fluid-lg flex items-center justify-center gap-2 font-bold text-fluid-sm hover:bg-organic-600 hover:text-white transition-colors min-h-[44px] active:scale-95 shadow-sm"
                                 >
                                     <ShoppingCart size={16} />
                                     Move to Cart

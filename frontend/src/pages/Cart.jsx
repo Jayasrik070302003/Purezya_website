@@ -29,7 +29,7 @@ const Cart = () => {
 
     if (cart.length === 0) {
         return (
-            <div className="min-h-screen pt-24 md:pt-32 pb-20 px-4 sm:px-8 lg:px-12 bg-[#F9F8F6] relative overflow-hidden flex flex-col items-center justify-center font-sans">
+            <div className="min-h-screen pt-[clamp(6rem,12vw,8rem)] pb-[clamp(3rem,8vw,5rem)] px-[clamp(1rem,4vw,3rem)] bg-[#F9F8F6] relative overflow-hidden flex flex-col items-center justify-center font-sans">
                 {/* Background Atmosphere */}
                 <div className="absolute top-0 right-0 -z-10 translate-y-[-20%] translate-x-[10%] w-[600px] h-[600px] bg-organic-100/40 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" />
                 <div className="absolute bottom-0 left-0 -z-10 translate-y-[20%] translate-x-[-10%] w-[500px] h-[500px] bg-yellow-100/40 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
@@ -38,17 +38,17 @@ const Cart = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="text-center max-w-lg mx-auto relative z-10 mb-6 md:mb-16"
+                    className="text-center max-w-lg mx-auto relative z-10 mb-fluid-2xl"
                 >
-                    <div className="w-20 h-20 md:w-28 md:h-28 bg-white shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] rounded-[2rem] flex items-center justify-center mx-auto mb-6 md:mb-8 text-organic-400 rotate-3 transition-transform hover:rotate-6 duration-500">
-                        <ShoppingCart size={32} className="opacity-80 md:w-12 md:h-12" />
+                    <div className="w-[clamp(5rem,15vw,7rem)] h-[clamp(5rem,15vw,7rem)] bg-white shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] rounded-fluid-2xl flex items-center justify-center mx-auto mb-fluid-lg text-organic-400 rotate-3 transition-transform hover:rotate-6 duration-500">
+                        <ShoppingCart className="opacity-80 w-[clamp(2rem,6vw,3rem)] h-[clamp(2rem,6vw,3rem)]" />
                     </div>
-                    <h1 className="text-3xl md:text-5xl font-display font-bold text-earthy-900 mb-3 md:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-earthy-900 to-earthy-600">Your Cart is Empty</h1>
-                    <p className="text-earthy-600 text-sm md:text-lg mb-8 md:mb-10 leading-relaxed px-4">
+                    <h1 className="text-fluid-4xl font-display font-bold text-earthy-900 mb-fluid-sm bg-clip-text text-transparent bg-gradient-to-r from-earthy-900 to-earthy-600">Your Cart is Empty</h1>
+                    <p className="text-earthy-600 text-fluid-base mb-fluid-xl leading-relaxed px-4">
                         Your basket is waiting for some fresh, organic goodness. <br className="hidden md:block" />
                         Start shopping to fill it with healthy choices!
                     </p>
-                    <Link to="/catalogue" className="inline-flex items-center gap-2 bg-[#1A2E16] text-[#F3F6F1] px-8 py-3 md:px-10 md:py-4 rounded-2xl font-bold text-xs md:text-sm tracking-widest hover:bg-[#2F4F2C] hover:-translate-y-1 transition-all shadow-xl shadow-organic-900/20">
+                    <Link to="/catalogue" className="inline-flex items-center gap-2 bg-[#1A2E16] text-[#F3F6F1] px-[clamp(1.5rem,4vw,2.5rem)] py-[clamp(0.75rem,2vw,1rem)] rounded-fluid-lg font-bold text-fluid-sm tracking-widest hover:bg-[#2F4F2C] hover:-translate-y-1 transition-all shadow-xl shadow-organic-900/20">
                         START SHOPPING <ArrowRight size={16} />
                     </Link>
                 </motion.div>
@@ -82,7 +82,7 @@ const Cart = () => {
     }
 
     return (
-        <div className="min-h-screen pt-20 md:pt-32 pb-20 px-3 sm:px-8 lg:px-12 bg-[#F9F8F6] relative overflow-hidden font-sans">
+        <div className="min-h-screen pt-[clamp(6rem,12vw,8rem)] pb-[clamp(3rem,8vw,5rem)] px-[clamp(0.75rem,4vw,3rem)] bg-[#F9F8F6] relative overflow-hidden font-sans">
             {/* Vibrant Atmosphere */}
             <div className="absolute top-0 left-0 -translate-x-[20%] -translate-y-[20%] w-[700px] h-[700px] bg-organic-200/20 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" />
             <div className="absolute bottom-0 right-0 translate-x-[20%] translate-y-[20%] w-[600px] h-[600px] bg-yellow-200/20 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
@@ -91,13 +91,13 @@ const Cart = () => {
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
 
             <div className="max-w-[1200px] mx-auto z-10 relative">
-                <div className="flex flex-row items-center justify-between md:items-end mb-6 md:mb-12 border-b-0 md:border-b border-earthy-200/60 pb-0 md:pb-8">
+                <div className="flex flex-row items-center justify-between md:items-end mb-fluid-xl border-b-0 md:border-b border-earthy-200/60 pb-0 md:pb-8">
                     <div className="">
-                        <h1 className="text-2xl md:text-6xl font-display font-bold text-earthy-900 mb-1 md:mb-3 tracking-tight">
+                        <h1 className="text-fluid-5xl font-display font-bold text-earthy-900 mb-fluid-xs tracking-tight">
                             My <span className="text-transparent bg-clip-text bg-gradient-to-r from-organic-600 to-organic-400">Basket</span>
                         </h1>
-                        <p className="text-earthy-500 font-medium text-xs md:text-lg flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-organic-500 inline-block animate-pulse"></span>
+                        <p className="text-earthy-500 font-medium text-fluid-base flex items-center gap-fluid-sm">
+                            <span className="w-[clamp(0.375rem,1vw,0.5rem)] h-[clamp(0.375rem,1vw,0.5rem)] rounded-full bg-organic-500 inline-block animate-pulse"></span>
                             {cart.length > 0 ? `${cart.length} items ready` : 'Basket is empty'}
                         </p>
                     </div>
@@ -119,10 +119,10 @@ const Cart = () => {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, x: -20 }}
-                                className="group relative bg-white md:bg-white/80 md:backdrop-blur-md p-3 md:p-5 rounded-2xl md:rounded-[2.5rem] shadow-sm md:shadow-sm border border-gray-100 md:border-white/50 md:ring-1 md:ring-earthy-100/50 transition-all duration-300 flex gap-4 md:gap-6 items-center w-full max-w-[340px] md:max-w-full mx-auto"
+                                className="group relative bg-white md:bg-white/80 md:backdrop-blur-md p-fluid-md rounded-fluid-2xl shadow-sm border border-gray-100 md:border-white/50 md:ring-1 md:ring-earthy-100/50 transition-all duration-300 flex gap-fluid-md items-center w-full mx-auto"
                             >
                                 {/* Product Image */}
-                                <div className="w-16 h-16 md:w-32 md:h-32 shrink-0 rounded-xl md:rounded-[2rem] overflow-hidden bg-gray-50 relative group-hover:-rotate-2 transition-transform duration-500 ease-out border border-gray-100/50">
+                                <div className="w-[clamp(4rem,15vw,8rem)] h-[clamp(4rem,15vw,8rem)] shrink-0 rounded-fluid-xl overflow-hidden bg-gray-50 relative group-hover:-rotate-2 transition-transform duration-500 ease-out border border-gray-100/50">
                                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                 </div>
 
@@ -130,13 +130,13 @@ const Cart = () => {
                                 <div className="flex-1 min-w-0 py-1">
                                     <div className="flex justify-between items-start mb-0.5 md:mb-2">
                                         <div className="flex-1 mr-2 min-w-0">
-                                            <h3 className="text-sm md:text-2xl font-display font-semibold md:font-bold text-earthy-900 leading-tight md:leading-none mb-0.5 md:mb-2 truncate">{item.name}</h3>
-                                            <p className="text-earthy-400 text-[10px] md:text-sm font-medium truncate flex items-center gap-1 md:gap-2">
-                                                <Leaf size={10} className="text-organic-400 md:w-3 md:h-3 shrink-0" /> {item.description}
+                                            <h3 className="text-fluid-xl font-display font-semibold md:font-bold text-earthy-900 leading-tight md:leading-none mb-fluid-xs truncate">{item.name}</h3>
+                                            <p className="text-earthy-400 text-fluid-xs font-medium truncate flex items-center gap-fluid-sm">
+                                                <Leaf className="text-organic-400 w-[clamp(0.625rem,1.5vw,0.875rem)] h-[clamp(0.625rem,1.5vw,0.875rem)] shrink-0" /> {item.description}
                                             </p>
                                         </div>
                                         <div className="text-right shrink-0">
-                                            <p className="text-sm md:text-2xl font-bold text-organic-700">₹{item.price * item.quantity}</p>
+                                            <p className="text-fluid-xl font-bold text-organic-700">₹{item.price * item.quantity}</p>
                                         </div>
                                     </div>
 
@@ -150,10 +150,11 @@ const Cart = () => {
                                         {/* Delete Icon - Positioned naturally in flow but pushed right */}
                                         <button
                                             onClick={() => setItemToDelete(item.id)}
-                                            className="text-earthy-300 hover:text-red-500 transition-colors p-1 md:p-2 hover:bg-red-50 rounded-full active:scale-95"
+                                            className="text-earthy-400 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-full active:scale-95 min-w-[36px] min-h-[36px] flex items-center justify-center"
                                             title="Remove Item"
+                                            aria-label="Remove item"
                                         >
-                                            <Trash2 size={13} className="md:w-[18px] md:h-[18px]" />
+                                            <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                                         </button>
                                     </div>
                                 </div>
@@ -162,12 +163,12 @@ const Cart = () => {
                     </div>
 
                     {/* Order Summary - Sticky */}
-                    <div className="lg:col-span-4 sticky top-24 md:top-32 w-full max-w-[340px] md:max-w-full mx-auto">
-                        <div className="bg-white md:bg-white/80 md:backdrop-blur-xl rounded-3xl md:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 md:border-white/60 md:ring-1 md:ring-earthy-100 p-4 md:p-8 relative overflow-hidden">
+                    <div className="lg:col-span-4 sticky top-24 md:top-32 w-full mx-auto">
+                        <div className="bg-white md:bg-white/80 md:backdrop-blur-xl rounded-fluid-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 md:border-white/60 md:ring-1 md:ring-earthy-100 p-fluid-xl relative overflow-hidden">
                             {/* Decorative Top Gradient */}
                             <div className="absolute top-0 left-0 right-0 h-1 md:h-1.5 bg-gradient-to-r from-organic-400 via-yellow-400 to-earthy-400 opacity-80 md:opacity-100" />
 
-                            <h2 className="text-lg md:text-3xl font-display font-bold text-earthy-900 mb-3 md:mb-8 flex items-center gap-3 tracking-tight">
+                            <h2 className="text-fluid-2xl font-display font-bold text-earthy-900 mb-fluid-lg flex items-center gap-3 tracking-tight">
                                 Bill Details
                                 <div className="h-px flex-1 bg-gray-100 md:hidden" />
                             </h2>
@@ -190,16 +191,16 @@ const Cart = () => {
                             <div className="bg-organic-50 p-3 -mx-1 mb-3 rounded-xl border border-organic-100 md:bg-transparent md:p-0 md:mx-0 md:mb-8 md:pt-6 md:border-0 md:border-t md:border-earthy-100">
                                 <div className="flex justify-between items-center">
                                     <span className="text-earthy-600 font-bold text-xs uppercase tracking-widest">Total Payable</span>
-                                    <span className="text-2xl md:text-4xl font-display font-black text-earthy-900 tracking-tight">₹{total}</span>
+                                    <span className="text-fluid-3xl font-display font-black text-earthy-900 tracking-tight">₹{total}</span>
                                 </div>
                             </div>
 
                             <button
                                 onClick={handleCheckout}
-                                className="w-full group relative overflow-hidden bg-[#152e15] text-white py-3 md:py-5 rounded-xl md:rounded-2xl font-bold text-xs md:text-base tracking-[0.2em] shadow-xl shadow-organic-900/20 hover:shadow-2xl hover:shadow-organic-900/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 md:gap-3"
+                                className="w-full group relative overflow-hidden bg-[#152e15] text-white py-fluid-md rounded-fluid-xl font-bold text-fluid-base tracking-[0.2em] shadow-xl shadow-organic-900/20 hover:shadow-2xl hover:shadow-organic-900/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 md:gap-3"
                             >
                                 <span className="relative z-10 flex items-center gap-2">
-                                    CHECKOUT <ArrowRight size={16} className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform opacity-80" />
+                                    CHECKOUT <ArrowRight className="w-[clamp(1rem,2.5vw,1.25rem)] h-[clamp(1rem,2.5vw,1.25rem)] group-hover:translate-x-1 transition-transform opacity-80" />
                                 </span>
                                 {/* Shimmer Effect */}
                                 <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />

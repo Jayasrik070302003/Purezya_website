@@ -42,42 +42,42 @@ const NoodlesAndPasta = () => {
     const allProducts = products;
 
     return (
-        <div className="min-h-screen pt-24 md:pt-32 pb-6 md:pb-20 px-4 sm:px-8 lg:px-12 bg-[#FAF9F6] relative overflow-hidden">
+        <div className="min-h-screen pt-[clamp(6rem,12vw,8rem)] pb-[clamp(1.5rem,5vw,5rem)] px-[clamp(1rem,4vw,3rem)] bg-[#FAF9F6] relative overflow-hidden">
             {/* Background Blobs */}
             <div className="absolute top-0 right-0 -z-10 translate-y-[-20%] translate-x-[10%] w-[600px] h-[600px] bg-organic-100/40 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 -z-10 translate-y-[20%] translate-x-[-10%] w-[500px] h-[500px] bg-earthy-100/40 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="w-full max-w-[95%] mx-auto z-10 relative">
                 {/* Header */}
-                <div className="mb-6 md:mb-12">
-                    <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-earthy-500 hover:text-organic-700 font-bold mb-3 md:mb-6 transition-colors text-sm md:text-base">
-                        <ArrowLeft size={18} className="md:w-5 md:h-5" /> Back
+                <div className="mb-fluid-xl">
+                    <button onClick={() => navigate(-1)} className="inline-flex items-center gap-fluid-xs text-earthy-500 hover:text-organic-700 font-bold mb-[clamp(0.75rem,2vw,1.5rem)] transition-colors text-fluid-base">
+                        <ArrowLeft className="w-[clamp(1.125rem,1.5vw,1.25rem)] h-[clamp(1.125rem,1.5vw,1.25rem)]" /> Back
                     </button>
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
-                        <h1 className="text-2xl md:text-5xl font-display font-bold text-earthy-900 mb-2 md:mb-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                        <h1 className="text-[clamp(1.5rem,4vw,3rem)] font-display font-bold text-earthy-900 mb-fluid-sm flex flex-col md:flex-row md:items-center gap-fluid-sm">
                             Noodles & Pasta
-                            <span className="bg-organic-100 text-organic-700 px-2.5 py-0.5 md:px-4 md:py-1 rounded-full text-xs md:text-lg font-bold tracking-wide w-fit">{allProducts.length} Items</span>
+                            <span className="bg-organic-100 text-organic-700 px-[clamp(0.625rem,1.5vw,1rem)] py-[clamp(0.125rem,0.5vw,0.25rem)] rounded-full text-fluid-sm font-bold tracking-wide w-fit">{allProducts.length} Items</span>
                         </h1>
-                        <p className="text-earthy-600 text-sm md:text-lg max-w-2xl">
+                        <p className="text-earthy-600 text-fluid-base max-w-2xl">
                             Discover our range of healthy, colorful noodles and pasta made with natural vegetables and nutritious grains.
                         </p>
                     </motion.div>
                 </div>
 
                 {/* Product Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,140px),1fr))] md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-fluid-md">
                     {allProducts.map((product, idx) => (
                         <motion.div
                             key={product.id}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: idx * 0.1 }}
-                            className="bg-white rounded-[1.2rem] md:rounded-[2.5rem] p-2 md:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group border border-transparent hover:border-organic-100"
+                            className="bg-white rounded-fluid-2xl p-[clamp(0.5rem,2vw,1.5rem)] shadow-xl hover:shadow-2xl transition-all duration-300 group border border-transparent hover:border-organic-100 flex flex-col"
                         >
-                            <Link to={`/product/${product.id}`} className="block relative h-32 md:h-64 rounded-[1rem] md:rounded-[2rem] overflow-hidden mb-2 md:mb-6 bg-earthy-50 group-hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+                            <Link to={`/product/${product.id}`} className="block relative aspect-square md:aspect-auto md:h-[clamp(12rem,25vw,16rem)] rounded-fluid-xl overflow-hidden mb-[clamp(0.5rem,2vw,1.5rem)] bg-earthy-50 group-hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
                                 <img
                                     src={product.image}
                                     alt={product.name}
@@ -88,49 +88,49 @@ const NoodlesAndPasta = () => {
                                         e.preventDefault();
                                         toggleWishlist(product);
                                     }}
-                                    className="absolute top-2 right-2 md:top-4 md:right-4 w-6 h-6 md:w-10 md:h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/50 transition-all shadow-sm z-10"
+                                    className="absolute top-[clamp(0.5rem,1.5vw,1rem)] right-[clamp(0.5rem,1.5vw,1rem)] w-[clamp(1.5rem,3vw,2.5rem)] h-[clamp(1.5rem,3vw,2.5rem)] bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/50 transition-all shadow-sm z-10"
                                 >
-                                    <Heart size={12} fill={isInWishlist(product.id) ? "currentColor" : "none"} className={`md:w-5 md:h-5 ${isInWishlist(product.id) ? "text-red-500" : ""}`} />
+                                    <Heart className={`w-[clamp(0.75rem,1.5vw,1.25rem)] h-[clamp(0.75rem,1.5vw,1.25rem)] ${isInWishlist(product.id) ? "text-red-500" : ""}`} fill={isInWishlist(product.id) ? "currentColor" : "none"} />
                                 </button>
                                 {idx === 0 && (
-                                    <div className="absolute top-4 left-4 px-3 py-1 bg-organic-600/90 backdrop-blur text-white text-xs font-bold rounded-full uppercase tracking-widest">
+                                    <div className="absolute top-[clamp(0.5rem,1.5vw,1rem)] left-[clamp(0.5rem,1.5vw,1rem)] px-[clamp(0.5rem,1vw,0.75rem)] py-[clamp(0.125rem,0.5vw,0.25rem)] bg-organic-600/90 backdrop-blur text-white text-[clamp(0.5625rem,1vw,0.75rem)] font-bold rounded-full uppercase tracking-widest">
                                         Best Seller
                                     </div>
                                 )}
-                                <div className="absolute bottom-1.5 left-1.5 md:bottom-4 md:left-4 px-1.5 py-0.5 md:px-3 md:py-1 bg-white/90 backdrop-blur text-earthy-800 text-[8px] md:text-xs font-bold rounded-full uppercase tracking-widest shadow-sm">
+                                <div className="absolute bottom-[clamp(0.375rem,1vw,0.75rem)] left-[clamp(0.375rem,1vw,0.75rem)] md:bottom-[clamp(0.5rem,1.5vw,1rem)] md:left-[clamp(0.5rem,1.5vw,1rem)] px-[clamp(0.375rem,1vw,0.75rem)] py-[clamp(0.125rem,0.5vw,0.25rem)] bg-white/90 backdrop-blur text-earthy-800 text-[clamp(0.5rem,1vw,0.75rem)] font-bold rounded-full uppercase tracking-widest shadow-sm">
                                     {product.category}
                                 </div>
-                                <div className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 bg-white/90 backdrop-blur rounded-md flex items-center gap-0.5 md:hidden shadow-sm">
-                                    <Star size={8} className="text-yellow-500" fill="currentColor" />
-                                    <span className="text-[9px] font-bold text-earthy-900">{product.rating}</span>
+                                <div className="absolute bottom-[clamp(0.375rem,1vw,0.75rem)] right-[clamp(0.375rem,1vw,0.75rem)] px-[clamp(0.375rem,1vw,0.5rem)] py-[clamp(0.125rem,0.5vw,0.25rem)] bg-white/90 backdrop-blur rounded-md flex items-center gap-0.5 md:hidden shadow-sm">
+                                    <Star className="text-yellow-500 w-[clamp(0.5rem,1vw,0.75rem)] h-[clamp(0.5rem,1vw,0.75rem)]" fill="currentColor" />
+                                    <span className="text-[clamp(0.5625rem,1vw,0.75rem)] font-bold text-earthy-900">{product.rating}</span>
                                 </div>
                             </Link>
 
-                            <div className="px-1 md:px-2">
+                            <div className="px-[clamp(0.25rem,1vw,0.5rem)] flex flex-col flex-1">
                                 <Link to={`/product/${product.id}`} className="block mb-1 md:mb-2">
-                                    <h3 className="text-xs md:text-2xl font-bold text-earthy-900 leading-tight hover:text-organic-600 transition-colors line-clamp-2 min-h-[2.5em] md:min-h-0">{product.name}</h3>
+                                    <h3 className="text-[clamp(0.75rem,2vw,1.5rem)] font-bold text-earthy-900 leading-tight hover:text-organic-600 transition-colors line-clamp-2 min-h-[2.5em] md:min-h-0">{product.name}</h3>
                                 </Link>
 
-                                <div className="hidden md:flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg w-fit mb-2">
-                                    <Star size={14} className="text-yellow-500" fill="currentColor" />
-                                    <span className="text-xs font-bold text-yellow-700">{product.rating}</span>
+                                <div className="hidden md:flex items-center gap-1 bg-yellow-50 px-fluid-sm py-fluid-xs rounded-lg w-fit mb-2">
+                                    <Star className="text-yellow-500 w-[clamp(0.75rem,1vw,0.875rem)] h-[clamp(0.75rem,1vw,0.875rem)]" fill="currentColor" />
+                                    <span className="text-fluid-xs font-bold text-yellow-700">{product.rating}</span>
                                 </div>
 
-                                <p className="hidden md:block text-earthy-500 text-sm font-medium mb-6 line-clamp-2 min-h-[40px]">{product.description}</p>
+                                <p className="hidden md:block text-earthy-500 text-fluid-sm font-medium mb-fluid-md line-clamp-2 min-h-[clamp(2.5rem,4vw,3.5rem)]">{product.description}</p>
 
-                                <div className="flex items-center justify-between mt-auto">
+                                <div className="flex items-center justify-between mt-auto pt-2">
                                     <div>
-                                        <p className="text-[8px] md:text-xs font-bold text-earthy-400 uppercase tracking-wider md:mb-1">Price</p>
-                                        <p className="text-base md:text-2xl font-black text-organic-700">₹{product.price}</p>
+                                        <p className="text-[clamp(0.5rem,1vw,0.75rem)] font-bold text-earthy-400 uppercase tracking-wider md:mb-1">Price</p>
+                                        <p className="text-[clamp(1rem,2.5vw,1.5rem)] font-black text-organic-700">₹{product.price}</p>
                                     </div>
                                     <button
                                         onClick={() => {
                                             addToCart(product);
                                             showToast(`${product.name} added to cart!`);
                                         }}
-                                        className="bg-[#1A2E16] text-white px-2 py-1 md:px-6 md:py-3 rounded-lg md:rounded-2xl flex items-center gap-1 md:gap-2 font-bold hover:bg-[#2F4F2C] transition-colors shadow-lg active:scale-95 text-[10px] md:text-base"
+                                        className="bg-[#1A2E16] text-white px-[clamp(0.5rem,2vw,1.5rem)] py-[clamp(0.25rem,1vw,0.75rem)] rounded-fluid-lg flex items-center gap-[clamp(0.25rem,1vw,0.5rem)] font-bold hover:bg-[#2F4F2C] transition-colors shadow-lg active:scale-95 text-[clamp(0.625rem,1.5vw,1rem)]"
                                     >
-                                        <ShoppingCart size={14} className="md:w-[18px] md:h-[18px]" />
+                                        <ShoppingCart className="w-[clamp(0.875rem,1.5vw,1.125rem)] h-[clamp(0.875rem,1.5vw,1.125rem)]" />
                                         Add
                                     </button>
                                 </div>

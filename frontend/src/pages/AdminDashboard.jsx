@@ -19,11 +19,11 @@ const AdminDashboard = () => {
 
     // Category Management State (Product Groups)
     const [categories, setCategories] = useState([
-        { id: 1, name: 'Malt Beverages', status: 'Active', stock: 'High', count: 12 },
-        { id: 2, name: 'Organic Atta', status: 'Active', stock: 'High', count: 8 },
-        { id: 3, name: 'Snacks & Sweets', status: 'Active', stock: 'High', count: 15 },
-        { id: 4, name: 'Noodles & Pasta', status: 'Active', stock: 'Medium', count: 6 },
-        { id: 5, name: 'Wellness Products', status: 'Active', stock: 'Low', count: 4 },
+        { id: 1, name: 'Malt Beverages', status: 'Active', stock: 'High', count: 0 },
+        { id: 2, name: 'Organic Atta', status: 'Active', stock: 'High', count: 0 },
+        { id: 3, name: 'Snacks & Sweets', status: 'Active', stock: 'High', count: 0 },
+        { id: 4, name: 'Noodles & Pasta', status: 'Active', stock: 'Medium', count: 0 },
+        { id: 5, name: 'Wellness Products', status: 'Active', stock: 'Low', count: 0 },
     ]);
     const [editingCategory, setEditingCategory] = useState(null);
     const [editForm, setEditForm] = useState({ name: '', stock: '' });
@@ -487,7 +487,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 lg:ml-64 p-4 lg:p-8 pt-24 lg:pt-8 transition-all duration-300">
+            <div className="flex-1 lg:ml-64 p-[clamp(1rem,3vw,2rem)] pt-[clamp(6rem,12vw,8rem)] lg:pt-[clamp(1rem,3vw,2rem)] transition-all duration-300">
                 <div className="max-w-7xl mx-auto relative">
                     {/* Notification Toast */}
                     <AnimatePresence>
@@ -496,7 +496,7 @@ const AdminDashboard = () => {
                                 initial={{ opacity: 0, y: -50, x: '-50%' }}
                                 animate={{ opacity: 1, y: 0, x: '-50%' }}
                                 exit={{ opacity: 0, y: -50, x: '-50%' }}
-                                className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-md border flex items-center gap-3 min-w-[320px] justify-center
+                                className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] px-4 py-3 sm:px-6 sm:py-4 rounded-2xl shadow-2xl backdrop-blur-md border flex items-center gap-3 w-[clamp(16rem,90vw,22rem)] max-w-[calc(100vw-2rem)] justify-center
                                     ${notification.type === 'success'
                                         ? 'bg-emerald-50/90 border-emerald-200 text-emerald-800'
                                         : 'bg-red-50/90 border-red-200 text-red-800'
@@ -1139,7 +1139,7 @@ const AdminDashboard = () => {
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
-                                    className="bg-white rounded-3xl p-8 w-full max-w-md relative z-10 shadow-2xl"
+                                    className="bg-white rounded-[2rem] p-[clamp(1.5rem,4vw,2rem)] w-full max-w-md relative z-10 shadow-2xl"
                                 >
                                     <div className="flex justify-between items-center mb-6">
                                         <h3 className="text-2xl font-bold font-display text-earthy-900">Edit Category</h3>
@@ -1223,7 +1223,7 @@ const AdminDashboard = () => {
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
-                                    className="bg-white rounded-[2rem] p-8 w-full max-w-2xl relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar"
+                                    className="bg-white rounded-[2rem] p-[clamp(1.5rem,4vw,2rem)] w-full max-w-2xl relative z-10 shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar"
                                 >
                                     <style>{`
                                         .no-scrollbar::-webkit-scrollbar {
