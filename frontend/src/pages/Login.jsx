@@ -147,10 +147,10 @@ const Login = () => {
                     {/* Form Section */}
                     <form onSubmit={handleSubmit} noValidate className="space-y-4 relative z-10">
 
-                        {/* Email Input */}
+                        {/* Email or ID Input */}
                         <div className="space-y-2">
                             <div className="flex justify-between px-1">
-                                <label className="text-[clamp(0.625rem,1vw,0.75rem)] font-bold text-[#4A7A45] tracking-widest uppercase">Email Address</label>
+                                <label className="text-[clamp(0.625rem,1vw,0.75rem)] font-bold text-[#4A7A45] tracking-widest uppercase">Email / User ID</label>
                                 {fieldErrors.email && <span className="text-[clamp(0.625rem,1vw,0.75rem)] text-red-500 font-medium">{fieldErrors.email}</span>}
                             </div>
                             <div className="relative group transition-all duration-300">
@@ -158,14 +158,14 @@ const Login = () => {
                                     <Mail className="w-[clamp(1rem,1.5vw,1.25rem)] h-[clamp(1rem,1.5vw,1.25rem)]" strokeWidth={1.5} />
                                 </div>
                                 <input
-                                    type="email"
+                                    type="text"
                                     value={email}
                                     onChange={(e) => {
                                         setEmail(e.target.value);
                                         if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: '' });
                                     }}
                                     className={`w-full bg-[#F5F7F5] border border-transparent focus:bg-white focus:border-[#D4C5A5]/60 hover:bg-white/80 text-[#1A2E16] text-fluid-sm rounded-fluid-xl py-[clamp(0.75rem,2vw,1rem)] pl-[clamp(2.5rem,5vw,3rem)] pr-[clamp(1rem,2vw,1.5rem)] outline-none transition-all shadow-inner placeholder:text-[#B0C4B8] font-medium`}
-                                    placeholder="Enter your email"
+                                    placeholder="Enter your email or admin ID (purazya)"
                                 />
                             </div>
                         </div>

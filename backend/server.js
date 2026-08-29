@@ -120,17 +120,24 @@ const initDb = async () => {
             )
         `);
 
-        // Seed default Admin user if not exists
-        const { rows: adminRows } = await client.query("SELECT * FROM users WHERE email = 'admin@gmail.com'");
-        if (adminRows.length === 0) {
-            const bcrypt = require('bcryptjs');
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash('admin123', salt);
+        // Seed official Admin account (admin@purazya.com / purazya / Purazya@123!)
+        const bcrypt = require('bcryptjs');
+        const salt = await bcrypt.genSalt(10);
+        const adminPasswordHash = await bcrypt.hash('Purazya@123!', salt);
+
+        const { rows: purazyaAdminRows } = await client.query("SELECT * FROM users WHERE email = 'admin@purazya.com' OR name = 'purazya'");
+        if (purazyaAdminRows.length === 0) {
             await client.query(
                 "INSERT INTO users (name, email, phone, password_hash) VALUES ($1, $2, $3, $4)",
-                ['Admin Purazya', 'admin@gmail.com', '9876543210', hashedPassword]
+                ['purazya', 'admin@purazya.com', '9876543210', adminPasswordHash]
             );
-            console.log('✅ Default Admin account seeded (admin@gmail.com / admin123)');
+            console.log('✅ Official Admin account seeded (admin@purazya.com / purazya / Purazya@123!)');
+        } else {
+            // Ensure credentials match
+            await client.query(
+                "UPDATE users SET name = 'purazya', password_hash = $1 WHERE email = 'admin@purazya.com'",
+                [adminPasswordHash]
+            );
         }
 
         await client.query('COMMIT');

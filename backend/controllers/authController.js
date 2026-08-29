@@ -75,9 +75,18 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        const loginIdentifier = (email || '').trim();
 
-        // Check user
-        const { rows: users } = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (!loginIdentifier || !password) {
+            return res.status(400).json({ message: 'Email/ID and password are required' });
+        }
+
+        // Allow login by Email OR Username/ID
+        const { rows: users } = await pool.query(
+            'SELECT * FROM users WHERE LOWER(email) = LOWER($1) OR LOWER(name) = LOWER($1)',
+            [loginIdentifier]
+        );
+
         if (users.length === 0) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
@@ -92,9 +101,12 @@ exports.login = async (req, res) => {
 
         const JWT_SECRET = process.env.JWT_SECRET || 'purazya_super_secure_jwt_secret_2026_default_key';
 
+        // Check admin role
+        const isAdmin = user.email === 'admin@purazya.com' || user.email === 'admin@gmail.com' || user.name.toLowerCase() === 'purazya';
+
         // Create token
         const token = jwt.sign(
-            { id: user.id, email: user.email, name: user.name },
+            { id: user.id, email: user.email, name: user.name, role: isAdmin ? 'admin' : 'user' },
             JWT_SECRET,
             { expiresIn: '24h' }
         );
@@ -106,7 +118,7 @@ exports.login = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 profile_picture: user.profile_picture,
-                role: user.email === 'admin@gmail.com' ? 'admin' : 'user'
+                role: isAdmin ? 'admin' : 'user'
             }
         });
     } catch (error) {
