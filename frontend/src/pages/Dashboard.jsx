@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { Search, Leaf, ArrowRight, Sun, Sunrise, Sunset, Moon, Coffee, Wheat, Candy, Utensils, HeartPulse } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -31,7 +32,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchDashboard = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/dashboard');
+                const res = await axios.get(`${API_URL}/dashboard`);
                 setData(res.data);
             } catch (err) {
                 console.error('Error fetching dashboard data');
@@ -48,10 +49,10 @@ const Dashboard = () => {
     const hour = new Date().getHours();
 
     const getGreetingDetails = (h) => {
-        if (h >= 5 && h < 12) return { text: 'Good Morning', icon: <Sunrise size={24} /> };
-        if (h >= 12 && h < 16) return { text: 'Good Afternoon', icon: <Sun size={24} /> };
-        if (h >= 16 && h < 20) return { text: 'Good Evening', icon: <Sunset size={24} /> };
-        return { text: 'Good Night', icon: <Moon size={24} /> };
+        if (h >= 5 && h < 12) return { text: 'Good Morning', icon: '🌅' };
+        if (h >= 12 && h < 16) return { text: 'Good Afternoon', icon: '☀️' };
+        if (h >= 16 && h < 20) return { text: 'Good Evening', icon: '🌆' };
+        return { text: 'Good Night', icon: '🌙' };
     };
 
     const { text: greetingText, icon: greetingIcon } = getGreetingDetails(hour);
@@ -164,8 +165,8 @@ const Dashboard = () => {
                                 </div>
 
                                 <div className="mb-fluid-md relative text-left z-20 min-w-0">
-                                    <h1 className="text-3xl sm:text-4xl md:text-fluid-4xl font-sans font-bold text-white leading-tight tracking-tight drop-shadow-sm flex flex-row items-center justify-start gap-fluid-sm mb-1 md:mb-0 flex-wrap min-w-0">
-                                        <span className="truncate max-w-full">{greetingText},</span>
+                                    <h1 className="text-3xl sm:text-4xl md:text-fluid-4xl font-sans font-bold text-white leading-normal tracking-tight drop-shadow-sm flex flex-row items-center justify-start gap-2 sm:gap-fluid-sm mb-1 md:mb-0 flex-wrap min-w-0 py-1">
+                                        <span className="shrink-0">{greetingText},</span>
                                         <motion.span
                                             animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
                                             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -197,7 +198,7 @@ const Dashboard = () => {
                                     <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] border border-white/20 bg-[#fdfcf8]">
                                         <img
                                             src="/hero-products.jpg"
-                                            alt="Purezya Organic Products"
+                                            alt="Purazya Organic Products"
                                             className="w-full h-auto aspect-[4/3] object-cover transform hover:scale-105 transition-transform duration-700"
                                         />
 
@@ -299,7 +300,7 @@ const Dashboard = () => {
                                 <div className="relative rounded-fluid-2xl overflow-hidden shadow-[0_45px_80px_-10px_rgba(0,0,0,0.6)] border-4 border-white/10 bg-[#fdfcf8]">
                                     <img
                                         src="/hero-products.jpg"
-                                        alt="Purezya Organic Products"
+                                        alt="Purazya Organic Products"
                                         className="w-full h-auto aspect-video lg:aspect-[16/10] object-cover transform hover:scale-105 transition-transform duration-700"
                                     />
                                     {/* Overlay Gradient on Image */}

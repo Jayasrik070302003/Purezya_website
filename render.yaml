@@ -1,0 +1,52 @@
+# ==========================================================
+# Render Blueprint Specification for Purezya Organic Foods
+# ==========================================================
+
+services:
+  # 1. Backend Web Service (Node.js Express + Neon PostgreSQL)
+  - type: web
+    name: purezya-backend
+    env: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # Set in Render Dashboard from Neon Postgres
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: SENDER_EMAIL
+        value: support@purezya.com
+      - key: SENDER_NAME
+        value: Purezya Organic Foods
+
+  # 2. Frontend Web Service (Vite React SPA)
+  - type: web
+    name: purezya-frontend
+    env: static
+    rootDir: frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: purezya-backend
+          property: host

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 
 const ShopContext = createContext();
 
@@ -8,7 +9,7 @@ export const useShop = () => useContext(ShopContext);
 export const ShopProvider = ({ children }) => {
     const [cart, setCart] = useState(() => {
         try {
-            const item = localStorage.getItem('purezya_cart');
+            const item = localStorage.getItem('Purazya_cart');
             return item ? JSON.parse(item) : [];
         } catch (error) {
             return [];
@@ -17,7 +18,7 @@ export const ShopProvider = ({ children }) => {
 
     const [wishlist, setWishlist] = useState(() => {
         try {
-            const item = localStorage.getItem('purezya_wishlist');
+            const item = localStorage.getItem('Purazya_wishlist');
             return item ? JSON.parse(item) : [];
         } catch (error) {
             return [];
@@ -26,11 +27,11 @@ export const ShopProvider = ({ children }) => {
 
     // Save to local storage on change
     useEffect(() => {
-        localStorage.setItem('purezya_cart', JSON.stringify(cart));
+        localStorage.setItem('Purazya_cart', JSON.stringify(cart));
     }, [cart]);
 
     useEffect(() => {
-        localStorage.setItem('purezya_wishlist', JSON.stringify(wishlist));
+        localStorage.setItem('Purazya_wishlist', JSON.stringify(wishlist));
     }, [wishlist]);
 
     const addToCart = (product, qty = 1) => {
@@ -84,7 +85,10 @@ export const ShopProvider = ({ children }) => {
 
     const createOrder = async (orderData) => {
         try {
-            const response = await axios.post('http://localhost:5001/api/orders', orderData);
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${API_URL}/orders`, orderData, {
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            });
             return response.data;
         } catch (error) {
             console.error("Order creation failed:", error);

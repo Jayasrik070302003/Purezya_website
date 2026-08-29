@@ -6,6 +6,7 @@ import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
 import { fetchWithCache } from '../utils/apiCache';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
+import { API_URL } from '../config/api';
 
 const WellnessProducts = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const WellnessProducts = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const data = await fetchWithCache('http://localhost:5001/api/products?category=Wellness%20Products');
+                const data = await fetchWithCache(`${API_URL}/products?category=Wellness%20Products`);
                 const mapped = data.map(p => ({
                         id: p.id,
                         name: p.name,
@@ -245,8 +246,6 @@ const WellnessProducts = () => {
                                     <Star className="text-yellow-500 w-[clamp(0.75rem,1vw,0.875rem)] h-[clamp(0.75rem,1vw,0.875rem)]" fill="currentColor" />
                                     <span className="text-fluid-xs font-bold text-yellow-700">{product.rating}</span>
                                 </div>
-
-                                <p className="hidden md:block text-earthy-500 text-fluid-sm font-medium mb-fluid-md line-clamp-2 min-h-[clamp(2.5rem,4vw,3.5rem)]">{product.description}</p>
 
                                 <div className="flex items-center justify-between mt-auto pt-2">
                                     <div>

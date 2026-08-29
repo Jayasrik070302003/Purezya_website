@@ -18,8 +18,8 @@ const Navbar = () => {
                         <div className="relative">
                             <div className="absolute inset-0 bg-organic-500 rounded-full blur-lg opacity-20 group-hover:opacity-40 transition-opacity" />
                             <img
-                                src="/purezya-logo.png"
-                                alt="Purezya Life Logo"
+                                src="/Purazya-logo.png"
+                                alt="Purazya Logo"
                                 className="h-[clamp(2.5rem,5vw,3.5rem)] w-[clamp(2.5rem,5vw,3.5rem)] rounded-full object-cover shadow-sm relative z-10 transition-transform group-hover:scale-105"
                             />
                         </div>

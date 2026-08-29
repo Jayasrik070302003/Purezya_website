@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -60,7 +61,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5001/api/auth/login', {
+            const response = await axios.post(`${API_URL}/auth/login`, {
                 email,
                 password
             });
@@ -113,8 +114,8 @@ const Login = () => {
                             <div className="absolute inset-0 bg-gradient-to-tr from-green-600 to-amber-400 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500" />
                             <div className="relative w-[clamp(4rem,10vw,5rem)] h-[clamp(4rem,10vw,5rem)] rounded-full p-1 bg-white/50 backdrop-blur-sm border border-white/50 shadow-lg">
                                 <img
-                                    src="/purezya-logo.png"
-                                    alt="Purezya Life Logo"
+                                    src="/Purazya-logo.png"
+                                    alt="Purazya Logo"
                                     className="w-full h-full rounded-full object-cover"
                                 />
                             </div>

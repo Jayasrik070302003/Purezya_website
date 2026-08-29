@@ -23,11 +23,23 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/upload', require('./routes/upload'));
+app.use('/api/addresses', require('./routes/addresses'));
 app.use('/uploads', express.static('uploads'));
+
+// Health check endpoint for Render & monitoring
+app.get(['/health', '/api/health'], (req, res) => {
+    res.status(200).json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        service: 'Purazya API',
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
 
 // Root path
 app.get('/', (req, res) => {
-    res.send('Purezya Life\'s Food API is running...');
+    res.send('Purazya Organic Foods API is running smoothly.');
 });
 
 // Database Initialization (Schema)
@@ -46,6 +58,24 @@ const initDb = async () => {
                 password_hash VARCHAR(255) NOT NULL,
                 profile_picture TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
+        // Addresses Table (Multiple Saved Addresses per Customer)
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS addresses (
+                id SERIAL PRIMARY KEY,
+                user_id INT NOT NULL,
+                first_name VARCHAR(100) NOT NULL,
+                last_name VARCHAR(100),
+                email VARCHAR(255),
+                phone VARCHAR(20) NOT NULL,
+                pincode VARCHAR(20) NOT NULL,
+                address_line TEXT NOT NULL,
+                address_type VARCHAR(50) DEFAULT 'Home',
+                is_default BOOLEAN DEFAULT FALSE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         `);
 

@@ -31,7 +31,7 @@ exports.getStats = async (req, res) => {
 exports.getOrders = async (req, res) => {
     try {
         const { rows: orders } = await pool.query(`
-            SELECT o.id, o.total_amount, o.status, o.created_at, u.name as user_name, u.email as user_email 
+            SELECT o.id, o.total_amount, o.status, o.created_at, u.name as user_name, u.email as user_email, u.phone as user_phone 
             FROM orders o 
             LEFT JOIN users u ON o.user_id = u.id 
             ORDER BY o.created_at DESC
@@ -49,7 +49,7 @@ exports.getOrderDetails = async (req, res) => {
 
         // Fetch order basic info
         const { rows: orders } = await pool.query(`
-            SELECT o.*, u.name as user_name, u.email as user_email 
+            SELECT o.*, u.name as user_name, u.email as user_email, u.phone as user_phone 
             FROM orders o 
             LEFT JOIN users u ON o.user_id = u.id 
             WHERE o.id = $1

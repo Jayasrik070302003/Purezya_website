@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 import { User, Mail, Phone, Lock, Loader2, ArrowRight, Leaf, CheckCircle2, Sprout, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -48,7 +49,7 @@ const Register = () => {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:5001/api/auth/register', {
+            const response = await axios.post(`${API_URL}/auth/register`, {
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1];
+    let token = req.headers['authorization']?.split(' ')[1] || req.headers['authorization'] || req.headers['x-auth-token'] || req.headers['x-access-token'];
 
     if (!token) {
         return res.status(403).json({ message: 'A token is required for authentication' });

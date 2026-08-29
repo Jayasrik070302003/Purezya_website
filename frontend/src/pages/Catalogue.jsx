@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchWithCache } from '../utils/apiCache';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
+import { API_URL } from '../config/api';
 import { ArrowRight, Leaf, Search, Filter, Sparkles, ArrowUpRight, Heart, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -15,7 +16,7 @@ const Catalogue = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const data = await fetchWithCache('http://localhost:5001/api/products');
+                const data = await fetchWithCache(`${API_URL}/products`);
                 setCategories(data);
             } catch (error) {
                 console.error("Failed to fetch products", error);

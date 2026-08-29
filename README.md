@@ -1,6 +1,6 @@
-# Purezya Life - Authentication & Dashboard
+# Purazya - Authentication & Dashboard
 
-A premium, production-ready full-stack authentication system and dashboard built for the Purezya Life brand.
+A premium, production-ready full-stack authentication system and dashboard built for the Purazya brand.
 
 ## Tech Stack
 - **Frontend**: React.js, Tailwind CSS, Framer Motion, Lucide Icons
@@ -14,7 +14,7 @@ A premium, production-ready full-stack authentication system and dashboard built
 ## Setup Instructions
 
 ### 1. Database Setup
-1. Create a MySQL database named `purezya_db`.
+1. Create a MySQL database named `Purazya_db`.
 2. The `users` table will be automatically created when the backend starts.
 
 ### 2. Backend Installation

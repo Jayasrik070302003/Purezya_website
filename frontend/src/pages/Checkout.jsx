@@ -1,24 +1,34 @@
 import { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../config/api';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CheckCircle, CreditCard, MapPin, Phone, User, ShieldCheck, Truck, Mail, Smartphone, Clock } from 'lucide-react';
+import { ArrowLeft, CheckCircle, CreditCard, MapPin, Phone, User, ShieldCheck, Truck, Mail, Smartphone, Clock, ArrowRight, Plus, Home, Briefcase, Tag, Trash2 } from 'lucide-react';
 
 const Checkout = () => {
     const { cart, createOrder, clearCart } = useShop();
+    const { user } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [step, setStep] = useState(1); // 1: Details, 2: Payment
+    const [savedAddresses, setSavedAddresses] = useState([]);
+    const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const [isAddingNew, setIsAddingNew] = useState(false);
+    const [saveAddressForFuture, setSaveAddressForFuture] = useState(true);
+
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
         mobile: '',
         pincode: '',
-        address: ''
+        address: '',
+        addressType: 'Home'
     });
     const [paymentMethod, setPaymentMethod] = useState('card');
 
@@ -27,6 +37,137 @@ const Checkout = () => {
     const [timer, setTimer] = useState(300); // 5 minutes in seconds
 
     const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+    // Fetch saved addresses from server / localStorage on load
+    useEffect(() => {
+        const loadAddresses = async () => {
+            const token = localStorage.getItem('token');
+            let addresses = [];
+
+            if (token) {
+                try {
+                    const res = await axios.get(`${API_URL}/addresses`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    addresses = res.data || [];
+                } catch (err) {
+                    console.warn('Could not fetch server addresses:', err);
+                }
+            }
+
+            // Fallback to local storage if empty
+            if (addresses.length === 0) {
+                try {
+                    const localSaved = localStorage.getItem('Purazya_saved_addresses');
+                    if (localSaved) {
+                        addresses = JSON.parse(localSaved);
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            setSavedAddresses(addresses);
+
+            if (addresses.length > 0) {
+                // Select default or first
+                const defaultAddr = addresses.find(a => a.is_default) || addresses[0];
+                setSelectedAddressId(defaultAddr.id);
+                setFormData({
+                    firstName: defaultAddr.first_name || '',
+                    lastName: defaultAddr.last_name || '',
+                    email: defaultAddr.email || user?.email || '',
+                    mobile: defaultAddr.phone || '',
+                    pincode: defaultAddr.pincode || '',
+                    address: defaultAddr.address_line || defaultAddr.address || '',
+                    addressType: defaultAddr.address_type || 'Home'
+                });
+                setIsAddingNew(false);
+            } else {
+                // Pre-fill basic info from user profile
+                if (user) {
+                    const nameParts = (user.name || '').split(' ');
+                    setFormData(prev => ({
+                        ...prev,
+                        firstName: nameParts[0] || '',
+                        lastName: nameParts.slice(1).join(' ') || '',
+                        email: user.email || '',
+                        mobile: user.phone || ''
+                    }));
+                }
+                setIsAddingNew(true);
+            }
+        };
+
+        loadAddresses();
+    }, [user]);
+
+    // Handle Selecting a Saved Address
+    const handleSelectAddress = (addr) => {
+        setSelectedAddressId(addr.id);
+        setFormData({
+            firstName: addr.first_name || '',
+            lastName: addr.last_name || '',
+            email: addr.email || user?.email || '',
+            mobile: addr.phone || '',
+            pincode: addr.pincode || '',
+            address: addr.address_line || addr.address || '',
+            addressType: addr.address_type || 'Home'
+        });
+        setIsAddingNew(false);
+    };
+
+    // Save and proceed with new address
+    const handleSaveAndProceed = async () => {
+        if (!formData.firstName || !formData.mobile || !formData.pincode || !formData.address) {
+            showToast('Please fill all required shipping fields.', 'error');
+            return;
+        }
+
+        if (saveAddressForFuture) {
+            const token = localStorage.getItem('token');
+            const newAddrPayload = {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phone: formData.mobile,
+                pincode: formData.pincode,
+                address: formData.address,
+                addressType: formData.addressType,
+                isDefault: savedAddresses.length === 0
+            };
+
+            let savedItem = {
+                id: Date.now(),
+                first_name: formData.firstName,
+                last_name: formData.lastName,
+                email: formData.email,
+                phone: formData.mobile,
+                pincode: formData.pincode,
+                address_line: formData.address,
+                address_type: formData.addressType,
+                is_default: savedAddresses.length === 0
+            };
+
+            if (token) {
+                try {
+                    const res = await axios.post(`${API_URL}/addresses`, newAddrPayload, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.data) savedItem = res.data;
+                } catch (err) {
+                    console.warn('Could not save address to server:', err);
+                }
+            }
+
+            const updatedList = [savedItem, ...savedAddresses];
+            setSavedAddresses(updatedList);
+            localStorage.setItem('Purazya_saved_addresses', JSON.stringify(updatedList));
+            setSelectedAddressId(savedItem.id);
+        }
+
+        setStep(2);
+    };
 
     // Timer Logic
     useEffect(() => {
@@ -47,7 +188,7 @@ const Checkout = () => {
 
     const handleUpiAppSelect = (app) => {
         setSelectedUpiApp(app);
-        setTimer(300); // Reset timer on app switch
+        setTimer(300);
     };
 
     const handlePlaceOrder = async () => {
@@ -63,7 +204,7 @@ const Checkout = () => {
                 })),
                 totalAmount: total,
                 status: 'Confirmed',
-                paymentMethod: paymentMethod, // Include payment method
+                paymentMethod: paymentMethod,
                 shippingDetails: formData
             };
 
@@ -82,183 +223,326 @@ const Checkout = () => {
     if (cart.length === 0) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[#F9F8F6]">
-                <p>Redirecting to cart...</p>
+                <p className="text-earthy-600 font-medium">Redirecting to cart...</p>
                 {setTimeout(() => navigate('/cart'), 0)}
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen pt-[clamp(6rem,12vw,8rem)] pb-[clamp(3rem,8vw,5rem)] px-[clamp(0.75rem,4vw,3rem)] bg-[#F9F8F6] relative overflow-hidden font-sans">
-            {/* Vibrant Atmosphere */}
-            <div className="absolute top-0 left-0 -translate-x-[20%] -translate-y-[20%] w-[700px] h-[700px] bg-organic-200/40 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" />
-            <div className="absolute bottom-0 right-0 translate-x-[20%] translate-y-[20%] w-[600px] h-[600px] bg-yellow-200/40 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        <div className="min-h-screen pt-24 sm:pt-28 md:pt-32 pb-16 px-3 sm:px-6 md:px-8 bg-[#F9F8F6] relative overflow-x-hidden font-sans">
+            {/* Background Glow */}
+            <div className="absolute top-0 left-0 -translate-x-[20%] -translate-y-[20%] w-[700px] h-[700px] bg-organic-200/30 rounded-full blur-[120px] pointer-events-none mix-blend-multiply" />
+            <div className="absolute bottom-0 right-0 translate-x-[20%] translate-y-[20%] w-[600px] h-[600px] bg-yellow-200/30 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
 
-            <div className="max-w-[1200px] mx-auto relative z-10">
-                <button onClick={() => navigate('/cart')} className="group flex items-center gap-fluid-xs text-earthy-500 hover:text-earthy-900 font-bold mb-fluid-lg transition-colors text-fluid-base">
-                    <ArrowLeft className="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)] group-hover:-translate-x-1 transition-transform" /> Back to Cart
+            <div className="max-w-[1180px] mx-auto relative z-10 w-full">
+                {/* Back Link & Title */}
+                <button
+                    onClick={() => navigate('/cart')}
+                    className="group inline-flex items-center gap-1.5 text-earthy-500 hover:text-earthy-900 font-bold mb-3 md:mb-5 transition-colors text-xs sm:text-sm"
+                >
+                    <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                    <span>Back to Basket</span>
                 </button>
 
-                <h1 className="text-fluid-4xl font-display font-bold text-earthy-900 mb-fluid-xl flex items-center gap-fluid-sm">
-                    Secure <span className="text-transparent bg-clip-text bg-gradient-to-r from-organic-600 to-organic-400">Checkout</span>
-                    <ShieldCheck className="text-organic-500 w-[clamp(1.5rem,4vw,2rem)] h-[clamp(1.5rem,4vw,2rem)]" />
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-earthy-900 mb-6 md:mb-8 flex items-center gap-2">
+                    <span>Secure <span className="text-transparent bg-clip-text bg-gradient-to-r from-organic-600 to-organic-400">Checkout</span></span>
+                    <ShieldCheck className="text-organic-600 w-6 h-6 sm:w-8 sm:h-8" />
                 </h1>
 
-                <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+                <div className="grid lg:grid-cols-12 gap-4 sm:gap-6 md:gap-8 items-start w-full min-w-0">
                     {/* Left Column: Form/Steps */}
-                    <div className="lg:col-span-7 space-y-6">
+                    <div className="lg:col-span-7 space-y-3.5 sm:space-y-6 w-full min-w-0">
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={`bg-white/80 backdrop-blur-xl rounded-fluid-2xl p-fluid-xl shadow-sm border transition-all duration-500 ${step === 1 ? 'border-organic-500 ring-1 ring-organic-200 shadow-xl' : 'border-white/50 opacity-60'}`}
-                        >
-                            <h2 className="text-fluid-xl font-display font-bold text-earthy-900 mb-fluid-lg flex items-center gap-fluid-sm">
-                                <span className={`px-4 py-1.5 rounded-full text-fluid-sm font-bold tracking-wide transition-all ${step === 1 ? 'bg-organic-600 text-white shadow-organic-200 shadow-lg' : 'bg-organic-600 text-white'}`}>
-                                    {step > 1 ? <CheckCircle className="w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)]" /> : 'Step 1'}
-                                </span>
-                                Shipping Details
-                            </h2>
+                        {/* Step 1: Shipping Details */}
+                        <div className={`bg-white rounded-2xl md:rounded-3xl p-3.5 sm:p-6 md:p-7 shadow-sm border transition-all duration-300 w-full min-w-0 ${step === 1 ? 'border-organic-500 ring-2 ring-organic-100 shadow-md' : 'border-earthy-100'}`}>
+                            <div className="flex items-center justify-between mb-3.5 sm:mb-6">
+                                <h2 className="text-sm sm:text-lg md:text-xl font-display font-bold text-earthy-900 flex items-center gap-2">
+                                    <span className={`px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-bold ${step === 1 ? 'bg-organic-600 text-white' : 'bg-emerald-100 text-emerald-800'}`}>
+                                        {step > 1 ? 'Step 1 ✓' : 'Step 1'}
+                                    </span>
+                                    <span>Delivery Address</span>
+                                </h2>
+                                {step > 1 && (
+                                    <button
+                                        onClick={() => setStep(1)}
+                                        className="text-xs font-bold text-organic-700 hover:text-organic-800 bg-organic-50 hover:bg-organic-100 px-2.5 py-1 rounded-lg transition-colors border border-organic-200"
+                                    >
+                                        Change Address
+                                    </button>
+                                )}
+                            </div>
 
                             <AnimatePresence mode="wait">
                                 {step === 1 ? (
                                     <motion.div
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        exit={{ opacity: 0, height: 0 }}
-                                        className="space-y-fluid-lg"
-                                    >
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-fluid-md">
-                                            <div className="space-y-2">
-                                                <label className="text-fluid-xs font-bold text-earthy-500 uppercase tracking-wider ml-1">First Name</label>
-                                                <div className="relative group">
-                                                    <User className="absolute left-[clamp(0.75rem,2vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 group-focus-within:text-organic-600 transition-colors w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)]" />
-                                                    <input
-                                                        type="text"
-                                                        value={formData.firstName}
-                                                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                                                        className="w-full bg-white rounded-fluid-xl pl-[clamp(2.25rem,4vw,3rem)] pr-[clamp(0.75rem,2vw,1.25rem)] py-[clamp(0.75rem,2vw,1rem)] border border-earthy-200 focus:outline-none focus:border-organic-500 focus:ring-4 focus:ring-organic-50 font-medium text-fluid-base text-earthy-900 transition-all shadow-sm placeholder:text-earthy-300"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-fluid-xs font-bold text-earthy-500 uppercase tracking-wider ml-1">Last Name</label>
-                                                <div className="relative group">
-                                                    <User className="absolute left-[clamp(0.75rem,2vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 group-focus-within:text-organic-600 transition-colors w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)]" />
-                                                    <input
-                                                        type="text"
-                                                        value={formData.lastName}
-                                                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                                                        placeholder="(Optional)"
-                                                        className="w-full bg-white rounded-fluid-xl pl-[clamp(2.25rem,4vw,3rem)] pr-[clamp(0.75rem,2vw,1.25rem)] py-[clamp(0.75rem,2vw,1rem)] border border-earthy-200 focus:outline-none focus:border-organic-500 focus:ring-4 focus:ring-organic-50 font-medium text-fluid-base text-earthy-900 transition-all shadow-sm placeholder:text-earthy-300"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <label className="text-fluid-xs font-bold text-earthy-500 uppercase tracking-wider ml-1">Email Address</label>
-                                            <div className="relative group">
-                                                <Mail className="absolute left-[clamp(0.75rem,2vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 group-focus-within:text-organic-600 transition-colors w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)]" />
-                                                <input
-                                                    type="email"
-                                                    value={formData.email}
-                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                    className="w-full bg-white rounded-fluid-xl pl-[clamp(2.25rem,4vw,3rem)] pr-[clamp(0.75rem,2vw,1.25rem)] py-[clamp(0.75rem,2vw,1rem)] border border-earthy-200 focus:outline-none focus:border-organic-500 focus:ring-4 focus:ring-organic-50 font-medium text-fluid-base text-earthy-900 transition-all shadow-sm placeholder:text-earthy-300"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-fluid-md">
-                                            <div className="space-y-2">
-                                                <label className="text-fluid-xs font-bold text-earthy-500 uppercase tracking-wider ml-1">Mobile Number</label>
-                                                <div className="relative group">
-                                                    <Phone className="absolute left-[clamp(0.75rem,2vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 group-focus-within:text-organic-600 transition-colors w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)]" />
-                                                    <input
-                                                        type="tel"
-                                                        value={formData.mobile}
-                                                        onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                                                        className="w-full bg-white rounded-fluid-xl pl-[clamp(2.25rem,4vw,3rem)] pr-[clamp(0.75rem,2vw,1.25rem)] py-[clamp(0.75rem,2vw,1rem)] border border-earthy-200 focus:outline-none focus:border-organic-500 focus:ring-4 focus:ring-organic-50 font-medium text-fluid-base text-earthy-900 transition-all shadow-sm placeholder:text-earthy-300"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-fluid-xs font-bold text-earthy-500 uppercase tracking-wider ml-1">Pin Code</label>
-                                                <div className="relative group">
-                                                    <MapPin className="absolute left-[clamp(0.75rem,2vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 group-focus-within:text-organic-600 transition-colors w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)]" />
-                                                    <input
-                                                        type="text"
-                                                        value={formData.pincode}
-                                                        onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                                                        className="w-full bg-white rounded-fluid-xl pl-[clamp(2.25rem,4vw,3rem)] pr-[clamp(0.75rem,2vw,1.25rem)] py-[clamp(0.75rem,2vw,1rem)] border border-earthy-200 focus:outline-none focus:border-organic-500 focus:ring-4 focus:ring-organic-50 font-medium text-fluid-base text-earthy-900 transition-all shadow-sm placeholder:text-earthy-300"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <label className="text-fluid-xs font-bold text-earthy-500 uppercase tracking-wider ml-1">Delivery Address</label>
-                                            <div className="relative group">
-                                                <MapPin className="absolute left-[clamp(0.75rem,2vw,1rem)] top-[clamp(0.875rem,2vw,1rem)] text-earthy-400 group-focus-within:text-organic-600 transition-colors w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)]" />
-                                                <textarea
-                                                    rows="3"
-                                                    value={formData.address}
-                                                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                                    className="w-full bg-white rounded-fluid-xl pl-[clamp(2.25rem,4vw,3rem)] pr-[clamp(0.75rem,2vw,1.25rem)] py-[clamp(0.75rem,2vw,1rem)] border border-earthy-200 focus:outline-none focus:border-organic-500 focus:ring-4 focus:ring-organic-50 font-medium text-fluid-base text-earthy-900 transition-all shadow-sm resize-none placeholder:text-earthy-300 break-all leading-relaxed no-scrollbar"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <button
-                                            onClick={() => setStep(2)}
-                                            className="mt-fluid-xl w-full bg-earthy-900 text-white px-[clamp(1.5rem,4vw,2rem)] py-[clamp(1rem,2.5vw,1.25rem)] rounded-fluid-xl font-bold text-fluid-base tracking-wide hover:bg-earthy-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-fluid-sm group"
-                                        >
-                                            Continue to Payment <ArrowLeft className="rotate-180 group-hover:translate-x-1 transition-transform w-[clamp(1rem,2vw,1.125rem)] h-[clamp(1rem,2vw,1.125rem)]" />
-                                        </button>
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="flex justify-between items-start md:items-center bg-white/50 rounded-fluid-xl p-fluid-md border border-earthy-100"
+                                        exit={{ opacity: 0 }}
+                                        className="space-y-4 w-full min-w-0"
                                     >
-                                        <div className="space-y-fluid-xs">
-                                            <p className="font-bold text-earthy-900 text-fluid-lg flex items-center gap-fluid-xs">
-                                                <User className="text-organic-600 w-[clamp(0.875rem,1.5vw,1rem)] h-[clamp(0.875rem,1.5vw,1rem)]" />
+                                        {/* Saved Addresses List (Amazon / Flipkart Style) */}
+                                        {savedAddresses.length > 0 && !isAddingNew && (
+                                            <div className="space-y-3">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-xs font-bold text-earthy-700 uppercase tracking-wider">
+                                                        Select from Saved Addresses ({savedAddresses.length})
+                                                    </p>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setIsAddingNew(true);
+                                                            setFormData({
+                                                                firstName: '',
+                                                                lastName: '',
+                                                                email: user?.email || '',
+                                                                mobile: user?.phone || '',
+                                                                pincode: '',
+                                                                address: '',
+                                                                addressType: 'Home'
+                                                            });
+                                                        }}
+                                                        className="inline-flex items-center gap-1 text-xs font-bold text-organic-700 hover:text-organic-800 bg-organic-50 hover:bg-organic-100 px-2.5 py-1 rounded-lg transition-colors border border-organic-200"
+                                                    >
+                                                        <Plus size={14} />
+                                                        <span>Add New Address</span>
+                                                    </button>
+                                                </div>
+
+                                                <div className="space-y-2.5">
+                                                    {savedAddresses.map((addr) => {
+                                                        const isSelected = selectedAddressId === addr.id;
+                                                        return (
+                                                            <div
+                                                                key={addr.id}
+                                                                onClick={() => handleSelectAddress(addr)}
+                                                                className={`p-3.5 sm:p-4 rounded-xl border-2 cursor-pointer transition-all ${isSelected
+                                                                        ? 'border-organic-600 bg-organic-50/30 ring-2 ring-organic-100 shadow-sm'
+                                                                        : 'border-earthy-200 bg-white hover:border-earthy-300'
+                                                                    }`}
+                                                            >
+                                                                <div className="flex items-start justify-between gap-2">
+                                                                    <div className="flex items-start gap-2.5 min-w-0">
+                                                                        <div className={`mt-0.5 w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${isSelected ? 'border-organic-600 bg-organic-600' : 'border-earthy-300 bg-white'
+                                                                            }`}>
+                                                                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                                                                        </div>
+                                                                        <div className="min-w-0">
+                                                                            <div className="flex items-center gap-2 flex-wrap mb-1">
+                                                                                <span className="font-bold text-earthy-900 text-xs sm:text-sm truncate">
+                                                                                    {addr.first_name} {addr.last_name}
+                                                                                </span>
+                                                                                <span className="px-2 py-0.5 bg-earthy-100 text-earthy-700 rounded-md text-[10px] font-extrabold uppercase">
+                                                                                    {addr.address_type || 'Home'}
+                                                                                </span>
+                                                                                {addr.is_default && (
+                                                                                    <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[9px] font-bold">
+                                                                                        DEFAULT
+                                                                                    </span>
+                                                                                )}
+                                                                            </div>
+                                                                            <p className="text-xs text-earthy-600 leading-relaxed break-words">
+                                                                                {addr.address_line || addr.address}
+                                                                            </p>
+                                                                            <p className="text-xs text-earthy-500 mt-1 flex items-center gap-3">
+                                                                                <span><strong>PIN:</strong> {addr.pincode}</span>
+                                                                                <span><strong>Phone:</strong> {addr.phone}</span>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setStep(2)}
+                                                    className="w-full mt-3 bg-earthy-900 hover:bg-earthy-800 text-white py-2.5 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2"
+                                                >
+                                                    <span>Deliver to this Address</span>
+                                                    <ArrowRight size={15} />
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* Address Input Form (When adding new or no saved addresses) */}
+                                        {(isAddingNew || savedAddresses.length === 0) && (
+                                            <div className="space-y-3 sm:space-y-4 w-full min-w-0">
+                                                {savedAddresses.length > 0 && (
+                                                    <div className="flex items-center justify-between pb-2 border-b border-earthy-100">
+                                                        <p className="text-xs font-bold text-earthy-800">Add New Delivery Address</p>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setIsAddingNew(false)}
+                                                            className="text-xs font-bold text-earthy-500 hover:text-earthy-800 underline"
+                                                        >
+                                                            Cancel & Use Saved
+                                                        </button>
+                                                    </div>
+                                                )}
+
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 w-full min-w-0">
+                                                    <div className="w-full min-w-0">
+                                                        <label className="block text-[10px] sm:text-xs font-bold text-earthy-600 uppercase tracking-wider mb-1">First Name *</label>
+                                                        <div className="relative w-full min-w-0">
+                                                            <User size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-earthy-400" />
+                                                            <input
+                                                                type="text"
+                                                                required
+                                                                value={formData.firstName}
+                                                                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                                                placeholder="First Name"
+                                                                className="w-full bg-earthy-50/50 rounded-xl pl-8 pr-2.5 py-2 border border-earthy-200 focus:outline-none focus:bg-white focus:border-organic-500 focus:ring-2 focus:ring-organic-100 text-xs sm:text-sm font-medium text-earthy-900 transition-all placeholder:text-earthy-300 box-border"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="w-full min-w-0">
+                                                        <label className="block text-[10px] sm:text-xs font-bold text-earthy-600 uppercase tracking-wider mb-1">Last Name</label>
+                                                        <div className="relative w-full min-w-0">
+                                                            <User size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-earthy-400" />
+                                                            <input
+                                                                type="text"
+                                                                value={formData.lastName}
+                                                                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                                                placeholder="(Optional)"
+                                                                className="w-full bg-earthy-50/50 rounded-xl pl-8 pr-2.5 py-2 border border-earthy-200 focus:outline-none focus:bg-white focus:border-organic-500 focus:ring-2 focus:ring-organic-100 text-xs sm:text-sm font-medium text-earthy-900 transition-all placeholder:text-earthy-300 box-border"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="w-full min-w-0">
+                                                    <label className="block text-[10px] sm:text-xs font-bold text-earthy-600 uppercase tracking-wider mb-1">Email Address</label>
+                                                    <div className="relative w-full min-w-0">
+                                                        <Mail size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-earthy-400" />
+                                                        <input
+                                                            type="email"
+                                                            value={formData.email}
+                                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                            placeholder="you@example.com"
+                                                            className="w-full bg-earthy-50/50 rounded-xl pl-8 pr-2.5 py-2 border border-earthy-200 focus:outline-none focus:bg-white focus:border-organic-500 focus:ring-2 focus:ring-organic-100 text-xs sm:text-sm font-medium text-earthy-900 transition-all placeholder:text-earthy-300 box-border"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 w-full min-w-0">
+                                                    <div className="w-full min-w-0">
+                                                        <label className="block text-[10px] sm:text-xs font-bold text-earthy-600 uppercase tracking-wider mb-1">Mobile Number *</label>
+                                                        <div className="relative w-full min-w-0">
+                                                            <Phone size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-earthy-400" />
+                                                            <input
+                                                                type="tel"
+                                                                required
+                                                                value={formData.mobile}
+                                                                onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                                                                placeholder="10-digit Mobile"
+                                                                className="w-full bg-earthy-50/50 rounded-xl pl-8 pr-2.5 py-2 border border-earthy-200 focus:outline-none focus:bg-white focus:border-organic-500 focus:ring-2 focus:ring-organic-100 text-xs sm:text-sm font-medium text-earthy-900 transition-all placeholder:text-earthy-300 box-border"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="w-full min-w-0">
+                                                        <label className="block text-[10px] sm:text-xs font-bold text-earthy-600 uppercase tracking-wider mb-1">PIN Code *</label>
+                                                        <div className="relative w-full min-w-0">
+                                                            <MapPin size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-earthy-400" />
+                                                            <input
+                                                                type="text"
+                                                                required
+                                                                value={formData.pincode}
+                                                                onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
+                                                                placeholder="6-digit PIN"
+                                                                className="w-full bg-earthy-50/50 rounded-xl pl-8 pr-2.5 py-2 border border-earthy-200 focus:outline-none focus:bg-white focus:border-organic-500 focus:ring-2 focus:ring-organic-100 text-xs sm:text-sm font-medium text-earthy-900 transition-all placeholder:text-earthy-300 box-border"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="w-full min-w-0">
+                                                    <label className="block text-[10px] sm:text-xs font-bold text-earthy-600 uppercase tracking-wider mb-1">Flat, House No., Building, Street *</label>
+                                                    <div className="relative w-full min-w-0">
+                                                        <MapPin size={14} className="absolute left-2.5 top-2.5 text-earthy-400" />
+                                                        <textarea
+                                                            rows="2"
+                                                            required
+                                                            value={formData.address}
+                                                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                                            placeholder="Door / Flat No., Street, Area, City"
+                                                            className="w-full bg-earthy-50/50 rounded-xl pl-8 pr-2.5 py-2 border border-earthy-200 focus:outline-none focus:bg-white focus:border-organic-500 focus:ring-2 focus:ring-organic-100 text-xs sm:text-sm font-medium text-earthy-900 transition-all resize-none placeholder:text-earthy-300 box-border"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Address Type Selector */}
+                                                <div>
+                                                    <label className="block text-[10px] sm:text-xs font-bold text-earthy-600 uppercase tracking-wider mb-1.5">Address Type</label>
+                                                    <div className="flex gap-2">
+                                                        {['Home', 'Work', 'Other'].map(type => (
+                                                            <button
+                                                                key={type}
+                                                                type="button"
+                                                                onClick={() => setFormData({ ...formData, addressType: type })}
+                                                                className={`flex-1 py-1.5 px-3 rounded-lg border text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${formData.addressType === type
+                                                                        ? 'border-organic-600 bg-organic-50 text-organic-800'
+                                                                        : 'border-earthy-200 bg-white text-earthy-600 hover:bg-earthy-50'
+                                                                    }`}
+                                                            >
+                                                                {type === 'Home' && <Home size={13} />}
+                                                                {type === 'Work' && <Briefcase size={13} />}
+                                                                {type === 'Other' && <Tag size={13} />}
+                                                                <span>{type}</span>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Save Address Checkbox */}
+                                                <label className="flex items-center gap-2 cursor-pointer pt-1">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={saveAddressForFuture}
+                                                        onChange={(e) => setSaveAddressForFuture(e.target.checked)}
+                                                        className="rounded text-organic-600 focus:ring-organic-500 w-4 h-4"
+                                                    />
+                                                    <span className="text-xs font-medium text-earthy-700">Save this address for faster checkout in future</span>
+                                                </label>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={handleSaveAndProceed}
+                                                    className="w-full mt-2 bg-earthy-900 hover:bg-earthy-800 text-white py-2.5 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2"
+                                                >
+                                                    <span>Save & Continue to Payment</span>
+                                                    <ArrowRight size={15} />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                ) : (
+                                    <div className="bg-earthy-50/60 rounded-xl p-3 sm:p-4 border border-earthy-100 text-xs sm:text-sm space-y-1 w-full min-w-0">
+                                        <div className="flex items-center justify-between">
+                                            <p className="font-bold text-earthy-900 flex items-center gap-1.5 truncate">
+                                                <User size={14} className="text-organic-600 shrink-0" />
                                                 {formData.firstName} {formData.lastName}
                                             </p>
-                                            <p className="text-earthy-600 text-fluid-sm flex items-center gap-fluid-xs pl-fluid-md leading-tight">
-                                                <span className="text-organic-600 font-medium">contact:</span> {formData.mobile}
-                                            </p>
-                                            <p className="text-earthy-600 text-fluid-sm flex items-center gap-fluid-xs pl-fluid-md leading-tight">
-                                                <span className="text-organic-600 font-medium">email:</span> {formData.email}
-                                            </p>
-                                            <p className="text-earthy-600 text-fluid-sm flex items-start gap-fluid-xs pl-fluid-md leading-tight">
-                                                <span className="text-organic-600 font-medium shrink-0">to:</span>
-                                                <span className="line-clamp-2">{formData.address}, {formData.pincode}</span>
-                                            </p>
+                                            <span className="px-2 py-0.5 bg-earthy-200/80 text-earthy-800 rounded text-[10px] font-bold uppercase">
+                                                {formData.addressType || 'Home'}
+                                            </span>
                                         </div>
-                                        <button onClick={() => setStep(1)} className="px-fluid-md py-[clamp(0.375rem,1vw,0.625rem)] bg-white border border-earthy-200 rounded-fluid-lg text-fluid-sm font-bold text-organic-700 hover:bg-organic-50 transition-colors shadow-sm shrink-0 ml-2">
-                                            Edit
-                                        </button>
-                                    </motion.div>
+                                        <p className="text-earthy-600 truncate"><span className="font-medium text-earthy-400">Mobile:</span> {formData.mobile}</p>
+                                        <p className="text-earthy-600 break-words"><span className="font-medium text-earthy-400">Address:</span> {formData.address}, PIN: {formData.pincode}</p>
+                                    </div>
                                 )}
                             </AnimatePresence>
-                        </motion.div>
+                        </div>
 
-                        {/* Step 2: Payment */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className={`bg-white/80 backdrop-blur-xl rounded-fluid-2xl p-fluid-xl shadow-sm border transition-all duration-500 ${step === 2 ? 'border-organic-500 ring-1 ring-organic-200 shadow-xl' : 'border-white/50 opacity-60'}`}
-                        >
-                            <h2 className="text-fluid-xl font-display font-bold text-earthy-900 mb-fluid-lg flex items-center gap-fluid-sm">
-                                <span className={`px-4 py-1.5 rounded-full text-fluid-sm font-bold tracking-wide ${step === 2 ? 'bg-organic-600 text-white shadow-organic-200 shadow-lg' : 'bg-earthy-100 text-earthy-500'}`}>
+                        {/* Step 2: Payment Method */}
+                        <div className={`bg-white rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-7 shadow-sm border transition-all duration-300 ${step === 2 ? 'border-organic-500 ring-2 ring-organic-100 shadow-md' : 'border-earthy-100'}`}>
+                            <h2 className="text-base sm:text-lg md:text-xl font-display font-bold text-earthy-900 mb-4 flex items-center gap-2">
+                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${step === 2 ? 'bg-organic-600 text-white' : 'bg-earthy-100 text-earthy-500'}`}>
                                     Step 2
                                 </span>
-                                Payment Method
+                                <span>Payment Method</span>
                             </h2>
 
                             <AnimatePresence>
@@ -266,251 +550,181 @@ const Checkout = () => {
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
-                                        className="space-y-6"
+                                        className="space-y-4"
                                     >
-                                        <div className="space-y-4">
-                                            {/* Helper Text */}
-                                            <p className="text-earthy-500 text-sm font-medium ml-1">Select your preferred payment mode</p>
+                                        <p className="text-earthy-500 text-xs sm:text-sm font-medium">Select your preferred payment mode</p>
 
-                                            {/* Option 1: Card */}
-                                            <label className="relative block cursor-pointer group mb-4">
-                                                <input
-                                                    type="radio"
-                                                    name="payment"
-                                                    checked={paymentMethod === 'card'}
-                                                    onChange={() => setPaymentMethod('card')}
-                                                    className="peer sr-only"
-                                                />
-                                                <div className={`p-4 md:p-6 bg-gradient-to-br from-white to-organic-50/30 border-2 rounded-2xl md:rounded-3xl transition-all duration-300 shadow-md relative overflow-hidden ${paymentMethod === 'card' ? 'border-organic-500 shadow-organic-100 ring-2 md:ring-4 ring-organic-50' : 'border-earthy-100 hover:border-organic-200'}`}>
-
-                                                    {/* Header Row */}
-                                                    <div className="flex items-start justify-between mb-3 md:mb-4">
-                                                        <div className="flex items-center gap-3 md:gap-4">
-                                                            <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center shadow-inner transition-colors ${paymentMethod === 'card' ? 'bg-organic-100 text-organic-600' : 'bg-earthy-50 text-earthy-400'}`}>
-                                                                <CreditCard size={20} className="md:w-7 md:h-7" />
-                                                            </div>
-                                                            <div>
-                                                                <p className="font-display font-bold text-earthy-900 text-sm md:text-lg leading-tight">Credit / Debit Card</p>
-                                                                <p className="text-[10px] md:text-sm font-medium text-organic-600">Secure payment via Stripe</p>
-                                                            </div>
+                                        {/* Option 1: Card */}
+                                        <label className="block cursor-pointer">
+                                            <input
+                                                type="radio"
+                                                name="payment"
+                                                checked={paymentMethod === 'card'}
+                                                onChange={() => setPaymentMethod('card')}
+                                                className="sr-only"
+                                            />
+                                            <div className={`p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border-2 transition-all ${paymentMethod === 'card' ? 'border-organic-600 bg-organic-50/40 ring-2 ring-organic-100' : 'border-earthy-100 bg-white hover:border-earthy-200'}`}>
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${paymentMethod === 'card' ? 'bg-organic-100 text-organic-700' : 'bg-earthy-100 text-earthy-500'}`}>
+                                                            <CreditCard size={18} />
                                                         </div>
-
-                                                        {/* Selected Indicator */}
-                                                        {paymentMethod === 'card' && (
-                                                            <div className="w-8 h-8 rounded-full bg-organic-500 text-white flex items-center justify-center shadow-lg transform scale-100 transition-transform duration-300">
-                                                                <CheckCircle size={18} fill="currentColor" className="text-white" />
-                                                            </div>
-                                                        )}
-                                                    </div>
-
-                                                    {/* Trust Badges / Info */}
-                                                    <div className="space-y-2 md:space-y-3 pl-2 md:pl-[4.5rem]">
-                                                        <div className="flex flex-wrap gap-1.5 md:gap-2 mb-2 md:mb-4">
-                                                            {['Visa', 'Mastercard', 'RuPay'].map(brand => (
-                                                                <div key={brand} className="px-2 py-0.5 md:px-3 md:py-1 bg-white border border-earthy-100 rounded md:rounded-lg text-[10px] md:text-xs font-bold text-earthy-600 shadow-sm">
-                                                                    {brand}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-
-                                                        <div className="space-y-1.5 md:space-y-2 text-[10px] md:text-xs font-medium text-earthy-500">
-                                                            <div className="flex items-center gap-1.5 md:gap-2">
-                                                                <ShieldCheck size={12} className="text-organic-500 md:w-[14px] md:h-[14px]" />
-                                                                <span>256-bit SSL encrypted transactions</span>
-                                                            </div>
-                                                            <div className="flex items-center gap-1.5 md:gap-2">
-                                                                <ShieldCheck size={12} className="text-organic-500 md:w-[14px] md:h-[14px]" />
-                                                                <span>PCI-DSS compliant payment gateway</span>
-                                                            </div>
-                                                            <div className="flex items-center gap-1.5 md:gap-2">
-                                                                <div className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full border border-organic-500 flex items-center justify-center text-organic-500 text-[8px] font-bold">↺</div>
-                                                                <span>Easy refund & cancellation support</span>
-                                                            </div>
+                                                        <div>
+                                                            <p className="font-bold text-earthy-900 text-xs sm:text-sm">Credit / Debit Card</p>
+                                                            <p className="text-[10px] sm:text-xs text-earthy-400">Visa, Mastercard, RuPay & more</p>
                                                         </div>
                                                     </div>
-
-                                                    {/* Subtle Glow Effect */}
                                                     {paymentMethod === 'card' && (
-                                                        <div className="absolute top-0 right-0 w-64 h-64 bg-organic-400/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                                                        <div className="w-5 h-5 rounded-full bg-organic-600 text-white flex items-center justify-center">
+                                                            <CheckCircle size={14} />
+                                                        </div>
                                                     )}
                                                 </div>
-                                            </label>
+                                                <div className="flex gap-1.5 pt-1 pl-12">
+                                                    {['Visa', 'Mastercard', 'RuPay'].map(brand => (
+                                                        <span key={brand} className="px-2 py-0.5 bg-white border border-earthy-200 rounded text-[10px] font-bold text-earthy-600">
+                                                            {brand}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </label>
 
-                                            {/* Option 2: UPI */}
-                                            <div className="relative group mb-4">
-                                                {/* Header to toggle UPI selection */}
-                                                <div
-                                                    onClick={() => setPaymentMethod('upi')}
-                                                    className={`cursor-pointer p-6 bg-gradient-to-br from-white to-organic-50/30 border-2 rounded-3xl transition-all duration-300 shadow-md relative overflow-hidden ${paymentMethod === 'upi' ? 'border-organic-500 shadow-organic-100 ring-4 ring-organic-50' : 'border-earthy-100 hover:border-organic-200'}`}
-                                                >
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner transition-colors ${paymentMethod === 'upi' ? 'bg-organic-100 text-organic-600' : 'bg-earthy-50 text-earthy-400'}`}>
-                                                                <Smartphone size={28} />
-                                                            </div>
-                                                            <div className="min-w-0">
-                                                                <p className="font-display font-bold text-earthy-900 text-sm md:text-lg leading-tight truncate">UPI Payment</p>
-                                                                <p className="text-[10px] md:text-sm font-medium text-earthy-500 truncate">Google Pay, PhonePe, Paytm, etc.</p>
-                                                            </div>
-                                                        </div>
-                                                        {paymentMethod === 'upi' && (
-                                                            <div className="w-8 h-8 rounded-full bg-organic-500 text-white flex items-center justify-center shadow-lg">
-                                                                <CheckCircle size={18} fill="currentColor" className="text-white" />
-                                                            </div>
-                                                        )}
+                                        {/* Option 2: UPI */}
+                                        <div
+                                            onClick={() => setPaymentMethod('upi')}
+                                            className={`cursor-pointer p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border-2 transition-all ${paymentMethod === 'upi' ? 'border-organic-600 bg-organic-50/40 ring-2 ring-organic-100' : 'border-earthy-100 bg-white hover:border-earthy-200'}`}
+                                        >
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${paymentMethod === 'upi' ? 'bg-organic-100 text-organic-700' : 'bg-earthy-100 text-earthy-500'}`}>
+                                                        <Smartphone size={18} />
                                                     </div>
+                                                    <div>
+                                                        <p className="font-bold text-earthy-900 text-xs sm:text-sm">UPI Payment</p>
+                                                        <p className="text-[10px] sm:text-xs text-earthy-400">Google Pay, PhonePe, Paytm QR</p>
+                                                    </div>
+                                                </div>
+                                                {paymentMethod === 'upi' && (
+                                                    <div className="w-5 h-5 rounded-full bg-organic-600 text-white flex items-center justify-center">
+                                                        <CheckCircle size={14} />
+                                                    </div>
+                                                )}
+                                            </div>
 
-                                                    {/* Expanded Content for UPI */}
-                                                    <AnimatePresence>
-                                                        {paymentMethod === 'upi' && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, height: 0 }}
-                                                                animate={{ opacity: 1, height: 'auto' }}
-                                                                exit={{ opacity: 0, height: 0 }}
-                                                                className="overflow-hidden"
+                                            {/* UPI Expandable Apps */}
+                                            {paymentMethod === 'upi' && (
+                                                <div className="mt-3 pt-3 border-t border-earthy-200/60" onClick={(e) => e.stopPropagation()}>
+                                                    <p className="text-xs font-bold text-earthy-700 mb-2">Select app to generate QR Code:</p>
+                                                    <div className="flex gap-2">
+                                                        {['Google Pay', 'PhonePe', 'Paytm'].map(app => (
+                                                            <button
+                                                                key={app}
+                                                                type="button"
+                                                                onClick={() => handleUpiAppSelect(app)}
+                                                                className={`flex-1 py-1.5 px-2 rounded-lg border font-bold text-xs transition-all ${selectedUpiApp === app ? 'border-organic-600 bg-organic-600 text-white shadow-sm' : 'border-earthy-200 bg-white text-earthy-700 hover:bg-earthy-50'}`}
                                                             >
-                                                                <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-dashed border-earthy-200">
-                                                                    <p className="text-xs md:text-sm font-semibold text-earthy-600 mb-3 md:mb-4 ml-1">Select your app to generate Payment QR</p>
-
-                                                                    <div className="flex flex-wrap gap-2 md:gap-3 mb-2 p-1">
-                                                                        {['Google Pay', 'PhonePe', 'Paytm'].map(app => (
-                                                                            <button
-                                                                                key={app}
-                                                                                onClick={(e) => {
-                                                                                    e.stopPropagation();
-                                                                                    handleUpiAppSelect(app);
-                                                                                }}
-                                                                                className={`flex-1 min-w-[80px] md:min-w-[100px] flex items-center justify-center py-2 md:py-3 px-3 md:px-4 rounded-xl border-2 font-bold text-xs md:text-sm transition-all duration-200 whitespace-nowrap ${selectedUpiApp === app ? 'border-organic-600 bg-organic-600 text-white shadow-lg shadow-organic-200 transform scale-105' : 'border-earthy-100 bg-white text-earthy-600 hover:border-organic-300 hover:bg-organic-50'}`}
-                                                                            >
-                                                                                {app}
-                                                                            </button>
-                                                                        ))}
-                                                                    </div>
-
-                                                                    <AnimatePresence mode="wait">
-                                                                        {selectedUpiApp && (
-                                                                            <motion.div
-                                                                                key={selectedUpiApp} // Remounts to simulate generating new QR
-                                                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                                                exit={{ opacity: 0, scale: 0.9 }}
-                                                                                className="mt-4 md:mt-6 bg-white p-4 md:p-6 rounded-2xl border border-earthy-100 shadow-inner flex flex-col items-center relative overflow-hidden"
-                                                                            >
-                                                                                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-organic-400 via-yellow-400 to-organic-400 animate-pulse" />
-
-                                                                                <p className="text-xs md:text-sm font-bold text-earthy-900 mb-3 md:mb-4 text-center">
-                                                                                    Scan with <span className="text-organic-600">{selectedUpiApp}</span> to Pay <span className="text-base md:text-lg">₹{total}</span>
-                                                                                </p>
-
-                                                                                <div className="p-2 md:p-3 bg-white rounded-xl md:rounded-2xl shadow-sm border border-earthy-100 mb-3 md:mb-4 relative group">
-                                                                                    <img
-                                                                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=shop@upi&pn=OrganicShop&am=${total}&tn=${selectedUpiApp}`}
-                                                                                        alt="Payment QR Code"
-                                                                                        className="w-32 h-32 md:w-44 md:h-44 object-contain rounded-lg md:rounded-xl mix-blend-multiply"
-                                                                                    />
-                                                                                    {/* Corner Accents */}
-                                                                                    <div className="absolute top-2 left-2 w-3 h-3 md:w-4 md:h-4 border-l-2 border-t-2 border-organic-500 rounded-tl-lg" />
-                                                                                    <div className="absolute top-2 right-2 w-3 h-3 md:w-4 md:h-4 border-r-2 border-t-2 border-organic-500 rounded-tr-lg" />
-                                                                                    <div className="absolute bottom-2 left-2 w-3 h-3 md:w-4 md:h-4 border-l-2 border-b-2 border-organic-500 rounded-bl-lg" />
-                                                                                    <div className="absolute bottom-2 right-2 w-3 h-3 md:w-4 md:h-4 border-r-2 border-b-2 border-organic-500 rounded-br-lg" />
-                                                                                </div>
-
-                                                                                {/* Timer */}
-                                                                                <div className={`flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs font-mono font-bold px-3 py-1 md:px-4 md:py-2 rounded-full transition-colors ${timer < 60 ? 'bg-red-50 text-red-600 animate-pulse' : 'bg-organic-50 text-organic-700'}`}>
-                                                                                    <Clock size={12} className={timer < 60 ? 'text-red-500 md:w-[14px] md:h-[14px]' : 'text-organic-500 md:w-[14px] md:h-[14px]'} />
-                                                                                    Expires in {formatTime(timer)}
-                                                                                </div>
-                                                                            </motion.div>
-                                                                        )}
-                                                                    </AnimatePresence>
-                                                                </div>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
-                                            </div>
-
-                                            {/* Option 3: COD (Disabled) */}
-                                            <div className="relative group opacity-60 grayscale cursor-not-allowed">
-                                                <div className="p-6 bg-earthy-50/50 border border-earthy-100 rounded-3xl flex items-center gap-4">
-                                                    <div className="w-14 h-14 rounded-2xl bg-earthy-100 text-earthy-400 flex items-center justify-center">
-                                                        <Truck size={28} />
+                                                                {app}
+                                                            </button>
+                                                        ))}
                                                     </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="flex justify-between items-center mb-0.5 md:mb-1">
-                                                            <p className="font-display font-bold text-earthy-700 text-sm md:text-lg truncate">Cash on Delivery</p>
-                                                            <div className="bg-earthy-200/50 p-1 md:p-1.5 rounded-lg text-earthy-500 shrink-0">
-                                                                <div className="w-3 h-3 md:w-4 md:h-4"><ShieldCheck className="w-full h-full" /></div>
+
+                                                    {selectedUpiApp && (
+                                                        <div className="mt-3 bg-white p-3 sm:p-4 rounded-xl border border-earthy-200 flex flex-col items-center">
+                                                            <p className="text-xs font-bold text-earthy-900 mb-2">
+                                                                Scan with <span className="text-organic-600">{selectedUpiApp}</span> to Pay ₹{total}
+                                                            </p>
+                                                            <img
+                                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=upi://pay?pa=Purazya@upi&pn=Purazya&am=${total}&tn=${selectedUpiApp}`}
+                                                                alt="UPI QR"
+                                                                className="w-28 h-28 sm:w-36 sm:h-36 object-contain rounded-lg border border-earthy-100 p-1"
+                                                            />
+                                                            <div className="mt-2 flex items-center gap-1 text-[11px] font-mono font-bold text-organic-700 bg-organic-50 px-2.5 py-1 rounded-full">
+                                                                <Clock size={12} />
+                                                                <span>Expires in {formatTime(timer)}</span>
                                                             </div>
                                                         </div>
-                                                        <p className="text-[10px] md:text-sm font-medium text-earthy-400 truncate">Currently unavailable for your location</p>
-                                                    </div>
+                                                    )}
                                                 </div>
-                                            </div>
+                                            )}
                                         </div>
 
-                                        <div className="pt-4">
+                                        {/* Option 3: COD (Disabled) */}
+                                        <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-earthy-100 bg-earthy-50/50 opacity-60 flex items-center justify-between cursor-not-allowed">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-9 h-9 rounded-xl bg-earthy-200 text-earthy-400 flex items-center justify-center">
+                                                    <Truck size={18} />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-earthy-700 text-xs sm:text-sm">Cash on Delivery</p>
+                                                    <p className="text-[10px] text-earthy-400">Currently unavailable</p>
+                                                </div>
+                                            </div>
+                                            <span className="text-[10px] font-bold text-earthy-400 bg-earthy-200 px-2 py-0.5 rounded">Disabled</span>
+                                        </div>
+
+                                        {/* Pay Button */}
+                                        <div className="pt-3">
                                             <button
+                                                type="button"
                                                 onClick={handlePlaceOrder}
                                                 disabled={isSubmitting || (paymentMethod === 'upi' && !selectedUpiApp)}
-                                                className={`w-full group relative overflow-hidden bg-gradient-to-r from-[#1A3019] to-[#254024] text-white py-3.5 md:py-5 rounded-xl md:rounded-2xl font-bold text-base md:text-lg tracking-wide shadow-[0_20px_40px_-15px_rgba(26,48,25,0.3)] hover:shadow-[0_25px_50px_-12px_rgba(26,48,25,0.4)] transition-all duration-300 flex flex-col items-center justify-center gap-1 ${(isSubmitting || (paymentMethod === 'upi' && !selectedUpiApp)) ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-1'}`}
+                                                className={`w-full bg-organic-700 hover:bg-organic-800 text-white py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base tracking-wide shadow-lg shadow-organic-700/25 transition-all flex items-center justify-center gap-2 ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
                                             >
-                                                <div className="relative z-10 flex items-center gap-2 md:gap-3">
-                                                    {isSubmitting ? 'PROCESSING...' : `PAY ₹${total}`}
-                                                    {!isSubmitting && <ArrowLeft size={18} className="rotate-180 group-hover:translate-x-1 transition-transform md:w-5 md:h-5" />}
-                                                </div>
-                                                {/* Shimmer Effect */}
-                                                {!isSubmitting && (paymentMethod !== 'upi' || selectedUpiApp) && <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />}
+                                                <span>{isSubmitting ? 'Processing Payment...' : `Pay ₹${total}`}</span>
+                                                {!isSubmitting && <ArrowRight size={18} />}
                                             </button>
 
-                                            <div className="mt-3 md:mt-4 flex items-center justify-center gap-1.5 md:gap-2 text-[10px] md:text-xs font-semibold text-organic-700/70">
-                                                <ShieldCheck size={12} className="md:w-[14px] md:h-[14px]" />
-                                                Payments are secure and encrypted
+                                            <div className="mt-2.5 flex items-center justify-center gap-1.5 text-earthy-400 text-[11px] font-medium">
+                                                <ShieldCheck size={14} className="text-emerald-600" />
+                                                <span>256-Bit SSL Encrypted & PCI-DSS Compliant</span>
                                             </div>
                                         </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
-                        </motion.div>
+                        </div>
                     </div>
 
                     {/* Right Column: Order Summary */}
-                    <div className="lg:col-span-5 relative">
-                        <div className="bg-white/90 backdrop-blur-xl rounded-fluid-2xl p-fluid-xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-white/60 ring-1 ring-earthy-100 sticky top-24 md:top-32 overflow-hidden">
-                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-organic-400 via-yellow-400 to-earthy-400" />
+                    <div className="lg:col-span-5 sticky top-24 md:top-32 w-full">
+                        <div className="bg-white rounded-2xl md:rounded-3xl shadow-lg border border-earthy-100 p-4 sm:p-6 md:p-7 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-organic-500 to-emerald-400" />
 
-                            <h3 className="text-fluid-2xl font-display font-bold text-earthy-900 mb-fluid-lg flex items-center justify-between">
-                                Order Summary
-                                <span className="text-fluid-sm font-sans font-medium text-earthy-500 bg-earthy-100 px-fluid-md py-fluid-xs rounded-full">{cart.length} items</span>
+                            <h3 className="text-lg sm:text-xl font-display font-bold text-earthy-900 mb-4 pb-2 border-b border-earthy-100 flex items-center justify-between">
+                                <span>Order Summary</span>
+                                <span className="text-xs font-sans font-semibold text-organic-700 bg-organic-50 px-2.5 py-0.5 rounded-full border border-organic-100">
+                                    {cart.length} {cart.length === 1 ? 'Item' : 'Items'}
+                                </span>
                             </h3>
 
-                            <div className="space-y-fluid-md mb-fluid-xl max-h-[300px] md:max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+                            {/* Product List */}
+                            <div className="space-y-3 mb-4 max-h-56 sm:max-h-64 overflow-y-auto no-scrollbar pr-1">
                                 {cart.map(item => (
-                                    <div key={item.id} className="flex gap-fluid-sm group">
-                                        <div className="w-[clamp(3rem,8vw,5rem)] h-[clamp(3rem,8vw,5rem)] rounded-fluid-lg bg-earthy-50 overflow-hidden shrink-0 border border-earthy-100 relative">
-                                            <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                    <div key={item.id} className="flex items-center gap-3 p-2 rounded-xl bg-earthy-50/50 border border-earthy-100/80">
+                                        <img src={item.image} alt={item.name} className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg object-cover shrink-0 border border-earthy-100" />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-bold text-earthy-900 text-xs sm:text-sm truncate">{item.name}</p>
+                                            <p className="text-[11px] text-earthy-400">Qty: <span className="font-bold text-earthy-700">{item.quantity}</span></p>
                                         </div>
-                                        <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                            <p className="font-bold text-earthy-900 line-clamp-1 text-fluid-lg leading-tight mb-0.5 md:mb-1">{item.name}</p>
-                                            <p className="text-fluid-xs text-earthy-500 font-medium">Qty: <span className="text-earthy-900">{item.quantity}</span></p>
-                                            <p className="text-fluid-base font-bold text-organic-700 mt-fluid-xs">₹{item.price * item.quantity}</p>
-                                        </div>
+                                        <span className="font-bold text-organic-700 text-xs sm:text-sm shrink-0">₹{item.price * item.quantity}</span>
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="pt-fluid-md border-t border-earthy-200/60 space-y-fluid-xs">
-                                <div className="flex justify-between text-earthy-600 text-fluid-base">
+                            {/* Totals */}
+                            <div className="space-y-2 pt-2 border-t border-earthy-100 text-xs sm:text-sm">
+                                <div className="flex justify-between text-earthy-600 font-medium">
                                     <span>Subtotal</span>
                                     <span className="font-bold text-earthy-900">₹{total}</span>
                                 </div>
-                                <div className="flex justify-between text-earthy-600 text-fluid-base">
-                                    <span>Shipping</span>
-                                    <span className="text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded text-fluid-sm">Free</span>
+                                <div className="flex justify-between text-earthy-600 font-medium">
+                                    <span>Delivery Charge</span>
+                                    <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded text-xs">FREE</span>
                                 </div>
-                                <div className="flex justify-between text-fluid-2xl font-display font-bold text-earthy-900 pt-fluid-md border-t border-dashed border-earthy-200 mt-fluid-md">
-                                    <span>Total</span>
-                                    <span>₹{total}</span>
+                                <div className="flex justify-between text-base sm:text-lg font-display font-bold text-earthy-900 pt-3 border-t border-dashed border-earthy-200">
+                                    <span>Total Payable</span>
+                                    <span className="text-organic-800">₹{total}</span>
                                 </div>
                             </div>
                         </div>

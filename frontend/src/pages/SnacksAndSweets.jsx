@@ -6,6 +6,7 @@ import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
 import { fetchWithCache } from '../utils/apiCache';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
+import { API_URL } from '../config/api';
 
 const SnacksAndSweets = () => {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ const SnacksAndSweets = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const data = await fetchWithCache('http://localhost:5001/api/products?category=Snacks%20%26%20Sweets');
+                const data = await fetchWithCache(`${API_URL}/products?category=Snacks%20%26%20Sweets`);
                 const mapped = data.map(p => ({
                         id: p.id,
                         name: p.name,
@@ -136,7 +137,6 @@ const SnacksAndSweets = () => {
                                     <Link to={`/product/${product.id}`} className="block">
                                         <h3 className="text-[clamp(0.75rem,2vw,1.25rem)] font-bold text-earthy-900 leading-tight mb-1 md:mb-2 hover:text-organic-700 transition-colors line-clamp-2 min-h-[2.5em] md:min-h-0">{product.name}</h3>
                                     </Link>
-                                    <p className="hidden md:block text-earthy-500 text-fluid-sm font-medium mb-fluid-md line-clamp-2 leading-relaxed">{product.description}</p>
 
                                     <div className="mt-auto flex items-center justify-between">
                                         <div>

@@ -23,6 +23,7 @@ import OrderHistory from './pages/OrderHistory';
 import AdminDashboard from './pages/AdminDashboard';
 import ScrollToTop from './components/ScrollToTop';
 import axios from 'axios';
+import { API_URL } from './config/api';
 
 // Ensure fresh data on every request
 axios.interceptors.request.use(config => {
@@ -34,19 +35,19 @@ axios.interceptors.request.use(config => {
   console.log(`[API] ${config.method.toUpperCase()} request to ${config.url}`);
   return config;
 });
+
 const AppContent = () => {
   const location = useLocation();
   const hideNavbarPaths = ['/login', '/register', '/admin'];
   const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
 
   useEffect(() => {
-    // Ping backend on every route change to ensure freshness/connectivity
-    // and satisfy the user's need to see network activity.
+    // Ping backend on route change to ensure freshness/connectivity
     const logNavigation = async () => {
       try {
-        await axios.get('http://localhost:5001/api/products?ping=true&limit=1');
+        await axios.get(`${API_URL}/products?ping=true&limit=1`);
       } catch (e) {
-        console.error("Navigation ping failed");
+        // Silent catch for initial render
       }
     };
     logNavigation();
