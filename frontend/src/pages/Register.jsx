@@ -112,19 +112,19 @@ const Register = () => {
                             Join thousands of families choosing purity over process. Real food, real health, real fast.
                         </p>
 
-                        <div className="space-y-fluid-xs">
+                        <div className="space-y-3">
                             {benefits.map((item, idx) => (
                                 <motion.div
                                     key={idx}
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: 0.4 + (idx * 0.1) }}
-                                    className="flex items-center gap-fluid-xs p-[clamp(0.5rem,1.5vw,0.75rem)] rounded-fluid-xl bg-white/5 backdrop-blur-sm border border-white/5 hover:bg-white/10 transition-colors group"
+                                    className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors group"
                                 >
-                                    <div className="w-[clamp(1.5rem,3vw,2rem)] h-[clamp(1.5rem,3vw,2rem)] rounded-full bg-organic-500/20 flex items-center justify-center text-organic-300 group-hover:scale-110 transition-transform duration-300">
-                                        <item.icon className="w-[clamp(0.875rem,1.5vw,1rem)] h-[clamp(0.875rem,1.5vw,1rem)]" />
+                                    <div className="w-8 h-8 rounded-full bg-organic-500/30 flex items-center justify-center text-organic-300 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                                        <item.icon className="w-4 h-4" />
                                     </div>
-                                    <span className="font-medium text-fluid-sm text-organic-50 tracking-wide">{item.text}</span>
+                                    <span className="font-medium text-sm text-organic-50 tracking-wide">{item.text}</span>
                                 </motion.div>
                             ))}
                         </div>
@@ -161,70 +161,68 @@ const Register = () => {
                             </motion.div>
                         )}
 
-                        <form onSubmit={handleSubmit} className="space-y-fluid-md">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-sm">
-                                <FormInput
-                                    label="Full Name"
-                                    icon={User}
-                                    name="name"
-                                    placeholder="John Carter"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                />
-                                <FormInput
-                                    label="Phone"
-                                    icon={Phone}
-                                    name="phone"
-                                    placeholder="+1 234 567 890"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                        <form onSubmit={handleSubmit} className="space-y-3.5">
+                            <FormInput
+                                label="Full Name"
+                                icon={User}
+                                name="name"
+                                placeholder="Enter your full name"
+                                value={formData.name}
+                                onChange={handleChange}
+                            />
 
                             <FormInput
                                 label="Email Address"
                                 icon={Mail}
                                 name="email"
                                 type="email"
-                                placeholder="john@example.com"
+                                placeholder="name@example.com"
                                 value={formData.email}
                                 onChange={handleChange}
                             />
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-fluid-sm">
-                                <FormInput
-                                    label="Password"
-                                    icon={Lock}
-                                    name="password"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                />
-                                <FormInput
-                                    label="Confirm Password"
-                                    icon={Lock}
-                                    name="confirmPassword"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                            <FormInput
+                                label="Phone Number"
+                                icon={Phone}
+                                name="phone"
+                                placeholder="Enter mobile number"
+                                value={formData.phone}
+                                onChange={handleChange}
+                            />
+
+                            <FormInput
+                                label="Password"
+                                icon={Lock}
+                                name="password"
+                                type="password"
+                                placeholder="Create password (min 6 chars)"
+                                value={formData.password}
+                                onChange={handleChange}
+                            />
+
+                            <FormInput
+                                label="Confirm Password"
+                                icon={Lock}
+                                name="confirmPassword"
+                                type="password"
+                                placeholder="Re-enter your password"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                            />
 
                             <motion.button
                                 whileHover={{ scale: 1.01 }}
                                 whileTap={{ scale: 0.99 }}
                                 type="submit"
                                 disabled={loading}
-                                className="w-full h-[clamp(2.5rem,6vw,3.25rem)] min-h-[46px] bg-gradient-to-r from-organic-800 to-organic-700 hover:from-organic-900 hover:to-organic-800 text-white rounded-fluid-xl font-bold transition-all duration-300 shadow-[0_10px_20px_-5px_rgba(22,101,52,0.3)] flex items-center justify-center gap-fluid-xs mt-fluid-xl text-fluid-base active:scale-95"
+                                className="w-full h-12 bg-gradient-to-r from-organic-800 to-organic-700 hover:from-organic-900 hover:to-organic-800 text-white rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 mt-5 text-sm active:scale-95"
                             >
-                                {loading ? <Loader2 className="animate-spin" /> : <>Complete Registration <ArrowRight className="w-[clamp(1rem,1.5vw,1.125rem)] h-[clamp(1rem,1.5vw,1.125rem)]" /></>}
+                                {loading ? <Loader2 className="animate-spin w-5 h-5" /> : <>Complete Registration <ArrowRight className="w-4 h-4" /></>}
                             </motion.button>
                         </form>
 
-                        <div className="mt-fluid-xl text-center">
-                            <p className="text-earthy-500 text-fluid-sm">
+                        <div className="mt-5 text-center">
+                            <p className="text-earthy-500 text-sm">
                                 Already have an account? {' '}
                                 <Link to="/login" className="text-organic-700 font-bold hover:text-organic-800 hover:underline decoration-2 underline-offset-4 transition-all">Sign In</Link>
                             </p>
@@ -242,23 +240,25 @@ const FormInput = ({ label, icon: Icon, type = "text", ...props }) => {
     const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
     return (
-        <div className="space-y-fluid-xs group">
-            <label className="text-fluid-xs font-bold text-earthy-500 uppercase tracking-wider ml-1 group-focus-within:text-organic-600 transition-colors duration-300">{label}</label>
-            <div className="relative">
-                <Icon className="absolute left-[clamp(0.75rem,1.5vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 group-focus-within:text-organic-600 transition-colors duration-300 w-[clamp(1rem,1.5vw,1.125rem)] h-[clamp(1rem,1.5vw,1.125rem)]" />
+        <div className="space-y-1 group">
+            <label className="text-xs font-bold text-earthy-600 uppercase tracking-wider ml-1 group-focus-within:text-organic-700 transition-colors block">
+                {label}
+            </label>
+            <div className="relative flex items-center">
+                <Icon className="absolute left-3.5 text-earthy-400 group-focus-within:text-organic-600 transition-colors w-4 h-4 pointer-events-none" />
                 <input
                     type={inputType}
                     required
-                    className={`w-full pl-[clamp(2.25rem,4vw,2.75rem)] ${isPassword ? 'pr-[clamp(2.5rem,4vw,3rem)]' : 'pr-[clamp(1rem,2vw,1.5rem)]'} py-[clamp(0.625rem,1.5vw,0.875rem)] rounded-fluid-xl border border-earthy-200 bg-earthy-50/50 focus:bg-white focus:ring-[3px] focus:ring-organic-100 focus:border-organic-500 outline-none transition-all duration-300 font-medium text-fluid-sm text-earthy-900 placeholder:text-earthy-300`}
+                    className={`w-full pl-10 ${isPassword ? 'pr-10' : 'pr-4'} py-2.5 rounded-xl border border-earthy-200 bg-earthy-50/60 focus:bg-white focus:ring-2 focus:ring-organic-500/20 focus:border-organic-600 outline-none transition-all font-medium text-sm text-earthy-900 placeholder:text-earthy-300`}
                     {...props}
                 />
                 {isPassword && (
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-[clamp(0.75rem,1.5vw,1rem)] top-1/2 -translate-y-1/2 text-earthy-400 hover:text-earthy-600 focus:text-organic-600 transition-colors outline-none"
+                        className="absolute right-3 text-earthy-400 hover:text-earthy-600 focus:text-organic-600 transition-colors outline-none p-1"
                     >
-                        {showPassword ? <EyeOff className="w-[clamp(1rem,1.5vw,1.125rem)] h-[clamp(1rem,1.5vw,1.125rem)]" /> : <Eye className="w-[clamp(1rem,1.5vw,1.125rem)] h-[clamp(1rem,1.5vw,1.125rem)]" />}
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                 )}
             </div>
