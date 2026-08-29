@@ -32,12 +32,13 @@ services:
       - key: SENDER_NAME
         value: Purezya Organic Foods
 
-# 2. Frontend Static Site (Vite React SPA - 100% Free on Render)
-staticSites:
-  - name: purezya-frontend
+  # 2. Frontend Static Site (Vite React SPA - 100% Free on Render)
+  - type: web
+    name: purezya-frontend
+    env: static
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishPath: dist
+    staticPublishPath: dist
     routes:
       - type: rewrite
         source: /*
