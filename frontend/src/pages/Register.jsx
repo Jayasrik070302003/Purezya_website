@@ -80,10 +80,10 @@ const Register = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="w-full max-w-lg lg:max-w-[min(1200px,100%)] z-10 grid grid-cols-1 lg:grid-cols-12 bg-white rounded-fluid-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden border border-white/50"
+                className="w-full max-w-md sm:max-w-lg lg:max-w-4xl z-10 grid grid-cols-1 lg:grid-cols-2 bg-white rounded-3xl shadow-[0_25px_70px_-15px_rgba(0,0,0,0.07)] overflow-hidden border border-earthy-100"
             >
                 {/* Left Side: Brand & Benefits (Hidden on Mobile, Visible on Desktop) */}
-                <div className="hidden lg:flex lg:col-span-5 relative bg-organic-900 p-[clamp(1.5rem,4vw,2.5rem)] text-white overflow-hidden flex-col justify-between min-h-[400px] lg:min-h-auto">
+                <div className="hidden lg:flex relative bg-organic-900 p-8 xl:p-10 text-white overflow-hidden flex-col justify-between min-h-[540px]">
                     {/* Decorative Patterns */}
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cube-coat.png')] opacity-5" />
                     <div className="absolute -right-20 -top-20 text-white/5 rotate-12 transform scale-150 pointer-events-none">
@@ -137,17 +137,17 @@ const Register = () => {
                                     <div key={i} className={`w-6 h-6 rounded-full border-2 border-organic-900 bg-organic-${i * 100 + 200}`} />
                                 ))}
                             </div>
-                            <p className="text-organic-200/80 text-xs font-semibold tracking-wider uppercase ml-2">Trusted by 50k+ Members</p>
+                            {/* <p className="text-organic-200/80 text-xs font-semibold tracking-wider uppercase ml-2">Trusted by 50k+ Members</p> */}
                         </div>
                     </div>
                 </div>
 
                 {/* Right Side: Form */}
-                <div className="col-span-1 lg:col-span-7 bg-white p-[clamp(1.25rem,4vw,2.5rem)] flex items-center justify-center">
+                <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10 bg-white">
                     <div className="w-full max-w-md mx-auto">
-                        <div className="mb-fluid-xl text-center lg:text-left">
-                            <h2 className="text-fluid-3xl font-display font-bold text-earthy-900 mb-fluid-xs">Create Account</h2>
-                            <p className="text-earthy-500 text-fluid-base">Sign up to start your organic journey</p>
+                        <div className="mb-6 text-center lg:text-left">
+                            <h2 className="text-2xl sm:text-3xl font-display font-bold text-earthy-900 mb-1">Create Account</h2>
+                            <p className="text-earthy-500 text-sm">Sign up to start your organic journey</p>
                         </div>
 
                         {error && (
