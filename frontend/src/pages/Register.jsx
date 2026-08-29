@@ -80,10 +80,10 @@ const Register = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="w-full max-w-[min(1200px,100%)] z-10 grid grid-cols-1 lg:grid-cols-12 bg-white rounded-fluid-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden border border-white/50"
+                className="w-full max-w-lg lg:max-w-[min(1200px,100%)] z-10 grid grid-cols-1 lg:grid-cols-12 bg-white rounded-fluid-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden border border-white/50"
             >
-                {/* Left Side: Brand & Benefits */}
-                <div className="lg:col-span-5 relative bg-organic-900 p-[clamp(1.5rem,4vw,2.5rem)] text-white overflow-hidden flex flex-col justify-between min-h-[400px] lg:min-h-auto">
+                {/* Left Side: Brand & Benefits (Hidden on Mobile, Visible on Desktop) */}
+                <div className="hidden lg:flex lg:col-span-5 relative bg-organic-900 p-[clamp(1.5rem,4vw,2.5rem)] text-white overflow-hidden flex-col justify-between min-h-[400px] lg:min-h-auto">
                     {/* Decorative Patterns */}
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cube-coat.png')] opacity-5" />
                     <div className="absolute -right-20 -top-20 text-white/5 rotate-12 transform scale-150 pointer-events-none">
@@ -143,7 +143,7 @@ const Register = () => {
                 </div>
 
                 {/* Right Side: Form */}
-                <div className="lg:col-span-7 bg-white p-[clamp(1.5rem,4vw,2.5rem)] flex items-center">
+                <div className="col-span-1 lg:col-span-7 bg-white p-[clamp(1.25rem,4vw,2.5rem)] flex items-center justify-center">
                     <div className="w-full max-w-md mx-auto">
                         <div className="mb-fluid-xl text-center lg:text-left">
                             <h2 className="text-fluid-3xl font-display font-bold text-earthy-900 mb-fluid-xs">Create Account</h2>
