@@ -45,7 +45,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: purazya-backend
-          property: host
+        sync: false # Set in Render Dashboard to your backend URL (e.g. https://purazya-backend.onrender.com)
