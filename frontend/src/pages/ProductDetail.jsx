@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
-import axios from 'axios';
+import { fetchWithCache } from '../utils/apiCache';
+import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -569,8 +570,7 @@ const ProductDetail = () => {
 
             // Otherwise fetch from database
             try {
-                const res = await axios.get('http://localhost:5001/api/products');
-                const found = res.data.find(p => p.id.toString() === id.toString());
+                const found = await fetchWithCache(`http://localhost:5001/api/products/${id}`);
                 if (found) {
                     setDynamicProduct({
                         id: found.id,
@@ -579,7 +579,7 @@ const ProductDetail = () => {
                         price: found.price,
                         rating: 5.0,
                         reviews: 0,
-                        image: found.image_url || '/placeholder-well.jpg',
+                        image: getOptimizedImageUrl(found.image_url, 800) || '/placeholder-well.jpg',
                         benefits: [
                             { icon: <Shield size={20} />, text: '100% Certified' },
                             { icon: <Leaf size={20} />, text: 'Naturally Grown' }
@@ -659,6 +659,7 @@ const ProductDetail = () => {
                                 <img
                                     src={product.image}
                                     alt={product.name}
+                                    loading="lazy"
                                     className="w-full h-full object-cover relative z-10 hover:scale-105 transition-transform duration-700 ease-out"
                                 />
 

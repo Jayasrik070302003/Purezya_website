@@ -4,7 +4,8 @@ import { ShoppingCart, Heart, ArrowLeft, Leaf, Star, Info, Package } from 'lucid
 import { Link, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
-import axios from 'axios';
+import { fetchWithCache } from '../utils/apiCache';
+import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 
 const MaltBeverages = () => {
     const navigate = useNavigate();
@@ -16,20 +17,18 @@ const MaltBeverages = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/products');
-                // Filter for Malt Beverages and map to match frontend structure
-                const filtered = res.data
-                    .filter(p => p.category === 'Malt Beverages')
-                    .map(p => ({
+                const data = await fetchWithCache('http://localhost:5001/api/products?category=Malt%20Beverages');
+                // Map to match frontend structure
+                const mapped = data.map(p => ({
                         id: p.id,
                         name: p.name,
                         description: p.description,
                         price: p.price,
                         rating: p.rating || 4.8, // Default rating
-                        image: p.image_url || '/placeholder-malt.jpg',
+                        image: getOptimizedImageUrl(p.image_url, 400) || '/placeholder-malt.jpg',
                         isDynamic: true
                     }));
-                setProducts(filtered);
+                setProducts(mapped);
             } catch (err) {
                 console.error("Error fetching products:", err);
             } finally {
@@ -82,6 +81,7 @@ const MaltBeverages = () => {
                                     <img
                                         src={product.image}
                                         alt={product.name}
+                                        loading="lazy"
                                         className="w-full h-full object-cover"
                                     />
                                 </Link>

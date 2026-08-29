@@ -8,6 +8,11 @@ const auth = require('../middleware/auth');
 // @access  Public
 router.get('/', productController.getAllProducts);
 
+// @route   GET api/products/:id
+// @desc    Get product by ID
+// @access  Public
+router.get('/:id', productController.getProductById);
+
 // @route   POST api/products
 // @desc    Create a new product
 // @access  Private (Admin)

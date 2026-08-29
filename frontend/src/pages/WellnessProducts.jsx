@@ -4,7 +4,8 @@ import { ShoppingCart, Heart, ArrowLeft, Leaf, Star, Sparkles } from 'lucide-rea
 import { Link, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
-import axios from 'axios';
+import { fetchWithCache } from '../utils/apiCache';
+import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 
 const WellnessProducts = () => {
     const navigate = useNavigate();
@@ -16,20 +17,18 @@ const WellnessProducts = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/products');
-                const filtered = res.data
-                    .filter(p => p.category === 'Wellness Products')
-                    .map(p => ({
+                const data = await fetchWithCache('http://localhost:5001/api/products?category=Wellness%20Products');
+                const mapped = data.map(p => ({
                         id: p.id,
                         name: p.name,
                         description: p.description,
                         price: p.price,
                         rating: p.rating || 4.9,
-                        image: p.image_url || '/placeholder-well.jpg',
+                        image: getOptimizedImageUrl(p.image_url, 400) || '/placeholder-well.jpg',
                         category: p.category,
                         isDynamic: true
                     }));
-                setProducts(filtered);
+                setProducts(mapped);
             } catch (err) {
                 console.error("Error fetching products:", err);
             } finally {
@@ -216,6 +215,7 @@ const WellnessProducts = () => {
                                 <img
                                     src={product.image}
                                     alt={product.name}
+                                    loading="lazy"
                                     className="w-full h-full object-cover"
                                 />
                                 <button

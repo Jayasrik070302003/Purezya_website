@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { Search, Leaf, ArrowRight, Sun } from 'lucide-react';
+import { Search, Leaf, ArrowRight, Sun, Sunrise, Sunset, Moon, Coffee, Wheat, Candy, Utensils, HeartPulse } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { productDatabase } from '../data/products';
 
@@ -48,10 +48,10 @@ const Dashboard = () => {
     const hour = new Date().getHours();
 
     const getGreetingDetails = (h) => {
-        if (h >= 5 && h < 12) return { text: 'Good Morning', icon: '🌅' };
-        if (h >= 12 && h < 16) return { text: 'Good Afternoon', icon: '☀️' };
-        if (h >= 16 && h < 20) return { text: 'Good Evening', icon: '🌆' };
-        return { text: 'Good Night', icon: '🌙' };
+        if (h >= 5 && h < 12) return { text: 'Good Morning', icon: <Sunrise size={24} /> };
+        if (h >= 12 && h < 16) return { text: 'Good Afternoon', icon: <Sun size={24} /> };
+        if (h >= 16 && h < 20) return { text: 'Good Evening', icon: <Sunset size={24} /> };
+        return { text: 'Good Night', icon: <Moon size={24} /> };
     };
 
     const { text: greetingText, icon: greetingIcon } = getGreetingDetails(hour);
@@ -70,15 +70,13 @@ const Dashboard = () => {
     );
 
     return (
-        <div className="min-h-screen pt-20 md:pt-32 pb-20 px-4 sm:px-8 lg:px-12 bg-[#FDFCF8] relative overflow-hidden font-sans">
+        <div className="min-h-screen pt-16 md:pt-32 pb-12 md:pb-20 px-3 sm:px-8 lg:px-12 bg-[#FDFCF8] relative overflow-hidden font-sans">
             <div className="max-w-[1400px] mx-auto relative z-10">
                 {/* Organic Background Blobs for Header */}
                 <div className="absolute top-0 left-0 -z-10 translate-y-[-20%] translate-x-[-10%] w-[600px] h-[600px] bg-gradient-to-br from-organic-100/30 to-earthy-100/30 rounded-full blur-[120px] pointer-events-none" />
 
                 {/* Hero Banner Section */}
-                {/* Hero Banner Section */}
-                {/* Hero Banner Section */}
-                <div className="relative rounded-fluid-2xl bg-[#1a3c1e] overflow-hidden p-fluid-xl mb-fluid-2xl shadow-[0_40px_80px_-20px_rgba(20,50,20,0.4)] border border-white/10 group isolation-auto">
+                <div className="relative rounded-2xl md:rounded-fluid-2xl bg-[#1a3c1e] overflow-hidden p-4 sm:p-6 md:p-fluid-xl mb-6 md:mb-fluid-2xl shadow-[0_40px_80px_-20px_rgba(20,50,20,0.4)] border border-white/10 group isolation-auto">
                     {/* Rich Animated Gradient Background */}
                     <div className="absolute inset-0 bg-gradient-to-br from-[#1A3C1E] via-[#2D5A27] to-[#142915] z-0" />
 
@@ -151,9 +149,9 @@ const Dashboard = () => {
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
 
                     {/* Content Grid */}
-                    <div className="relative z-10 grid lg:grid-cols-12 gap-0 lg:gap-8 items-center">
+                    <div className="relative z-10 grid lg:grid-cols-12 gap-0 lg:gap-8 items-center min-w-0">
                         {/* Left Side: Text & Actions (7 cols) */}
-                        <div className="lg:col-span-7 flex flex-col justify-center py-1 md:py-0">
+                        <div className="lg:col-span-7 flex flex-col justify-center py-1 md:py-0 min-w-0">
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -165,25 +163,25 @@ const Dashboard = () => {
                                     <span className="text-organic-100 text-fluid-xs font-bold uppercase tracking-[0.2em]">{hour < 12 ? 'Fresh Start' : hour < 17 ? 'Sun-Kissed' : 'Unwind'}</span>
                                 </div>
 
-                                <div className="mb-fluid-md relative text-left z-20">
-                                    <h1 className="text-fluid-4xl font-sans font-bold text-white leading-tight tracking-tight drop-shadow-sm flex flex-row items-center justify-start gap-fluid-sm mb-1 md:mb-0">
-                                        <span>{greetingText},</span>
+                                <div className="mb-fluid-md relative text-left z-20 min-w-0">
+                                    <h1 className="text-3xl sm:text-4xl md:text-fluid-4xl font-sans font-bold text-white leading-tight tracking-tight drop-shadow-sm flex flex-row items-center justify-start gap-fluid-sm mb-1 md:mb-0 flex-wrap min-w-0">
+                                        <span className="truncate max-w-full">{greetingText},</span>
                                         <motion.span
                                             animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
                                             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                            className="inline-block text-2xl md:text-5xl lg:text-5xl shadow-xl drop-shadow-2xl"
+                                            className="inline-block text-2xl md:text-5xl lg:text-5xl shadow-xl drop-shadow-2xl shrink-0"
                                         >
                                             {greetingIcon}
                                         </motion.span>
                                     </h1>
-                                    <div className="mt-1 md:mt-2 px-0.5">
-                                        <span className="block pt-0.5 text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8E7] via-[#F5E6D3] to-[#E6B800] font-serif italic font-medium tracking-wide text-fluid-5xl filter drop-shadow-md opacity-100 leading-normal">
+                                    <div className="mt-1 md:mt-2 px-0.5 min-w-0">
+                                        <span className="block pt-0.5 text-transparent bg-clip-text bg-gradient-to-r from-[#FFF8E7] via-[#F5E6D3] to-[#E6B800] font-serif italic font-medium tracking-wide text-4xl sm:text-5xl md:text-fluid-5xl filter drop-shadow-md opacity-100 leading-tight md:leading-normal break-words whitespace-normal min-w-0">
                                             {user?.name || 'Nature Lover'}
                                         </span>
                                     </div>
                                 </div>
 
-                                <p className="text-[#dcfce7]/90 text-fluid-base mb-fluid-lg w-full max-w-none md:max-w-lg font-medium leading-relaxed text-left">
+                                <p className="text-[#dcfce7]/90 text-sm md:text-fluid-base mb-fluid-lg w-full max-w-none md:max-w-lg font-medium leading-relaxed text-left min-w-0 break-words">
                                     Step into your personal organic sanctuary.
                                     <span className="text-white block mt-0.5 md:mt-1">We've curated the season's finest harvest just for you.</span>
                                 </p>
@@ -200,7 +198,7 @@ const Dashboard = () => {
                                         <img
                                             src="/hero-products.jpg"
                                             alt="Purezya Organic Products"
-                                            className="w-full h-[clamp(14rem,35vw,20rem)] object-cover transform hover:scale-105 transition-transform duration-700"
+                                            className="w-full h-auto aspect-[4/3] object-cover transform hover:scale-105 transition-transform duration-700"
                                         />
 
                                         {/* Floating Gold Dots Overlay */}
@@ -238,15 +236,15 @@ const Dashboard = () => {
 
                                 {/* Floating Search Bar */}
                                 <div className="flex justify-start w-full">
-                                    <div className="group relative bg-white/10 backdrop-blur-2xl p-fluid-xs rounded-fluid-xl shadow-[0_20px_40px_-5px_rgba(0,0,0,0.2)] border border-white/20 flex items-center w-full max-w-xl transition-all duration-500 hover:bg-white/15 focus-within:bg-white/20 focus-within:shadow-[0_0_30px_rgba(74,222,128,0.2)] ring-1 ring-white/10 focus-within:ring-2 focus-within:ring-organic-300/60 overflow-hidden">
+                                    <div className="group relative bg-white/10 backdrop-blur-2xl p-1 md:p-fluid-xs rounded-full md:rounded-fluid-xl shadow-[0_20px_40px_-5px_rgba(0,0,0,0.2)] border border-white/20 flex items-center w-full max-w-xl transition-all duration-500 hover:bg-white/15 focus-within:bg-white/20 focus-within:shadow-[0_0_30px_rgba(74,222,128,0.2)] ring-1 ring-white/10 focus-within:ring-2 focus-within:ring-organic-300/60 overflow-hidden">
                                         {/* Shimmer Effect */}
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out pointer-events-none" />
 
-                                        <div className="pl-[clamp(0.75rem,2vw,1.5rem)] text-organic-200 shrink-0 transition-transform duration-300 group-focus-within:scale-110 group-focus-within:text-organic-300">
-                                            <Search className="w-[clamp(1.25rem,2.5vw,1.5rem)] h-[clamp(1.25rem,2.5vw,1.5rem)]" strokeWidth={2.5} />
+                                        <div className="pl-[clamp(0.5rem,2vw,1.5rem)] text-organic-200 shrink-0 transition-transform duration-300 group-focus-within:scale-110 group-focus-within:text-organic-300">
+                                            <Search className="w-[clamp(1rem,2.5vw,1.5rem)] h-[clamp(1rem,2.5vw,1.5rem)]" strokeWidth={2.5} />
                                         </div>
                                         <input
-                                            className="w-full px-[clamp(0.75rem,2vw,1.25rem)] py-[clamp(0.375rem,1.5vw,1rem)] text-fluid-sm text-white placeholder-organic-200/60 outline-none font-medium bg-transparent min-w-0 relative z-10"
+                                            className="w-full px-[clamp(0.5rem,2vw,1.25rem)] py-2 md:py-[clamp(0.375rem,1.5vw,1rem)] text-xs md:text-fluid-sm text-white placeholder-organic-200/60 outline-none font-medium bg-transparent min-w-0 relative z-10"
                                             placeholder="Search products..."
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -254,34 +252,32 @@ const Dashboard = () => {
                                         />
                                         <button
                                             onClick={handleSearch}
-                                            className="shrink-0 relative z-10 bg-gradient-to-r from-organic-500 to-organic-600 hover:from-organic-400 hover:to-organic-500 text-white w-[clamp(2.25rem,4vw,3.5rem)] h-[clamp(2.25rem,4vw,3.5rem)] min-w-[38px] min-h-[38px] rounded-full transition-all flex items-center justify-center shadow-lg hover:shadow-organic-500/50 hover:scale-105 active:scale-95 group/btn"
+                                            className="shrink-0 relative z-10 bg-gradient-to-r from-organic-500 to-organic-600 hover:from-organic-400 hover:to-organic-500 text-white w-8 h-8 md:w-[clamp(2.25rem,4vw,3.5rem)] md:h-[clamp(2.25rem,4vw,3.5rem)] min-w-[32px] min-h-[32px] md:min-w-[38px] md:min-h-[38px] rounded-full transition-all flex items-center justify-center shadow-lg hover:shadow-organic-500/50 hover:scale-105 active:scale-95 group/btn"
                                             aria-label="Search"
                                         >
-                                            <ArrowRight className="w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)] transition-transform group-hover/btn:translate-x-0.5" />
+                                            <ArrowRight className="w-4 h-4 md:w-[clamp(1rem,2vw,1.5rem)] md:h-[clamp(1rem,2vw,1.5rem)] transition-transform group-hover/btn:translate-x-0.5" />
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* Quick Chips */}
-                                <div className="relative z-20 flex flex-nowrap md:flex-wrap items-center justify-start md:justify-start gap-fluid-sm mt-fluid-md overflow-x-auto no-scrollbar pb-1.5 w-full max-w-full scroll-smooth">
-                                    {['🥤 Malt Beverages', '🌾 Organic Atta', '🍪 Snacks & Sweets', '🍝 Noodles & Pasta', '🧘 Wellness'].map((chip, i) => (
+                                <div className="relative z-20 flex flex-nowrap md:flex-wrap items-center justify-start gap-2 md:gap-fluid-sm mt-4 md:mt-fluid-md overflow-x-auto no-scrollbar pb-1.5 w-full max-w-full scroll-smooth">
+                                    {[
+                                        { label: 'Malt Beverages', icon: <Coffee size={16} />, path: '/malt-beverages' },
+                                        { label: 'Organic Atta', icon: <Wheat size={16} />, path: '/organic-atta' },
+                                        { label: 'Snacks & Sweets', icon: <Candy size={16} />, path: '/snacks-sweets' },
+                                        { label: 'Noodles & Pasta', icon: <Utensils size={16} />, path: '/noodles-pasta' },
+                                        { label: 'Wellness', icon: <HeartPulse size={16} />, path: '/wellness-products' }
+                                    ].map((chip, i) => (
                                         <motion.button
                                             key={i}
                                             whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
                                             whileTap={{ scale: 0.95 }}
-                                            onClick={() => {
-                                                const catMap = {
-                                                    '🥤 Malt Beverages': '/malt-beverages',
-                                                    '🌾 Organic Atta': '/organic-atta',
-                                                    '🍪 Snacks & Sweets': '/snacks-sweets',
-                                                    '🍝 Noodles & Pasta': '/noodles-pasta',
-                                                    '🧘 Wellness': '/wellness-products'
-                                                };
-                                                if (catMap[chip]) navigate(catMap[chip]);
-                                            }}
-                                            className="px-3 py-2 rounded-fluid-lg bg-white/10 hover:bg-white/20 border border-white/15 text-[#f0fdf4] text-fluid-xs font-semibold transition-all shadow-sm backdrop-blur-sm whitespace-nowrap shrink-0 min-h-[36px]"
+                                            onClick={() => navigate(chip.path)}
+                                            className="flex items-center gap-1.5 md:gap-2 px-2 py-1.5 md:px-3 md:py-2 rounded-full md:rounded-fluid-lg bg-white/10 hover:bg-white/20 border border-white/15 text-[#f0fdf4] text-[10px] md:text-fluid-xs font-semibold transition-all shadow-sm backdrop-blur-sm whitespace-nowrap shrink-0 min-h-[28px] md:min-h-[36px]"
                                         >
-                                            {chip}
+                                            <div className="opacity-80 scale-75 md:scale-100">{chip.icon}</div>
+                                            <span>{chip.label}</span>
                                         </motion.button>
                                     ))}
                                 </div>
@@ -304,7 +300,7 @@ const Dashboard = () => {
                                     <img
                                         src="/hero-products.jpg"
                                         alt="Purezya Organic Products"
-                                        className="w-full h-[clamp(14rem,30vw,35rem)] object-cover transform hover:scale-105 transition-transform duration-700"
+                                        className="w-full h-auto aspect-video lg:aspect-[16/10] object-cover transform hover:scale-105 transition-transform duration-700"
                                     />
                                     {/* Overlay Gradient on Image */}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60" />
@@ -349,48 +345,49 @@ const Dashboard = () => {
                 </div>
 
                 {/* Categories Section - Cinematic Grid */}
-                <section>
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-fluid-xl border-b border-earthy-100 pb-fluid-md gap-fluid-md">
+                <section className="mt-4 md:mt-12">
+                    <div className="flex items-center justify-between mb-3 md:mb-fluid-xl border-b border-earthy-100 pb-2.5 md:pb-fluid-md">
                         <div>
-                            <span className="text-organic-600 font-bold tracking-widest uppercase text-fluid-xs mb-2 block">Curated For You</span>
-                            <h2 className="text-fluid-3xl font-display font-bold text-earthy-900">
+                            <span className="text-organic-600 font-bold tracking-widest uppercase text-[10px] md:text-fluid-xs mb-0.5 md:mb-2 block">Curated For You</span>
+                            <h2 className="text-lg sm:text-2xl md:text-fluid-3xl font-display font-bold text-earthy-900">
                                 Explore Collections
                             </h2>
                         </div>
-                        <Link to="/catalogue" className="flex items-center justify-center gap-2 text-organic-700 font-bold hover:text-organic-900 transition-colors group px-6 py-3 bg-organic-50 hover:bg-organic-100 rounded-2xl w-full md:w-auto min-h-[44px]">
-                            View Catalogue <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                        <Link to="/catalogue" className="inline-flex items-center justify-center gap-1.5 text-organic-700 font-bold hover:text-organic-900 transition-colors group px-3 py-1.5 md:px-6 md:py-3 bg-organic-50 hover:bg-organic-100 rounded-xl md:rounded-2xl text-xs md:text-sm shrink-0">
+                            <span>View Catalogue</span> <ArrowRight size={14} className="md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,250px),1fr))] gap-fluid-lg">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 md:gap-fluid-lg">
                         {data?.categories.map((cat, idx) => (
                             <motion.div
                                 key={cat.id}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 + (idx * 0.1) }}
-                                whileHover={{ y: -10 }}
-                                className="group relative h-[clamp(280px,40vw,350px)] rounded-fluid-2xl overflow-hidden shadow-lg hover:shadow-2xl cursor-pointer transition-all duration-500"
+                                transition={{ delay: 0.1 + (idx * 0.05) }}
+                                whileHover={{ y: -6 }}
+                                className="group relative h-36 sm:h-48 md:h-[clamp(280px,40vw,350px)] rounded-xl sm:rounded-2xl md:rounded-fluid-2xl overflow-hidden shadow-md hover:shadow-xl cursor-pointer transition-all duration-500"
                             >
                                 <Link to={cat.id === 1 ? '/malt-beverages' : cat.id === 2 ? '/organic-atta' : cat.id === 3 ? '/snacks-sweets' : cat.id === 4 ? '/noodles-pasta' : cat.id === 5 ? '/wellness-products' : '/catalogue'} className="block w-full h-full">
                                     <img
                                         src={cat.image}
                                         alt={cat.name}
-                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                        loading="lazy"
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent transition-opacity" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent transition-opacity" />
 
-                                    <div className="absolute top-6 left-6 translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                        <span className="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] text-white font-bold uppercase tracking-widest border border-white/20">
+                                    <div className="absolute top-2 left-2 md:top-6 md:left-6 translate-y-[-5px] md:translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hidden sm:block">
+                                        <span className="px-2 py-1 md:px-3 md:py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[9px] md:text-[10px] text-white font-bold uppercase tracking-widest border border-white/20">
                                             Premium
                                         </span>
                                     </div>
 
-                                    <div className="absolute bottom-0 left-0 right-0 p-8 text-white transform transition-transform duration-500">
-                                        <p className="text-2xl font-display font-medium mb-2">{cat.name}</p>
-                                        <div className="flex items-center gap-2 text-organic-200 text-sm font-semibold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-100">
+                                    <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-4 md:p-8 text-white transform transition-transform duration-500">
+                                        <p className="text-xs sm:text-base md:text-2xl font-display font-bold md:font-medium leading-tight mb-0.5 md:mb-2 drop-shadow-sm">{cat.name}</p>
+                                        <div className="flex items-center gap-1 md:gap-2 text-organic-200 text-[10px] md:text-sm font-semibold opacity-90 md:opacity-0 group-hover:opacity-100 transform md:translate-y-4 group-hover:translate-y-0 transition-all duration-300 md:duration-500 delay-75 md:delay-100">
                                             <span>Shop Now</span>
-                                            <ArrowRight size={14} />
+                                            <ArrowRight size={10} className="md:w-3.5 md:h-3.5" />
                                         </div>
                                     </div>
                                 </Link>

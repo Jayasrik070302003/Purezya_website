@@ -4,7 +4,8 @@ import { ShoppingCart, Heart, ArrowLeft, Leaf, Star, Info } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
-import axios from 'axios';
+import { fetchWithCache } from '../utils/apiCache';
+import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 
 const SnacksAndSweets = () => {
     const navigate = useNavigate();
@@ -18,20 +19,18 @@ const SnacksAndSweets = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/products');
-                const filtered = res.data
-                    .filter(p => p.category === 'Snacks & Sweets')
-                    .map(p => ({
+                const data = await fetchWithCache('http://localhost:5001/api/products?category=Snacks%20%26%20Sweets');
+                const mapped = data.map(p => ({
                         id: p.id,
                         name: p.name,
                         description: p.description,
                         price: p.price,
                         rating: p.rating || 4.8,
-                        image: p.image_url || '/placeholder-sweet.jpg',
-                        category: p.sub_category || 'Others', // Assuming sub_category exists or defaulting
+                        image: getOptimizedImageUrl(p.image_url, 400) || '/placeholder-sweet.jpg',
+                        category: p.sub_category || 'Others',
                         isDynamic: true
                     }));
-                setProducts(filtered);
+                setProducts(mapped);
             } catch (err) {
                 console.error("Error fetching products:", err);
             } finally {
@@ -59,182 +58,23 @@ const SnacksAndSweets = () => {
 
             <div className="w-full max-w-[1400px] mx-auto z-10 relative">
 
-                {/* Back Link */}
-                <button onClick={() => navigate(-1)} className="inline-flex items-center gap-fluid-xs text-earthy-500 hover:text-earthy-900 font-bold mb-[clamp(0.75rem,2vw,2rem)] transition-colors text-fluid-base">
+                {/* Header */}
+                <div className="mb-fluid-xl">
+                    <button onClick={() => navigate(-1)} className="inline-flex items-center gap-fluid-xs text-earthy-500 hover:text-organic-700 font-bold mb-[clamp(0.75rem,2vw,1.5rem)] transition-colors text-fluid-base">
                         <ArrowLeft className="w-[clamp(1.125rem,1.5vw,1.25rem)] h-[clamp(1.125rem,1.5vw,1.25rem)]" /> Back
-                </button>
-
-                {/* Hero Banner */}
-                {/* Premium Hero Banner - Compact */}
-                <div className="relative overflow-hidden bg-[#122310] rounded-fluid-2xl p-[clamp(1rem,4vw,2.5rem)] mb-[clamp(1rem,3vw,2rem)] shadow-[0_20px_50px_-20px_rgba(20,50,20,0.5)] border border-[#2F4F2C]">
-
-                    {/* Animated Background Mesh & Texture */}
-                    <div className="absolute inset-0 z-0">
-                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-110 mix-blend-overlay" />
-
-                        {/* Rich gradient background base */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#122310] via-[#1a3c1a] to-[#0d1f0d]" />
-
-                        {/* Refined Gradient Orbs - More Vibrant & Visible */}
-                        <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#224422] rounded-full blur-[80px] opacity-60 translate-x-1/3 -translate-y-1/3" />
-                        <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-[#3a5a3a] rounded-full blur-[60px] opacity-40" />
-
-                        {/* Golden Wave Flow - More Visible */}
-                        <div className="absolute bottom-0 left-0 right-0 h-[300px] opacity-15 pointer-events-none overflow-hidden mix-blend-overlay">
-                            <svg viewBox="0 0 1440 320" className="w-full h-full text-yellow-200 fill-current ml-30">
-                                <path fillOpacity="1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,122.7C960,117,1056,171,1152,197.3C1248,224,1344,224,1392,224L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-                            </svg>
-                        </div>
-
-                        {/* Distributed Gold Particles - More Sparkle */}
-                        {[...Array(20)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                className="absolute w-[3px] h-[3px] bg-yellow-300 rounded-full opacity-0 shadow-[0_0_10px_rgba(253,224,71,0.8)]"
-                                style={{
-                                    top: `${Math.random() * 80 + 10}%`,
-                                    left: `${Math.random() * 90}%`,
-                                }}
-                                animate={{
-                                    y: [0, -40, 0],
-                                    opacity: [0, 0.8, 0],
-                                    scale: [0, 1.5, 0]
-                                }}
-                                transition={{
-                                    duration: 3 + Math.random() * 4,
-                                    repeat: Infinity,
-                                    ease: "easeInOut",
-                                    delay: Math.random() * 2
-                                }}
-                            />
-                        ))}
-
-                        {/* Large Modern Geometric Accent (Right Side) */}
-                        <div className="absolute top-10 right-10 w-[600px] h-[600px] border-[40px] border-white/[0.03] rounded-full pointer-events-none" />
-                        <div className="absolute top-20 right-20 w-[500px] h-[500px] border-[20px] border-white/[0.03] rounded-full pointer-events-none" />
-
-                        {/* Stylized Watermark */}
-                        <div className="absolute bottom-[-2rem] left-[5%] font-serif text-[15rem] leading-none text-white/[0.03] select-none pointer-events-none italic tracking-tighter mix-blend-overlay z-0">
-                            Pure
-                        </div>
-                    </div>
-
-                    <div className="relative z-10 grid lg:grid-cols-2 gap-8 items-center">
-                        {/* Mobile Right Side Visual */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0, y: [0, -10, 0], rotate: [3, 6, 3] }}
-                            transition={{
-                                opacity: { duration: 0.5 },
-                                y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                                rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" }
-                            }}
-                            className="absolute right-[4%] top-[5%] w-28 h-32 lg:hidden z-0 pointer-events-none"
-                        >
-                            <div className="w-full h-full rounded-[1.5rem] overflow-hidden border border-white/20 shadow-2xl rotate-6 relative">
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10" />
-                                <img src="/featured-sweet-hero.jpg" alt="Sweet" className="w-full h-full object-cover" />
-                                {/* Glass shine effect */}
-                                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-white/20 to-transparent opacity-50" />
-                            </div>
-                        </motion.div>
-                        <div className="space-y-[clamp(1rem,3vw,2.5rem)]">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="inline-flex items-center gap-fluid-xs px-[clamp(0.5rem,2vw,1.25rem)] py-[clamp(0.25rem,1vw,0.5rem)] rounded-full bg-white/5 border border-white/10 text-yellow-100/90 text-[clamp(0.5rem,1vw,0.75rem)] font-bold tracking-[0.1em] md:tracking-[0.2em] uppercase backdrop-blur-md shadow-lg shadow-black/20"
-                            >
-                                <Star className="text-yellow-400 fill-yellow-400 animate-pulse w-[clamp(0.5rem,1vw,1rem)] h-[clamp(0.5rem,1vw,1rem)]" /> Limited Edition
-                            </motion.div>
-
-                            <motion.h1
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
-                                className="text-[clamp(1.875rem,6vw,6rem)] font-display font-medium text-white leading-[0.95] tracking-tight"
-                            >
-                                <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70">Heritage</span>
-                                <span className="font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-amber-200 to-yellow-400 pr-4">Sweetnezz</span>
-                            </motion.h1>
-
-                            <motion.p
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="text-[#AABBA9] text-fluid-lg max-w-[clamp(20rem,40vw,32rem)] leading-relaxed font-light"
-                            >
-                                Handcrafted with <span className="text-white font-medium border-b border-yellow-500/30 pb-0.5">palm jaggery</span> and <span className="text-white font-medium border-b border-yellow-500/30 pb-0.5">pure ghee</span>. A royal treat for your senses, guilt-free.
-                            </motion.p>
-
-                            {/* Enhanced Search Bar */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
-                                className="relative max-w-lg group"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-organic-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                <div className="relative flex items-center bg-white/5 border border-white/10 rounded-full p-[clamp(0.375rem,1vw,0.5rem)] backdrop-blur-xl group-focus-within:bg-white/10 group-focus-within:border-white/20 transition-all shadow-2xl">
-                                    <div className="pl-4 md:pl-6 text-white/40 group-focus-within:text-yellow-400 transition-colors">
-                                        <svg className="w-[clamp(1.25rem,2vw,1.5rem)] h-[clamp(1.25rem,2vw,1.5rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        placeholder="Search treats..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-transparent text-white placeholder-white/30 px-[clamp(0.75rem,2vw,1rem)] py-[clamp(0.5rem,1.5vw,0.75rem)] focus:outline-none text-fluid-base font-medium"
-                                    />
-                                    <button className="bg-[#D4AF37] hover:bg-[#F4C430] text-[#122310] px-[clamp(1rem,3vw,2rem)] py-[clamp(0.375rem,1.5vw,0.75rem)] rounded-full font-bold text-[clamp(0.625rem,1.5vw,0.875rem)] tracking-widest transition-all transform hover:scale-105 shadow-lg shadow-yellow-900/40">
-                                        FIND
-                                    </button>
-                                </div>
-                            </motion.div>
-                        </div>
-
-                        {/* Visual Right Side - More Premium Composition */}
-                        <div className="hidden lg:block relative h-full min-h-[450px] perspective-1000">
-                            {/* Decorative Background Pattern to fill blank space */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(255,255,255,0.05)_0%,transparent_70%)] animate-pulse-slow pointer-events-none" />
-                            {/* Floating Elements */}
-                            <motion.div
-                                animate={{ y: [0, -12, 0], rotate: [0, 2, 0] }}
-                                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                                className="absolute right-10 top-[20%] z-20"
-                            >
-                                <div className="w-[300px] h-[360px] bg-white/10 backdrop-blur-xl rounded-[2.5rem] border border-white/20 p-3 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] relative group overflow-hidden hover:shadow-[0_40px_90px_-20px_rgba(0,0,0,0.8)] transition-all duration-500">
-                                    {/* Inner Image */}
-                                    <div className="w-full h-full rounded-[2rem] overflow-hidden relative">
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                                        <img src="/featured-sweet-hero.jpg" alt="Featured Sweet" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1.5s]" />
-
-                                        {/* Floating Badge */}
-                                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur text-[#1A2E16] px-3 py-1 rounded-full font-extrabold text-[10px] uppercase tracking-wider shadow-xl z-20 flex items-center gap-1.5">
-                                            <Leaf size={10} className="text-green-600" /> 100% Organic
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-
-                            {/* Background Decorative Card (Blurry) - Adjusted */}
-                            <motion.div
-                                animate={{ y: [0, 15, 0], rotate: [0, -4, 0] }}
-                                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                                className="absolute right-24 top-[25%] z-10 opacity-70 scale-95"
-                            >
-                                <div className="w-[300px] h-[360px] bg-[#2F4F2C] rounded-[2.5rem] border border-white/5 shadow-2xl mix-blend-multiply" />
-                            </motion.div>
-
-                            {/* Extra visuals to fill space */}
-                            {/* Large Decorative Leaf - Subtle Background */}
-                            <div className="absolute top-[10%] right-[35%] text-white/[0.03] -rotate-12 pointer-events-none blur-[1px]">
-                                <Leaf size={280} />
-                            </div>
-
-                            {/* Gold Glow */}
-                            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-yellow-500/10 rounded-full blur-[100px] pointer-events-none" />
-                        </div>
-                    </div>
+                    </button>
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <h1 className="text-[clamp(1.5rem,4vw,3rem)] font-display font-bold text-earthy-900 mb-fluid-sm flex flex-wrap items-center gap-fluid-sm">
+                            Snacks & Sweets
+                            <span className="bg-organic-100 text-organic-700 px-[clamp(0.625rem,1.5vw,1rem)] py-[clamp(0.125rem,0.5vw,0.25rem)] rounded-full text-fluid-sm font-bold tracking-wide whitespace-nowrap">{allProducts.length} Items</span>
+                        </h1>
+                        <p className="text-earthy-600 text-fluid-base max-w-2xl">
+                            Handcrafted organic delicacies made with pure palm jaggery, nuts, and authentic traditional recipes.
+                        </p>
+                    </motion.div>
                 </div>
 
                 {/* Filters */}
@@ -270,6 +110,7 @@ const SnacksAndSweets = () => {
                                         <img
                                             src={product.image}
                                             alt={product.name}
+                                            loading="lazy"
                                             className="w-full h-full object-cover"
                                         />
                                     </Link>

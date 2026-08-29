@@ -4,7 +4,8 @@ import { ShoppingCart, Heart, ArrowLeft, Leaf, Star, Info } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
-import axios from 'axios';
+import { fetchWithCache } from '../utils/apiCache';
+import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 
 const NoodlesAndPasta = () => {
     const navigate = useNavigate();
@@ -16,20 +17,18 @@ const NoodlesAndPasta = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const res = await axios.get('http://localhost:5001/api/products');
-                const filtered = res.data
-                    .filter(p => p.category === 'Noodles & Pasta')
-                    .map(p => ({
+                const data = await fetchWithCache('http://localhost:5001/api/products?category=Noodles%20%26%20Pasta');
+                const mapped = data.map(p => ({
                         id: p.id,
                         name: p.name,
                         description: p.description,
                         price: p.price,
                         rating: p.rating || 4.8,
-                        image: p.image_url || '/placeholder-nod.jpg',
+                        image: getOptimizedImageUrl(p.image_url, 400) || '/placeholder-nod.jpg',
                         category: p.name.toLowerCase().includes('pasta') ? 'Pasta' : 'Noodles',
                         isDynamic: true
                     }));
-                setProducts(filtered);
+                setProducts(mapped);
             } catch (err) {
                 console.error("Error fetching products:", err);
             } finally {
@@ -81,6 +80,7 @@ const NoodlesAndPasta = () => {
                                 <img
                                     src={product.image}
                                     alt={product.name}
+                                    loading="lazy"
                                     className="w-full h-full object-cover"
                                 />
                                 <button

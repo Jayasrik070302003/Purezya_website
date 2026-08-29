@@ -1,7 +1,8 @@
 import { ShoppingCart, Trash2, ArrowRight, Leaf } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { fetchWithCache } from '../utils/apiCache';
+import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 import { useShop } from '../context/ShopContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
@@ -21,8 +22,8 @@ const Cart = () => {
 
     useEffect(() => {
         if (cart.length === 0) {
-            axios.get('http://localhost:5001/api/products')
-                .then(res => setRecommended(res.data.slice(0, 3)))
+            fetchWithCache('http://localhost:5001/api/products?limit=3')
+                .then(data => setRecommended(data))
                 .catch(err => console.error(err));
         }
     }, [cart.length]);
@@ -64,7 +65,7 @@ const Cart = () => {
                         <div className="flex md:grid md:grid-cols-3 gap-3 md:gap-6 overflow-x-auto pb-4 md:pb-0 px-4 md:px-0 -mx-4 md:mx-0 snap-x snap-mandatory no-scrollbar">
                             {recommended.map(item => (
                                 <Link to="/catalogue" key={item.id} className="min-w-[260px] md:min-w-0 snap-center bg-white p-3 md:p-4 rounded-2xl shadow-sm border border-earthy-100 flex items-center gap-3 md:gap-4 group">
-                                    <img src={item.image_url || item.image} alt={item.name} className="w-10 h-10 md:w-16 md:h-16 rounded-lg md:rounded-xl object-cover" />
+                                    <img src={getOptimizedImageUrl(item.image_url || item.image, 200)} alt={item.name} loading="lazy" className="w-10 h-10 md:w-16 md:h-16 rounded-lg md:rounded-xl object-cover" />
                                     <div className="flex-1 min-w-0 text-left">
                                         <h4 className="font-bold text-sm md:text-base text-earthy-900 group-hover:text-organic-600 transition-colors truncate">{item.name}</h4>
                                         <p className="text-[10px] md:text-xs text-earthy-500 font-medium">Coming Soon</p>
@@ -123,7 +124,7 @@ const Cart = () => {
                             >
                                 {/* Product Image */}
                                 <div className="w-[clamp(4rem,15vw,8rem)] h-[clamp(4rem,15vw,8rem)] shrink-0 rounded-fluid-xl overflow-hidden bg-gray-50 relative group-hover:-rotate-2 transition-transform duration-500 ease-out border border-gray-100/50">
-                                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                    <img src={getOptimizedImageUrl(item.image, 200)} alt={item.name} loading="lazy" className="w-full h-full object-cover" />
                                 </div>
 
                                 {/* Details */}

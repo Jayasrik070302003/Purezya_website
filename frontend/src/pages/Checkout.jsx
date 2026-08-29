@@ -69,7 +69,7 @@ const Checkout = () => {
 
             await createOrder(orderData);
             clearCart();
-            showToast('Order placed successfully! 🎉');
+            showToast('Order placed successfully!');
             navigate('/orders');
         } catch (error) {
             console.error(error);

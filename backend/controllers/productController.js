@@ -1,13 +1,59 @@
 const pool = require('../config/db');
 
-// Get all products
+// Get products (with optional category and limit)
 exports.getAllProducts = async (req, res) => {
     try {
-        const { rows: products } = await pool.query('SELECT * FROM products ORDER BY created_at DESC');
+        const { category, limit, offset, search } = req.query;
+        let query = 'SELECT * FROM products';
+        let queryParams = [];
+        let conditions = [];
+
+        if (category) {
+            queryParams.push(category);
+            conditions.push(`category = $${queryParams.length}`);
+        }
+
+        if (search) {
+            queryParams.push(`%${search}%`);
+            conditions.push(`name ILIKE $${queryParams.length}`);
+        }
+
+        if (conditions.length > 0) {
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        query += ' ORDER BY created_at DESC';
+
+        if (limit) {
+            queryParams.push(parseInt(limit));
+            query += ` LIMIT $${queryParams.length}`;
+        }
+
+        if (offset) {
+            queryParams.push(parseInt(offset));
+            query += ` OFFSET $${queryParams.length}`;
+        }
+
+        const { rows: products } = await pool.query(query, queryParams);
         res.json(products);
     } catch (error) {
         console.error('Error fetching products:', error);
         res.status(500).json({ message: 'Server error fetching products' });
+    }
+};
+
+// Get single product by ID
+exports.getProductById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const { rows: products } = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
+        if (products.length === 0) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.json(products[0]);
+    } catch (error) {
+        console.error('Error fetching product by ID:', error);
+        res.status(500).json({ message: 'Server error fetching product' });
     }
 };
 

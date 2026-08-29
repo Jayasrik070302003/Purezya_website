@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Package, Truck, CheckCircle, Clock, ArrowRight, ArrowLeft, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -11,7 +10,8 @@ const OrderHistory = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                await axios.get('http://localhost:5001/api/products');
+                // Simulate order fetching
+                await new Promise(resolve => setTimeout(resolve, 500));
                 setOrders([]);
             } catch (err) {
                 console.error(err);
