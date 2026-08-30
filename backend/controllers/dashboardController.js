@@ -20,11 +20,11 @@ exports.getDashboardData = async (req, res) => {
                 { title: 'Pending Deliveries', value: pendingOrders.toLocaleString(), color: '#34d399' }
             ],
             categories: [
-                { id: 1, name: 'Malt Beverages', image: '/malt-beverage.jpg' },
-                { id: 2, name: 'Organic Atta', image: '/wheat-atta.jpg' },
-                { id: 3, name: 'Snacks & Sweets', image: '/snacks-sweets.jpg' },
-                { id: 4, name: 'Noodles & Pasta', image: '/palak-noodles-premium-v2.jpg' },
-                { id: 5, name: 'Wellness Products', image: '/wellness-products.jpg' }
+                { id: 1, name: 'Malt Beverages', image: '/asset/malt-beverage.jpg' },
+                { id: 2, name: 'Organic Atta', image: '/Product iamges/wheat-atta.jpg' },
+                { id: 3, name: 'Snacks & Sweets', image: '/asset/snacks-sweets.jpg' },
+                { id: 4, name: 'Noodles & Pasta', image: '/Product iamges/palak-noodles-premium-v2.jpg' },
+                { id: 5, name: 'Wellness Products', image: '/asset/wellness-products.jpg' }
             ]
         };
 

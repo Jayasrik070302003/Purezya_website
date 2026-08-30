@@ -299,7 +299,7 @@ const Dashboard = () => {
 
                                 <div className="relative rounded-fluid-2xl overflow-hidden shadow-[0_45px_80px_-10px_rgba(0,0,0,0.6)] border-4 border-white/10 bg-[#fdfcf8]">
                                     <img
-                                        src="/hero-products.jpg"
+                                        src="/asset/hero-products.jpg"
                                         alt="Purazya Organic Products"
                                         className="w-full h-auto aspect-video lg:aspect-[16/10] object-cover transform hover:scale-105 transition-transform duration-700"
                                     />
@@ -361,11 +361,11 @@ const Dashboard = () => {
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 md:gap-fluid-lg">
                         {(data?.categories || [
-                            { id: 1, name: 'Malt Beverages', image: '/malt-beverage.jpg' },
-                            { id: 2, name: 'Organic Atta', image: '/wheat-atta.jpg' },
-                            { id: 3, name: 'Snacks & Sweets', image: '/snacks-sweets.jpg' },
-                            { id: 4, name: 'Noodles & Pasta', image: '/palak-noodles-premium-v2.jpg' },
-                            { id: 5, name: 'Wellness Products', image: '/wellness-products.jpg' }
+                            { id: 1, name: 'Malt Beverages', image: '/asset/malt-beverage.jpg' },
+                            { id: 2, name: 'Organic Atta', image: '/Product iamges/wheat-atta.jpg' },
+                            { id: 3, name: 'Snacks & Sweets', image: '/asset/snacks-sweets.jpg' },
+                            { id: 4, name: 'Noodles & Pasta', image: '/Product iamges/palak-noodles-premium-v2.jpg' },
+                            { id: 5, name: 'Wellness Products', image: '/asset/wellness-products.jpg' }
                         ]).map((cat, idx) => (
                             <motion.div
                                 key={cat.id}

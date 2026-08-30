@@ -10,7 +10,7 @@ export const productDatabase = {
         price: 450,
         rating: 4.8,
         reviews: 124,
-        image: '/beetroot-malt.jpg',
+        image: '/Product iamges/beetroot-malt.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'Boosts Hemoglobin' },
             { icon: <Shield size={20} />, text: 'Immunity Support' },
@@ -27,7 +27,7 @@ export const productDatabase = {
         price: 380,
         rating: 4.9,
         reviews: 89,
-        image: '/sprouted-ragi-malt.jpg',
+        image: '/Product iamges/sprouted-ragi-malt.jpg',
         benefits: [
             { icon: <Flame size={20} />, text: 'High Calcium' },
             { icon: <Activity size={20} />, text: 'Easy Digestion' },
@@ -44,7 +44,7 @@ export const productDatabase = {
         price: 420,
         rating: 4.7,
         reviews: 56,
-        image: '/sprouted-ragi-choco-malt.jpg',
+        image: '/Product iamges/sprouted-ragi-choco-malt.jpg',
         benefits: [
             { icon: <Heart size={20} />, text: 'Kid Favorite' },
             { icon: <Flame size={20} />, text: 'Energy Booster' },
@@ -61,7 +61,7 @@ export const productDatabase = {
         price: 550,
         rating: 4.9,
         reviews: 210,
-        image: '/abc-malt.jpg',
+        image: '/Product iamges/abc-malt.jpg',
         benefits: [
             { icon: <Leaf size={20} />, text: 'Detoxifying' },
             { icon: <Activity size={20} />, text: 'Glowing Skin' },
@@ -78,7 +78,7 @@ export const productDatabase = {
         price: 480,
         rating: 4.6,
         reviews: 75,
-        image: '/red-banana-malt.jpg',
+        image: '/Product iamges/red-banana-malt.jpg',
         benefits: [
             { icon: <Flame size={20} />, text: 'High Energy' },
             { icon: <Activity size={20} />, text: 'Weight Gain' },
@@ -95,7 +95,7 @@ export const productDatabase = {
         price: 460,
         rating: 4.8,
         reviews: 92,
-        image: '/nenthiram-banana-malt.jpg',
+        image: '/asset/nenthiram-banana-malt.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'Gut Health' },
             { icon: <Flame size={20} />, text: 'Sustained Energy' },
@@ -113,7 +113,7 @@ export const productDatabase = {
         price: 60,
         rating: 4.8,
         reviews: 215,
-        image: '/wheat-atta.jpg',
+        image: '/Product iamges/wheat-atta.jpg',
         benefits: [
             { icon: <Leaf size={20} />, text: 'High Fiber' },
             { icon: <Activity size={20} />, text: 'Easy Digestion' },
@@ -132,7 +132,7 @@ export const productDatabase = {
         price: 85,
         rating: 4.7,
         reviews: 142,
-        image: '/beetroot-atta.jpg',
+        image: '/Product iamges/beetroot-atta.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'Boosts Iron' },
             { icon: <Heart size={20} />, text: 'Blood Pressure' },
@@ -151,7 +151,7 @@ export const productDatabase = {
         price: 85,
         rating: 4.6,
         reviews: 98,
-        image: '/carrot-atta.jpg',
+        image: '/Product iamges/carrot-atta.jpg',
         benefits: [
             { icon: <Flame size={20} />, text: 'Eye Health' },
             { icon: <Leaf size={20} />, text: 'Vitamin A Rich' },
@@ -170,7 +170,7 @@ export const productDatabase = {
         price: 70,
         rating: 4.9,
         reviews: 180,
-        image: '/ragi-atta.jpg',
+        image: '/Product iamges/ragi-atta.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'High Calcium' },
             { icon: <Flame size={20} />, text: 'Weight Loss' },
@@ -189,7 +189,7 @@ export const productDatabase = {
         price: 120,
         rating: 4.9,
         reviews: 210,
-        image: '/abc-atta.jpg',
+        image: '/Product iamges/abc-atta.jpg',
         benefits: [
             { icon: <Shield size={20} />, text: 'Total Wellness' },
             { icon: <Activity size={20} />, text: 'Detox Support' },
@@ -208,7 +208,7 @@ export const productDatabase = {
         price: 280,
         rating: 4.8,
         reviews: 156,
-        image: '/ragi-karupatti-halwa.jpg',
+        image: '/Product iamges/ragi-karupatti-halwa.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'Vitamins Rich' },
             { icon: <Heart size={20} />, text: 'Iron Boost' },
@@ -229,7 +229,7 @@ export const productDatabase = {
         price: 320,
         rating: 4.9,
         reviews: 89,
-        image: '/thodhal-halwa.jpg',
+        image: '/Product iamges/thodhal-halwa.jpg',
         benefits: [
             { icon: <Leaf size={20} />, text: 'Authentic Taste' },
             { icon: <Flame size={20} />, text: 'Energy Source' },
@@ -250,7 +250,7 @@ export const productDatabase = {
         price: 300,
         rating: 4.7,
         reviews: 112,
-        image: '/wheat-milk-halwa.jpg',
+        image: '/Product iamges/wheat-milk-halwa.jpg',
         benefits: [
             { icon: <Heart size={20} />, text: 'Classic Flavor' },
             { icon: <Activity size={20} />, text: 'Instant Energy' },
@@ -271,7 +271,7 @@ export const productDatabase = {
         price: 180,
         rating: 4.8,
         reviews: 240,
-        image: '/peanut-laddu.jpg',
+        image: '/Product iamges/peanut-laddu.jpg',
         benefits: [
             { icon: <Flame size={20} />, text: 'High Protein' },
             { icon: <Activity size={20} />, text: 'Energy Bar' },
@@ -292,7 +292,7 @@ export const productDatabase = {
         price: 200,
         rating: 4.9,
         reviews: 134,
-        image: '/ragi-laddu.jpg',
+        image: '/Product iamges/ragi-laddu.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'Calcium Rich' },
             { icon: <Heart size={20} />, text: 'Heart Friendly' },
@@ -313,7 +313,7 @@ export const productDatabase = {
         price: 220,
         rating: 4.7,
         reviews: 95,
-        image: '/coconut-laddu.jpg',
+        image: '/Product iamges/coconut-laddu.jpg',
         benefits: [
             { icon: <Leaf size={20} />, text: 'Fresh Coconut' },
             { icon: <Activity size={20} />, text: 'Instant Boost' },
@@ -335,7 +335,7 @@ export const productDatabase = {
         originalPrice: 150,
         rating: 4.8,
         reviews: 145,
-        image: '/beetroot-noodles.jpg',
+        image: '/Product iamges/beetroot-noodles.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'Rich in Iron' },
             { icon: <Leaf size={20} />, text: 'No Maida' },
@@ -356,7 +356,7 @@ export const productDatabase = {
         originalPrice: 160,
         rating: 4.7,
         reviews: 98,
-        image: '/beetroot-pasta-premium.jpg',
+        image: '/Product iamges/beetroot-pasta-premium.jpg',
         benefits: [
             { icon: <Heart size={20} />, text: 'Heart Healthy' },
             { icon: <Flame size={20} />, text: 'Fiber Rich' },
@@ -377,7 +377,7 @@ export const productDatabase = {
         originalPrice: 140,
         rating: 4.9,
         reviews: 210,
-        image: '/ragi-noodles-premium.jpg',
+        image: '/Product iamges/ragi-noodles-premium.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'High Calcium' },
             { icon: <Shield size={20} />, text: 'Bone Strength' },
@@ -398,7 +398,7 @@ export const productDatabase = {
         originalPrice: 155,
         rating: 4.8,
         reviews: 135,
-        image: '/ragi-pasta-premium.jpg',
+        image: '/Product iamges/ragi-pasta-premium.jpg',
         benefits: [
             { icon: <Flame size={20} />, text: 'Sustained Energy' },
             { icon: <Activity size={20} />, text: 'Rich in Minerals' },
@@ -419,7 +419,7 @@ export const productDatabase = {
         originalPrice: 145,
         rating: 4.7,
         reviews: 80,
-        image: '/carrot-noodles-premium.jpg',
+        image: '/Product iamges/carrot-noodles-premium.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'Eye Health' },
             { icon: <Leaf size={20} />, text: 'Vitamin A' },
@@ -440,7 +440,7 @@ export const productDatabase = {
         originalPrice: 160,
         rating: 4.6,
         reviews: 72,
-        image: '/carrot-pasta-premium.jpg',
+        image: '/Product iamges/carrot-pasta-premium.jpg',
         benefits: [
             { icon: <Leaf size={20} />, text: 'Antioxidants' },
             { icon: <Activity size={20} />, text: 'Skin Health' },
@@ -461,7 +461,7 @@ export const productDatabase = {
         originalPrice: 155,
         rating: 4.9,
         reviews: 160,
-        image: '/palak-noodles-premium-v2.jpg',
+        image: '/Product iamges/palak-noodles-premium-v2.jpg',
         benefits: [
             { icon: <Shield size={20} />, text: 'Iron Boost' },
             { icon: <Leaf size={20} />, text: 'Detoxifying' },
@@ -482,7 +482,7 @@ export const productDatabase = {
         originalPrice: 165,
         rating: 4.8,
         reviews: 110,
-        image: '/palak-pasta-premium.jpg',
+        image: '/Product iamges/palak-pasta-premium.jpg',
         benefits: [
             { icon: <Activity size={20} />, text: 'Superfood' },
             { icon: <Leaf size={20} />, text: 'High Fiber' },
@@ -502,7 +502,7 @@ export const productDatabase = {
         price: 350,
         rating: 4.9,
         reviews: 65,
-        image: '/amla-gulkand-premium.png',
+        image: '/Product iamges/amla-gulkand-premium.png',
         benefits: [
             { icon: <Shield size={20} />, text: 'Immunity' },
             { icon: <Leaf size={20} />, text: 'Cooling' },
@@ -523,7 +523,7 @@ export const productDatabase = {
         price: 220,
         rating: 4.8,
         reviews: 120,
-        image: '/amla-candy-premium.png',
+        image: '/Product iamges/amla-candy-premium.png',
         benefits: [
             { icon: <Shield size={20} />, text: 'High Vitamin C' },
             { icon: <Activity size={20} />, text: 'Antioxidant' },

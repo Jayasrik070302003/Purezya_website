@@ -114,7 +114,7 @@ const Login = () => {
                             <div className="absolute inset-0 bg-gradient-to-tr from-green-600 to-amber-400 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500" />
                             <div className="relative w-[clamp(4rem,10vw,5rem)] h-[clamp(4rem,10vw,5rem)] rounded-full p-1 bg-white/50 backdrop-blur-sm border border-white/50 shadow-lg">
                                 <img
-                                    src="/Purazya-logo.png"
+                                    src="/asset/Purazya-logo.png"
                                     alt="Purazya Logo"
                                     className="w-full h-full rounded-full object-cover"
                                 />
@@ -165,7 +165,7 @@ const Login = () => {
                                         if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: '' });
                                     }}
                                     className={`w-full bg-[#F5F7F5] border border-transparent focus:bg-white focus:border-[#D4C5A5]/60 hover:bg-white/80 text-[#1A2E16] text-fluid-sm rounded-fluid-xl py-[clamp(0.75rem,2vw,1rem)] pl-[clamp(2.5rem,5vw,3rem)] pr-[clamp(1rem,2vw,1.5rem)] outline-none transition-all shadow-inner placeholder:text-[#B0C4B8] font-medium`}
-                                    placeholder="Enter your email or admin ID (purazya)"
+                                    placeholder="Enter your email"
                                 />
                             </div>
                         </div>
