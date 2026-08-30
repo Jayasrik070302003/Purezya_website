@@ -1420,6 +1420,13 @@ const AdminDashboard = () => {
                                                 </motion.div>
                                             );
                                         })}
+                                        {categories.length === 0 && (
+                                            <div className="col-span-full py-8 sm:py-10 text-center bg-white rounded-2xl sm:rounded-3xl border-2 border-dashed border-earthy-200 p-6">
+                                                <Package className="w-10 h-10 text-earthy-300 mx-auto mb-2" strokeWidth={1.5} />
+                                                <p className="text-sm sm:text-base font-bold text-earthy-800">No categories added yet</p>
+                                                <p className="text-xs text-earthy-500 mt-1 max-w-sm mx-auto">Click "+ Add Category" above to create your first dynamic category.</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -1723,88 +1730,92 @@ const AdminDashboard = () => {
                                             />
                                         </div>
 
-                                        <div className="grid grid-cols-2 gap-2.5 sm:gap-6">
-                                                                   <div>
-                                                <div className="flex items-center justify-between mb-1 sm:mb-2 ml-0.5 sm:ml-1">
-                                                    <label className="block text-xs sm:text-sm font-bold text-earthy-700">Category</label>
-                                                    {!isInlineCategoryOpen && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setIsInlineCategoryOpen(true)}
-                                                            className="text-[11px] sm:text-xs font-bold text-organic-600 hover:text-organic-700 flex items-center gap-0.5"
-                                                        >
-                                                            <Plus size={12} /> New
-                                                        </button>
-                                                    )}
-                                                </div>
-
-                                                {isInlineCategoryOpen ? (
-                                                    <div className="flex items-center gap-1.5 p-1.5 bg-organic-50 border border-organic-200 rounded-xl mb-2">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Category name..."
-                                                            value={inlineCategoryName}
-                                                            onChange={(e) => setInlineCategoryName(e.target.value)}
-                                                            className="flex-1 px-2.5 py-1 text-xs rounded-lg border border-organic-300 outline-none bg-white"
-                                                            autoFocus
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            onClick={async () => {
-                                                                if (inlineCategoryName.trim()) {
-                                                                    const cat = await handleCreateCategory(inlineCategoryName.trim());
-                                                                    if (cat) {
-                                                                        setNewProduct(prev => ({ ...prev, category: cat.name }));
-                                                                        setInlineCategoryName('');
-                                                                        setIsInlineCategoryOpen(false);
-                                                                    }
-                                                                }
-                                                            }}
-                                                            className="px-2.5 py-1 bg-organic-600 hover:bg-organic-700 text-white rounded-lg text-xs font-bold"
-                                                        >
-                                                            Add
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                setInlineCategoryName('');
-                                                                setIsInlineCategoryOpen(false);
-                                                            }}
-                                                            className="px-1.5 py-1 text-earthy-500 hover:text-earthy-700 text-xs"
-                                                        >
-                                                            ✕
-                                                        </button>
-                                                    </div>
-                                                ) : null}
-
-                                                <FormControl fullWidth size="small">
-                                                    <Select
-                                                        value={newProduct.category}
-                                                        onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                                                        displayEmpty
-                                                        sx={{
-                                                            height: { xs: '42px', sm: '52px' },
-                                                            borderRadius: { xs: '0.75rem', sm: '1rem' },
-                                                            backgroundColor: 'rgba(255, 247, 237, 0.5)',
-                                                            "& .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#e5e7eb"
-                                                            },
-                                                            "&:hover .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#65a30d"
-                                                            },
-                                                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                                                borderColor: "#65a30d"
-                                                            },
-                                                            fontSize: { xs: '0.875rem', sm: '1rem' }
-                                                        }}
+                                        {/* Category Selection with clean inline adder */}
+                                        <div>
+                                            <div className="flex items-center justify-between mb-1 sm:mb-2 ml-0.5 sm:ml-1">
+                                                <label className="block text-xs sm:text-sm font-bold text-earthy-700">Category</label>
+                                                {!isInlineCategoryOpen ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setIsInlineCategoryOpen(true)}
+                                                        className="text-[11px] sm:text-xs font-bold text-organic-600 hover:text-organic-700 flex items-center gap-1 bg-organic-50 hover:bg-organic-100 px-2 py-0.5 rounded-lg transition-colors border border-organic-200/50"
                                                     >
-                                                        <MenuItem value="" disabled><em>Select Category</em></MenuItem>
-                                                        {categories.map((cat) => (
-                                                            <MenuItem key={cat.id || cat.name} value={cat.name}>{cat.name}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
+                                                        <Plus size={13} /> Add New Category
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setInlineCategoryName('');
+                                                            setIsInlineCategoryOpen(false);
+                                                        }}
+                                                        className="text-[11px] sm:text-xs font-semibold text-earthy-500 hover:text-earthy-700"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                )}
                                             </div>
+
+                                            {isInlineCategoryOpen && (
+                                                <div className="flex items-center gap-2 p-2 bg-organic-50/90 border border-organic-300 rounded-xl sm:rounded-2xl mb-2.5 shadow-sm">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Enter new category name..."
+                                                        value={inlineCategoryName}
+                                                        onChange={(e) => setInlineCategoryName(e.target.value)}
+                                                        className="flex-1 px-3 py-1.5 text-xs sm:text-sm rounded-lg sm:rounded-xl border border-organic-200 outline-none bg-white font-medium"
+                                                        autoFocus
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={async () => {
+                                                            if (inlineCategoryName.trim()) {
+                                                                const cat = await handleCreateCategory(inlineCategoryName.trim());
+                                                                if (cat) {
+                                                                    setNewProduct(prev => ({ ...prev, category: cat.name }));
+                                                                    setInlineCategoryName('');
+                                                                    setIsInlineCategoryOpen(false);
+                                                                }
+                                                            }
+                                                        }}
+                                                        className="px-3.5 py-1.5 bg-organic-600 hover:bg-organic-700 text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold shadow-sm"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                </div>
+                                            )}
+
+                                            <FormControl fullWidth size="small">
+                                                <Select
+                                                    value={newProduct.category}
+                                                    onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                                                    displayEmpty
+                                                    sx={{
+                                                        height: { xs: '44px', sm: '52px' },
+                                                        borderRadius: { xs: '0.75rem', sm: '1rem' },
+                                                        backgroundColor: 'rgba(255, 247, 237, 0.5)',
+                                                        "& .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#e5e7eb"
+                                                        },
+                                                        "&:hover .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#65a30d"
+                                                        },
+                                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                                            borderColor: "#65a30d"
+                                                        },
+                                                        fontSize: { xs: '0.875rem', sm: '1rem' }
+                                                    }}
+                                                >
+                                                    <MenuItem value="" disabled><em>Select Category</em></MenuItem>
+                                                    {categories.map((cat) => (
+                                                        <MenuItem key={cat.id || cat.name} value={cat.name}>{cat.name}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </div>
+
+                                        {/* Price & Stock side by side */}
+                                        <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
                                             <div>
                                                 <label className="block text-xs sm:text-sm font-bold text-earthy-700 mb-1 sm:mb-2 ml-0.5 sm:ml-1">Price (₹)</label>
                                                 <input
@@ -1817,9 +1828,6 @@ const AdminDashboard = () => {
                                                     placeholder="0.00"
                                                 />
                                             </div>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-6">
                                             <div>
                                                 <label className="block text-xs sm:text-sm font-bold text-earthy-700 mb-1 sm:mb-2 ml-0.5 sm:ml-1">Stock Quantity</label>
                                                 <input
@@ -1831,17 +1839,19 @@ const AdminDashboard = () => {
                                                     placeholder="100"
                                                 />
                                             </div>
-                                            <div>
-                                                <label className="block text-xs sm:text-sm font-bold text-earthy-700 mb-1 sm:mb-2 ml-0.5 sm:ml-1">Product Image (Cloudinary)</label>
-                                                <div className="relative">
-                                                    <input
-                                                        type="file"
-                                                        id="new-product-file"
-                                                        accept="image/*"
-                                                        className="hidden"
-                                                        onChange={(e) => handleFileUpload(e, 'new')}
-                                                        disabled={uploadingImage}
-                                                    />
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs sm:text-sm font-bold text-earthy-700 mb-1 sm:mb-2 ml-0.5 sm:ml-1">Product Image (Cloudinary)</label>
+                                            <div className="relative">
+                                                <input
+                                                    type="file"
+                                                    id="new-product-file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={(e) => handleFileUpload(e, 'new')}
+                                                    disabled={uploadingImage}
+                                                />
                                                     {newProduct.image_url ? (
                                                         <div className="flex items-center gap-2 p-1.5 sm:p-2 bg-earthy-50 rounded-xl sm:rounded-2xl border border-earthy-200">
                                                             <img src={newProduct.image_url} alt="Preview" className="w-9 h-9 sm:w-10 sm:h-10 object-cover rounded-lg shrink-0" />
@@ -1876,7 +1886,6 @@ const AdminDashboard = () => {
                                                     )}
                                                 </div>
                                             </div>
-                                        </div>
 
                                         <div>
                                             <label className="block text-xs sm:text-sm font-bold text-earthy-700 mb-1 sm:mb-2 ml-0.5 sm:ml-1">Description</label>
