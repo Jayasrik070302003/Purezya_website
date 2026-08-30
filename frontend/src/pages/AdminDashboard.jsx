@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Users, Package, LayoutDashboard, Search, TrendingUp, DollarSign, ShoppingBag, Leaf, User, X, Check, Edit2, ClipboardList, ChevronRight, Trash2, LogOut, AlertCircle, Printer, Phone, Mail, MoreHorizontal, Menu, UploadCloud, Image as ImageIcon, Loader2, Download, FileText } from 'lucide-react';
+import { Users, Package, LayoutDashboard, Search, TrendingUp, DollarSign, ShoppingBag, Leaf, User, X, Check, Edit2, ClipboardList, ChevronRight, Trash2, LogOut, AlertCircle, Printer, Phone, Mail, MoreHorizontal, Menu, UploadCloud, Image as ImageIcon, Loader2, Download, FileText, Plus, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -1928,7 +1928,7 @@ const AdminDashboard = () => {
                                 >
                                     {/* Header with Pattern */}
                                     <div className="relative bg-[#14261C] p-4 sm:p-8 md:p-10 text-white overflow-hidden shrink-0">
-                                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-110 mix-blend-overlay pointer-events-none" />
+                                        <div className="absolute inset-0 bg-[url('')] opacity-20 brightness-110 mix-blend-overlay pointer-events-none" />
                                         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-organic-500 rounded-full blur-[120px] opacity-20 translate-x-[20%] translate-y-[-40%]" />
                                         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-yellow-500 rounded-full blur-[100px] opacity-10 translate-x-[-20%] translate-y-[20%]" />
 

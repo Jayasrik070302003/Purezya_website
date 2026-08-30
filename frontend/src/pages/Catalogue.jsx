@@ -101,7 +101,7 @@ const Catalogue = () => {
     return (
         <div className="min-h-screen pt-16 md:pt-28 pb-6 md:pb-20 px-3 sm:px-8 lg:px-12 bg-[#F5F7F4] relative overflow-hidden font-sans selection:bg-organic-200 selection:text-organic-900">
             {/* Ambient Atmosphere */}
-            <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+            <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[url('')]" />
             <div className="absolute -top-20 -right-20 w-[600px] h-[600px] bg-organic-300/20 rounded-full blur-[120px] pointer-events-none mix-blend-multiply animate-pulse-slow" />
             <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-[#E8F5E9]/50 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
 
@@ -126,7 +126,7 @@ const Catalogue = () => {
                                 />
                                 {/* Rich Overlay Gradients */}
                                 <div className="absolute inset-0 bg-gradient-to-b from-[#0F2411]/90 via-[#0F2411]/50 to-[#0F2411]/80 mix-blend-multiply z-10" />
-                                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay z-10 pointer-events-none" />
+                                <div className="absolute inset-0 bg-[url('')] opacity-20 mix-blend-overlay z-10 pointer-events-none" />
 
                                 {/* Central Glow Spot */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4CAF50]/20 blur-[120px] rounded-full mix-blend-soft-light z-10 pointer-events-none" />

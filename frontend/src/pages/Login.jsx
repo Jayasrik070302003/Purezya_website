@@ -26,7 +26,7 @@ const NutsAndSeedsBackground = () => {
             <div className="absolute inset-0 bg-black/40 z-10" />
 
             {/* Film Grain Texture for texture matching */}
-            <div className="absolute inset-0 opacity-[0.05] z-20 pointer-events-none mix-blend-overlay" style={{ backgroundImage: `url("https://grainy-gradients.vercel.app/noise.svg")` }} />
+            <div className="absolute inset-0 opacity-[0.05] z-20 pointer-events-none mix-blend-overlay" style={{ backgroundImage: `url("")` }} />
         </div>
     );
 };

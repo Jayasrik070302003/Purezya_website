@@ -61,7 +61,7 @@ const WellnessProducts = () => {
                         <motion.div
                             animate={{ backgroundPosition: ["0% 0%", "100% 100%"] }}
                             transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
-                            className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-110 mix-blend-overlay pointer-events-none"
+                            className="absolute inset-0 bg-[url('')] opacity-20 brightness-110 mix-blend-overlay pointer-events-none"
                         />
 
                         {/* Smoother, unified gradient flow for mobile */}
