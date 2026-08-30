@@ -21,10 +21,10 @@ exports.getDashboardData = async (req, res) => {
             ],
             categories: [
                 { id: 1, name: 'Malt Beverages', image: '/malt-beverage.jpg' },
-                { id: 2, name: 'Organic Atta', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80' },
+                { id: 2, name: 'Organic Atta', image: '/wheat-atta.jpg' },
                 { id: 3, name: 'Snacks & Sweets', image: '/snacks-sweets.jpg' },
-                { id: 4, name: 'Noodles & Pasta', image: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=500&q=80' },
-                { id: 5, name: 'Wellness Products', image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=500&q=80' }
+                { id: 4, name: 'Noodles & Pasta', image: '/palak-noodles-premium-v2.jpg' },
+                { id: 5, name: 'Wellness Products', image: '/wellness-products.jpg' }
             ]
         };
 

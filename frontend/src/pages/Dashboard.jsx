@@ -360,7 +360,13 @@ const Dashboard = () => {
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4 md:gap-fluid-lg">
-                        {data?.categories.map((cat, idx) => (
+                        {(data?.categories || [
+                            { id: 1, name: 'Malt Beverages', image: '/malt-beverage.jpg' },
+                            { id: 2, name: 'Organic Atta', image: '/wheat-atta.jpg' },
+                            { id: 3, name: 'Snacks & Sweets', image: '/snacks-sweets.jpg' },
+                            { id: 4, name: 'Noodles & Pasta', image: '/palak-noodles-premium-v2.jpg' },
+                            { id: 5, name: 'Wellness Products', image: '/wellness-products.jpg' }
+                        ]).map((cat, idx) => (
                             <motion.div
                                 key={cat.id}
                                 initial={{ opacity: 0, y: 20 }}
