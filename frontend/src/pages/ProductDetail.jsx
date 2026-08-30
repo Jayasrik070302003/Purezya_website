@@ -670,6 +670,7 @@ const ProductDetail = () => {
                                     alt={product.name}
                                     loading="lazy"
                                     className="w-full h-full object-cover relative z-10 hover:scale-105 transition-transform duration-700 ease-out"
+                                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'; }}
                                 />
 
                                 {/* 100% Organic Badge */}

@@ -2,41 +2,44 @@ import { API_BASE_URL } from '../config/api';
 
 export const getOptimizedImageUrl = (url, width = 400) => {
     if (!url || typeof url !== 'string') {
-        return url;
+        return '';
     }
 
     let imageUrl = url.trim();
+    if (!imageUrl) return '';
 
+    // 1. Handle local backend upload paths
     if (imageUrl.startsWith('/uploads/')) {
         return `${API_BASE_URL}${imageUrl}`;
     }
 
-    imageUrl = imageUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1):\d+(\/uploads\/.*)$/i, `${API_BASE_URL}$2`);
+    // 2. Replace any legacy localhost / 127.0.0.1 backend URLs with public backend
+    imageUrl = imageUrl.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/uploads\/.*)$/i, `${API_BASE_URL}$3`);
 
-    if (!imageUrl.includes('cloudinary.com')) {
-        return imageUrl; // Return original if not Cloudinary
-    }
-
+    // 3. Ensure HTTPS protocol for all external URLs
     if (imageUrl.startsWith('//')) {
         imageUrl = `https:${imageUrl}`;
-    } else if (!/^https?:\/\//i.test(imageUrl)) {
-        imageUrl = `https://${imageUrl.replace(/^\/+/, '')}`;
+    } else if (imageUrl.startsWith('http://')) {
+        imageUrl = imageUrl.replace(/^http:\/\//i, 'https://');
     }
 
-    const secureUrl = imageUrl.replace(/^http:\/\//i, 'https://');
+    // 4. Non-Cloudinary URLs (Unsplash, local assets, etc.)
+    if (!imageUrl.includes('cloudinary.com')) {
+        return imageUrl;
+    }
 
-    // Example Cloudinary URL: https://res.cloudinary.com/demo/image/upload/v1234/sample.jpg
-    // We want to insert transformations after /upload/
-    const uploadIndex = secureUrl.indexOf('/upload/');
-    if (uploadIndex === -1) return secureUrl;
+    // 5. Cloudinary optimization
+    // Format: https://res.cloudinary.com/<cloud>/image/upload/[transformations/]v12345/public_id.jpg
+    const uploadIndex = imageUrl.indexOf('/upload/');
+    if (uploadIndex === -1) return imageUrl;
 
-    const base = secureUrl.substring(0, uploadIndex + 8); // includes '/upload/'
-    const rest = secureUrl.substring(uploadIndex + 8);
+    const prefix = imageUrl.substring(0, uploadIndex + 8); // includes '.../upload/'
+    let rest = imageUrl.substring(uploadIndex + 8);
 
-    // If it already has transformations (like /c_scale,w_400/), don't add more unless we want to replace them
-    // For simplicity, just check if there's already a /v or /something/ before the actual filename
-    // Actually, checking if there's a '/' before the next part is enough to see if transformations exist, but Cloudinary versions start with 'v' and numbers.
-    // A safe way is to just inject `/q_auto,f_auto,w_${width}/` right after `/upload/`
-    
-    return `${base}q_auto,w_${width}/${rest}`;
+    // If 'rest' already starts with transformations (e.g. q_auto, c_scale, w_..., f_auto etc.), strip them out
+    rest = rest.replace(/^(?:(?:[a-z]_[a-z0-9_.-]+,?)+|\b(?:q_auto|f_auto|w_\d+|c_\w+)\b,?)\//gi, '');
+    rest = rest.replace(/^\/+/, '');
+
+    const transform = width ? `f_auto,q_auto,w_${width},c_limit` : 'f_auto,q_auto';
+    return `${prefix}${transform}/${rest}`;
 };
