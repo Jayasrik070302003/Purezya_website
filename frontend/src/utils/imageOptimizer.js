@@ -1,5 +1,20 @@
 import { API_BASE_URL } from '../config/api';
 
+export const normalizeImagePath = (src) => {
+    if (!src || typeof src !== 'string') return '';
+    const trimmed = src.trim();
+
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:')) {
+        return getOptimizedImageUrl(trimmed);
+    }
+
+    if (trimmed.startsWith('/uploads/')) {
+        return `${API_BASE_URL}${trimmed}`;
+    }
+
+    return trimmed;
+};
+
 export const getOptimizedImageUrl = (url, width = 400) => {
     if (!url || typeof url !== 'string') {
         return '';
@@ -23,20 +38,18 @@ export const getOptimizedImageUrl = (url, width = 400) => {
         imageUrl = imageUrl.replace(/^http:\/\//i, 'https://');
     }
 
-    // 4. Non-Cloudinary URLs (Unsplash, local assets, etc.)
+    // 4. Non-Cloudinary URLs (Local public assets, Unsplash, etc.)
     if (!imageUrl.includes('cloudinary.com')) {
         return imageUrl;
     }
 
     // 5. Cloudinary optimization
-    // Format: https://res.cloudinary.com/<cloud>/image/upload/[transformations/]v12345/public_id.jpg
     const uploadIndex = imageUrl.indexOf('/upload/');
     if (uploadIndex === -1) return imageUrl;
 
-    const prefix = imageUrl.substring(0, uploadIndex + 8); // includes '.../upload/'
+    const prefix = imageUrl.substring(0, uploadIndex + 8);
     let rest = imageUrl.substring(uploadIndex + 8);
 
-    // If 'rest' already starts with transformations (e.g. q_auto, c_scale, w_..., f_auto etc.), strip them out
     rest = rest.replace(/^(?:(?:[a-z]_[a-z0-9_.-]+,?)+|\b(?:q_auto|f_auto|w_\d+|c_\w+)\b,?)\//gi, '');
     rest = rest.replace(/^\/+/, '');
 

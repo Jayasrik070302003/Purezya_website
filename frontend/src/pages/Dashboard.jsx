@@ -380,6 +380,14 @@ const Dashboard = () => {
                                         src={cat.image}
                                         alt={cat.name}
                                         loading="lazy"
+                                        onError={(e) => {
+                                            if (cat.id === 1) e.target.src = '/malt-beverage.jpg';
+                                            else if (cat.id === 2) e.target.src = '/wheat-atta.jpg';
+                                            else if (cat.id === 3) e.target.src = '/snacks-sweets.jpg';
+                                            else if (cat.id === 4) e.target.src = '/palak-noodles-premium-v2.jpg';
+                                            else if (cat.id === 5) e.target.src = '/wellness-products.jpg';
+                                            else e.target.src = '/hero-products.jpg';
+                                        }}
                                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent transition-opacity" />
