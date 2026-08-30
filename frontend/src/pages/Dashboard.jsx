@@ -35,14 +35,14 @@ const Dashboard = () => {
         const fetchDashboardAndProducts = async () => {
             try {
                 const prodRes = await axios.get(`${API_URL}/products`);
-                if (prodRes.data && Array.isArray(prodRes.data) && prodRes.data.length > 0) {
+                if (prodRes.data && Array.isArray(prodRes.data)) {
                     setProducts(prodRes.data);
                 } else {
-                    setProducts(Object.values(productDatabase));
+                    setProducts([]);
                 }
             } catch (err) {
-                console.warn('Using local product database fallback', err);
-                setProducts(Object.values(productDatabase));
+                console.warn('Error fetching products', err);
+                setProducts([]);
                 if (err.response && err.response.status === 401) {
                     logout();
                 }

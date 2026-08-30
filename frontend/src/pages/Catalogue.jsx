@@ -8,42 +8,44 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useToast } from '../context/ToastContext';
 const Catalogue = () => {
-    const [categories, setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [dbCategories, setDbCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const { addToCart, toggleWishlist, isInWishlist } = useShop();
     const { showToast } = useToast();
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchCatalogueData = async () => {
             try {
-                const data = await fetchWithCache(`${API_URL}/products`);
-                setCategories(data);
+                const [prodsData, catsData] = await Promise.all([
+                    fetchWithCache(`${API_URL}/products`),
+                    fetchWithCache(`${API_URL}/categories`)
+                ]);
+                if (Array.isArray(prodsData)) setProducts(prodsData);
+                if (Array.isArray(catsData)) setDbCategories(catsData);
             } catch (error) {
-                console.error("Failed to fetch products", error);
+                console.error("Failed to fetch catalogue data", error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchProducts();
+        fetchCatalogueData();
     }, []);
 
     const [searchParams] = useSearchParams();
-    const categoryParam = searchParams.get('category');
     const [activeFilter, setActiveFilter] = useState('All');
     const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
 
     useEffect(() => {
         const cat = searchParams.get('category');
         if (cat) {
-            if (cat.toLowerCase().includes('malt')) setActiveFilter('Malt');
-            else if (cat.toLowerCase().includes('atta')) setActiveFilter('Atta');
-            else if (cat.toLowerCase().includes('snack') || cat.toLowerCase().includes('sweet')) setActiveFilter('Snacks & Sweets');
-            else if (cat.toLowerCase().includes('noodle') || cat.toLowerCase().includes('pasta')) setActiveFilter('Noodles & Pasta');
-            else if (cat.toLowerCase().includes('wellness')) setActiveFilter('Wellness');
+            setActiveFilter(cat);
         }
     }, [searchParams]);
 
-    const filteredCategories = categories.filter(item => {
+    const filterTabs = ['All', ...dbCategories.map(c => c.name)];
+
+    const filteredCategories = products.filter(item => {
         const name = (item.name || item.title || '').toLowerCase();
         const description = (item.description || item.benefit || '').toLowerCase();
         const category = (item.category || item.tag || '').toLowerCase();
@@ -56,13 +58,9 @@ const Catalogue = () => {
         if (!matchesSearch) return false;
 
         if (activeFilter === 'All') return true;
-        if (activeFilter === 'Malt' || activeFilter === 'Malt Beverages') return category.includes('malt') || name.includes('malt');
-        if (activeFilter === 'Atta' || activeFilter === 'Organic Atta') return category.includes('atta') || name.includes('atta');
-        if (activeFilter === 'Snacks' || activeFilter === 'Snacks & Sweets') return category.includes('snack') || category.includes('sweet') || name.includes('halwa') || name.includes('laddu');
-        if (activeFilter === 'Noodles' || activeFilter === 'Noodles & Pasta') return category.includes('noodle') || category.includes('pasta') || name.includes('noodle') || name.includes('pasta');
-        if (activeFilter === 'Wellness' || activeFilter === 'Wellness Products') return category.includes('wellness') || name.includes('amla') || name.includes('gulkand');
-
-        return true;
+        return category.toLowerCase() === activeFilter.toLowerCase() ||
+               category.includes(activeFilter.toLowerCase()) ||
+               activeFilter.toLowerCase().includes(category);
     });
 
     // Animation Variants
@@ -267,7 +265,7 @@ const Catalogue = () => {
                             <span>Filters</span>
                         </button>
                         <div className="hidden md:block w-px bg-gray-200 my-2 mx-1" />
-                        {['All', 'Malt', 'Atta', 'Snacks & Sweets', 'Noodles & Pasta', 'Wellness'].map((filter) => (
+                        {filterTabs.map((filter) => (
                             <button
                                 key={filter}
                                 onClick={() => setActiveFilter(filter)}
