@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Users, Package, LayoutDashboard, Search, TrendingUp, DollarSign, ShoppingBag, Leaf, User, X, Check, Edit2, ClipboardList, ChevronRight, Trash2, LogOut, AlertCircle, Printer, Phone, Mail, MoreHorizontal, Menu, UploadCloud, Image as ImageIcon, Loader2, Download, FileText, Plus, Minus } from 'lucide-react';
+import { Users, Package, LayoutDashboard, Search, TrendingUp, IndianRupee, ShoppingBag, Leaf, User, X, Check, Edit2, ClipboardList, ChevronRight, Trash2, LogOut, AlertCircle, Printer, Phone, Mail, MoreHorizontal, Menu, UploadCloud, Image as ImageIcon, Loader2, Download, FileText, Plus, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -145,16 +145,26 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeleteCategory = async (cat) => {
-        if (!window.confirm(`Are you sure you want to delete category "${cat.name}"?`)) return;
+    const [isDeleteCategoryModalOpen, setIsDeleteCategoryModalOpen] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState(null);
+
+    const handleDeleteCategoryClick = (cat) => {
+        setCategoryToDelete(cat);
+        setIsDeleteCategoryModalOpen(true);
+    };
+
+    const confirmDeleteCategory = async () => {
+        if (!categoryToDelete) return;
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`${API_URL}/categories/${cat.id}`, {
+            await axios.delete(`${API_URL}/categories/${categoryToDelete.id}`, {
                 headers: { 'x-auth-token': token }
             });
-            setCategories(prev => prev.filter(c => c.id !== cat.id));
-            if (selectedCategory === cat.name) setSelectedCategory('All');
-            setNotification({ type: 'success', message: `Category "${cat.name}" deleted successfully.` });
+            setCategories(prev => prev.filter(c => c.id !== categoryToDelete.id));
+            if (selectedCategory === categoryToDelete.name) setSelectedCategory('All');
+            setIsDeleteCategoryModalOpen(false);
+            setCategoryToDelete(null);
+            setNotification({ type: 'success', message: `Category "${categoryToDelete.name}" deleted successfully.` });
             setTimeout(() => setNotification(null), 3000);
         } catch (err) {
             console.error('Error deleting category:', err);
@@ -813,6 +823,134 @@ const AdminDashboard = () => {
                         )}
                     </AnimatePresence>
 
+                    {/* Edit Category Modal */}
+                    <AnimatePresence>
+                        {editingCategory && (
+                            <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4">
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => setEditingCategory(null)}
+                                    className="absolute inset-0 bg-[#0F2411]/50 backdrop-blur-md"
+                                />
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                                    className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative z-10 border border-earthy-100"
+                                >
+                                    {/* Header */}
+                                    <div className="relative bg-[#14261C] p-5 sm:p-6 text-white overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-organic-500 rounded-full blur-2xl opacity-20 translate-x-8 -translate-y-8" />
+                                        <div className="relative z-10 flex justify-between items-start">
+                                            <div>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider text-organic-400">Category Settings</span>
+                                                <h3 className="text-xl sm:text-2xl font-bold font-display text-white mt-0.5">Edit Category</h3>
+                                            </div>
+                                            <button
+                                                onClick={() => setEditingCategory(null)}
+                                                className="p-1.5 sm:p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all text-white/80 hover:text-white"
+                                            >
+                                                <X size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Form Body */}
+                                    <div className="p-5 sm:p-6 bg-[#FAF9F6] space-y-4 sm:space-y-5">
+                                        <div>
+                                            <label className="block text-xs font-bold text-earthy-700 uppercase tracking-wider mb-1.5 ml-0.5">
+                                                Category Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={editForm.name}
+                                                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                                className="w-full px-4 py-3 rounded-xl border-2 border-earthy-200 bg-white focus:outline-none focus:border-organic-500 focus:ring-4 focus:ring-organic-100 transition-all font-medium text-sm sm:text-base text-earthy-800"
+                                                placeholder="Enter category name"
+                                                autoFocus
+                                            />
+                                        </div>
+
+                                        <div className="pt-2 flex gap-3">
+                                            <button
+                                                type="button"
+                                                onClick={() => setEditingCategory(null)}
+                                                className="flex-1 py-3 rounded-xl font-bold text-earthy-600 hover:bg-earthy-100 hover:text-earthy-900 transition-all text-sm sm:text-base border border-earthy-200 bg-white"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={handleSaveEdit}
+                                                className="flex-1 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-organic-600 to-organic-500 hover:from-organic-700 hover:to-organic-600 transition-all shadow-md shadow-organic-600/25 flex items-center justify-center gap-2 text-sm sm:text-base"
+                                            >
+                                                <Check size={16} /> Save Changes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Delete Category Confirmation Modal */}
+                    <AnimatePresence>
+                        {isDeleteCategoryModalOpen && categoryToDelete && (
+                            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => {
+                                        setIsDeleteCategoryModalOpen(false);
+                                        setCategoryToDelete(null);
+                                    }}
+                                    className="absolute inset-0 bg-[#0F2411]/50 backdrop-blur-md"
+                                />
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                    className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-md p-6 sm:p-8 relative z-10 overflow-hidden border border-earthy-100"
+                                >
+                                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-500 to-rose-600" />
+
+                                    <div className="flex flex-col items-center text-center">
+                                        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 mb-4 sm:mb-5 border border-red-100">
+                                            <Trash2 size={28} className="sm:w-8 sm:h-8" />
+                                        </div>
+
+                                        <h2 className="text-xl sm:text-2xl font-display font-bold text-earthy-900 mb-1.5">Delete Category?</h2>
+                                        <p className="text-xs sm:text-sm text-earthy-600 mb-6 sm:mb-8 leading-relaxed max-w-sm">
+                                            Are you sure you want to delete <span className="font-bold text-earthy-900 bg-earthy-100 px-2 py-0.5 rounded">"{categoryToDelete.name}"</span>?
+                                        </p>
+
+                                        <div className="flex gap-3 w-full">
+                                            <button
+                                                onClick={() => {
+                                                    setIsDeleteCategoryModalOpen(false);
+                                                    setCategoryToDelete(null);
+                                                }}
+                                                className="flex-1 py-3 rounded-xl font-bold text-earthy-600 hover:bg-earthy-100 hover:text-earthy-900 transition-all border border-earthy-200 text-sm sm:text-base bg-white"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={confirmDeleteCategory}
+                                                className="flex-1 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 transition-all shadow-lg shadow-red-600/25 flex items-center justify-center gap-1.5 text-sm sm:text-base"
+                                            >
+                                                <Trash2 size={16} /> Yes, Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
+
                     {/* Header */}
                     <div className="flex flex-row justify-between items-center mb-3 md:mb-8 gap-2 md:gap-4">
                         <div>
@@ -869,7 +1007,7 @@ const AdminDashboard = () => {
                                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 md:gap-6">
                                     <StatCard title="Total Users" value={stats.totalUsers} icon={Users} color="text-blue-600 bg-blue-100" delay={0.1} />
                                     <StatCard title="Total Orders" value={stats.totalOrders} icon={ShoppingBag} color="text-purple-600 bg-purple-100" delay={0.2} />
-                                    <StatCard title="Total Revenue" value={`₹${stats.totalRevenue}`} icon={DollarSign} color="text-emerald-600 bg-emerald-100" delay={0.3} />
+                                    <StatCard title="Total Revenue" value={`₹${stats.totalRevenue}`} icon={IndianRupee} color="text-emerald-600 bg-emerald-100" delay={0.3} />
                                     <StatCard title="Total Products" value={stats.totalProducts} icon={Package} color="text-orange-600 bg-orange-100" delay={0.4} />
                                 </div>
 
@@ -2353,7 +2491,7 @@ const AdminDashboard = () => {
                                                         )
                                                     },
                                                     {
-                                                        icon: DollarSign, title: 'Payment', content: (
+                                                        icon: IndianRupee, title: 'Payment', content: (
                                                             <>
                                                                 <div className="flex justify-between items-center mb-1">
                                                                     <span className="text-earthy-500 text-xs">Method</span>
