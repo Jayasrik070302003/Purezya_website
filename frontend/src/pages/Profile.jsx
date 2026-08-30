@@ -6,6 +6,7 @@ import { User, Mail, Phone, MapPin, Camera, Save, ArrowLeft, Leaf, Award, Packag
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import OrganicAvatar from '../components/OrganicAvatar';
 
 const Profile = () => {
     const { user, updateUser } = useAuth();
@@ -210,12 +211,8 @@ const Profile = () => {
 
                             <div className="relative z-10 pt-[clamp(3.5rem,7vw,5rem)] mb-fluid-lg">
                                 <div className="relative inline-block group">
-                                    <div className="w-[clamp(6rem,12vw,8rem)] h-[clamp(6rem,12vw,8rem)] rounded-full border-4 border-white shadow-2xl overflow-hidden mx-auto bg-earthy-100 flex items-center justify-center">
-                                        {userData.avatar ? (
-                                            <img src={userData.avatar} alt="Profile" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <User className="w-1/2 h-1/2 text-earthy-400" />
-                                        )}
+                                    <div className="w-[clamp(6rem,12vw,8rem)] h-[clamp(6rem,12vw,8rem)] rounded-full border-4 border-white shadow-2xl overflow-hidden mx-auto bg-[#14261C] flex items-center justify-center">
+                                        <OrganicAvatar src={userData.avatar} name={userData.name} />
                                     </div>
                                     <label className="absolute bottom-0 right-0 p-[clamp(0.375rem,1vw,0.5rem)] bg-organic-600 hover:bg-organic-700 text-white rounded-full shadow-lg cursor-pointer transition-transform hover:scale-110 active:scale-95">
                                         <Camera className="w-[clamp(0.875rem,1.2vw,1rem)] h-[clamp(0.875rem,1.2vw,1rem)]" />

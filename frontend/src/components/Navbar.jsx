@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, User, Leaf, Menu, X, ChevronDown, Package, Heart, ShoppingCart, ArrowLeft, LayoutDashboard, Store, Home } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import OrganicAvatar from './OrganicAvatar';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
@@ -63,12 +64,8 @@ const Navbar = () => {
                                         <p className="text-sm font-black text-earthy-900 leading-none">{user.name}</p>
                                         <p className="text-[10px] font-bold text-organic-600 uppercase tracking-wider mt-1">Verified Member</p>
                                     </div>
-                                    <div className="w-[clamp(2.5rem,4vw,3rem)] h-[clamp(2.5rem,4vw,3rem)] rounded-fluid-xl bg-white flex items-center justify-center text-earthy-900 border border-earthy-200 group-hover:border-organic-300 group-hover:shadow-md transition-all overflow-hidden relative">
-                                        {user.profile_picture || user.avatar ? (
-                                            <img src={user.profile_picture || user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <User className="w-[clamp(1.25rem,2vw,1.5rem)] h-[clamp(1.25rem,2vw,1.5rem)]" />
-                                        )}
+                                    <div className="w-[clamp(2.5rem,4vw,3rem)] h-[clamp(2.5rem,4vw,3rem)] rounded-fluid-xl bg-[#14261C] flex items-center justify-center text-white border border-earthy-200 group-hover:border-organic-300 group-hover:shadow-md transition-all overflow-hidden relative">
+                                        <OrganicAvatar src={user.profile_picture || user.avatar} name={user.name} />
                                     </div>
                                     <ChevronDown className={`text-earthy-400 transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''}`} size={16} />
                                 </button>
@@ -131,8 +128,8 @@ const Navbar = () => {
                             {/* Mobile User Icon */}
                             {user && (
                                 <Link to="/profile" className="relative group/avatar">
-                                    <div className="w-[clamp(2rem,4vw,2.5rem)] h-[clamp(2rem,4vw,2.5rem)] rounded-full overflow-hidden border border-earthy-200 group-hover/avatar:border-organic-300 transition-colors">
-                                        <img src={user.profile_picture || user.avatar || "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=500&q=80"} alt="User" className="w-full h-full object-cover" />
+                                    <div className="w-[clamp(2rem,4vw,2.5rem)] h-[clamp(2rem,4vw,2.5rem)] rounded-full overflow-hidden border border-earthy-200 group-hover/avatar:border-organic-300 transition-colors bg-[#14261C]">
+                                        <OrganicAvatar src={user.profile_picture || user.avatar} name={user.name} />
                                     </div>
                                     <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
                                 </Link>
@@ -215,8 +212,8 @@ const Navbar = () => {
                                     <p className="text-[10px] font-black text-earthy-400 uppercase tracking-[0.25em] mb-1 pl-3">Account</p>
                                     <Link onClick={() => setIsMenuOpen(false)} to="/profile" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
                                         <div className="relative flex-shrink-0">
-                                            <div className="w-7 h-7 rounded-full bg-earthy-50 flex items-center justify-center text-organic-600 shadow-sm border border-earthy-100 overflow-hidden">
-                                                {(user.profile_picture || user.avatar) ? <img src={user.profile_picture || user.avatar} className="w-full h-full object-cover" /> : <User size={14} />}
+                                            <div className="w-7 h-7 rounded-full bg-[#14261C] flex items-center justify-center text-white shadow-sm border border-earthy-100 overflow-hidden">
+                                                <OrganicAvatar src={user.profile_picture || user.avatar} name={user.name} />
                                             </div>
                                             <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border border-white rounded-full"></div>
                                         </div>
