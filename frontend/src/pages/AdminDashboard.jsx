@@ -1286,21 +1286,9 @@ const AdminDashboard = () => {
                             >
                                 {/* Categories Section */}
                                 <div>
-                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2.5 sm:mb-4 gap-2">
-                                        <div>
-                                            <h2 className="text-base sm:text-xl font-bold text-earthy-900 font-display">Product Categories</h2>
-                                            <span className="text-[11px] sm:text-sm text-earthy-500">Manage category visibility, stock status & delete or add new groups</span>
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                setNewCategoryName('');
-                                                setNewCategoryDesc('');
-                                                setIsAddCategoryModalOpen(true);
-                                            }}
-                                            className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-organic-600 hover:bg-organic-700 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-sm transition-all self-start sm:self-auto"
-                                        >
-                                            <Plus size={16} /> Add Category
-                                        </button>
+                                    <div className="mb-2.5 sm:mb-4">
+                                        <h2 className="text-base sm:text-xl font-bold text-earthy-900 font-display">Product Categories</h2>
+                                        <span className="text-[11px] sm:text-sm text-earthy-500">Manage category visibility, stock status & delete or edit groups</span>
                                     </div>
                                     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                                         <div className="col-span-full border border-earthy-200 bg-earthy-50 p-2.5 sm:p-4 rounded-xl text-earthy-700 text-xs sm:text-sm mb-1 sm:mb-2 font-medium flex items-center gap-2">
@@ -1424,7 +1412,7 @@ const AdminDashboard = () => {
                                             <div className="col-span-full py-8 sm:py-10 text-center bg-white rounded-2xl sm:rounded-3xl border-2 border-dashed border-earthy-200 p-6">
                                                 <Package className="w-10 h-10 text-earthy-300 mx-auto mb-2" strokeWidth={1.5} />
                                                 <p className="text-sm sm:text-base font-bold text-earthy-800">No categories added yet</p>
-                                                <p className="text-xs text-earthy-500 mt-1 max-w-sm mx-auto">Click "+ Add Category" above to create your first dynamic category.</p>
+                                                <p className="text-xs text-earthy-500 mt-1 max-w-sm mx-auto">Categories are automatically added when creating products with a new category.</p>
                                             </div>
                                         )}
                                     </div>
