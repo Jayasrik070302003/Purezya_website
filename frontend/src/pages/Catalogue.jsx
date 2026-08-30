@@ -63,32 +63,37 @@ const Catalogue = () => {
                activeFilter.toLowerCase().includes(category);
     });
 
-    // Animation Variants
+    // Animation Variants for Category Switch & Stagger
     const containerVariants = {
         hidden: { opacity: 0 },
         show: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.2
+                staggerChildren: 0.04,
+                delayChildren: 0.05
             }
+        },
+        exit: {
+            opacity: 0,
+            y: -10,
+            transition: { duration: 0.15, ease: "easeOut" }
         }
     };
 
     const cardVariants = {
-        hidden: { opacity: 0, y: 50, scale: 0.95 },
+        hidden: { opacity: 0, y: 20, scale: 0.94 },
         show: {
             opacity: 1,
             y: 0,
             scale: 1,
             transition: {
                 type: "spring",
-                stiffness: 100,
-                damping: 20
+                stiffness: 260,
+                damping: 22
             }
         },
         hover: {
-            y: -12,
+            y: -10,
             scale: 1.02,
             transition: {
                 type: "spring",
@@ -269,13 +274,17 @@ const Catalogue = () => {
                             <button
                                 key={filter}
                                 onClick={() => setActiveFilter(filter)}
-                                className={`px-2.5 py-1.5 md:px-6 md:py-3 rounded-full text-[11px] md:text-sm font-bold whitespace-nowrap transition-all duration-300 relative overflow-hidden shrink-0 min-h-[30px] md:min-h-[36px] flex items-center justify-center ${activeFilter === filter
+                                className={`px-3 py-1.5 md:px-6 md:py-3 rounded-full text-[11px] md:text-sm font-bold whitespace-nowrap transition-all duration-300 relative shrink-0 min-h-[30px] md:min-h-[36px] flex items-center justify-center ${activeFilter === filter
                                     ? 'text-white shadow-lg shadow-[#2E7D32]/25'
                                     : 'text-[#455A64] hover:bg-white/80 hover:text-[#122A14]'
                                     }`}
                             >
                                 {activeFilter === filter && (
-                                    <motion.div layoutId="activeFilter" className="absolute inset-0 bg-[#122A14]" />
+                                    <motion.div
+                                        layoutId="activeCategoryPill"
+                                        className="absolute inset-0 bg-[#122A14] rounded-full shadow-md"
+                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                    />
                                 )}
                                 <span className="relative z-10">{filter}</span>
                             </button>
@@ -283,105 +292,113 @@ const Catalogue = () => {
                     </div>
                 </div>
 
-                {/* Immersive Grid */}
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="show"
-                    className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-fluid-lg"
-                >
-                    {filteredCategories.map((item) => (
-                        <Link to={`/product/${item.id}`} key={item.id} className="group h-full">
+                {/* Immersive Grid with Smooth Category Switch Animation */}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeFilter}
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="show"
+                        exit="exit"
+                        className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-fluid-lg"
+                    >
+                        {filteredCategories.map((item) => (
                             <motion.div
+                                key={item.id}
                                 variants={cardVariants}
-                                whileHover="hover"
-                                layout
-                                className="h-full relative bg-white rounded-2xl md:rounded-[2rem] p-2 sm:p-3 flex flex-col shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-transparent hover:border-[#4CAF50]/10"
+                                className="h-full"
                             >
-                                {/* Image Container with Parallax Zoom */}
-                                <div className="relative h-36 sm:h-48 md:h-[clamp(200px,30vw,280px)] rounded-xl md:rounded-fluid-xl overflow-hidden bg-gray-100 mb-2 md:mb-4">
-                                    <motion.img
-                                        src={getOptimizedImageUrl(item.image_url || item.image, 400)}
-                                        alt={item.name}
-                                        loading="lazy"
-                                        className="w-full h-full object-cover"
-                                        layoutId={`image-${item.id}`}
-                                        onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}
-                                    />
+                                <Link to={`/product/${item.id}`} className="group h-full block">
+                                    <motion.div
+                                        whileHover="hover"
+                                        className="h-full relative bg-white rounded-2xl md:rounded-[2rem] p-2 sm:p-3 flex flex-col shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-transparent hover:border-[#4CAF50]/10"
+                                    >
+                                        {/* Image Container with Parallax Zoom */}
+                                        <div className="relative h-36 sm:h-48 md:h-[clamp(200px,30vw,280px)] rounded-xl md:rounded-fluid-xl overflow-hidden bg-gray-100 mb-2 md:mb-4">
+                                            <motion.img
+                                                src={getOptimizedImageUrl(item.image_url || item.image, 400)}
+                                                alt={item.name}
+                                                loading="lazy"
+                                                className="w-full h-full object-cover"
+                                                layoutId={`image-${item.id}`}
+                                                onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}
+                                            />
 
-                                    {/* Living Gradient Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
+                                            {/* Living Gradient Overlay */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
 
-                                    {/* Floating Badges (Pulse Animation) */}
-                                    <div className="absolute top-2 left-2 right-2 md:top-4 md:left-4 md:right-4 flex justify-between items-start z-10">
-                                        <div className="flex flex-col gap-2">
-                                            {item.tag && (
-                                                <motion.div
-                                                    animate={{ scale: [1, 1.05, 1] }}
-                                                    transition={{ duration: 4, repeat: Infinity }}
-                                                    className="bg-white/90 backdrop-blur-md text-[#122A14] text-[8px] sm:text-[10px] font-black uppercase tracking-widest px-1.5 py-0.5 md:px-2.5 md:py-1 rounded-full shadow-lg border border-white/20 self-start"
+                                            {/* Floating Badges (Pulse Animation) */}
+                                            <div className="absolute top-2 left-2 right-2 md:top-4 md:left-4 md:right-4 flex justify-between items-start z-10">
+                                                <div className="flex flex-col gap-2">
+                                                    {item.tag && (
+                                                        <motion.div
+                                                            animate={{ scale: [1, 1.05, 1] }}
+                                                            transition={{ duration: 4, repeat: Infinity }}
+                                                            className="bg-white/90 backdrop-blur-md text-[#122A14] text-[8px] sm:text-[10px] font-black uppercase tracking-widest px-1.5 py-0.5 md:px-2.5 md:py-1 rounded-full shadow-lg border border-white/20 self-start"
+                                                        >
+                                                            {item.tag}
+                                                        </motion.div>
+                                                    )}
+                                                </div>
+                                                <button 
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        toggleWishlist(item);
+                                                        if (isInWishlist(item.id)) {
+                                                            showToast("Removed from wishlist");
+                                                        } else {
+                                                            showToast("Added to wishlist");
+                                                        }
+                                                    }}
+                                                    className={`flex w-6 h-6 sm:w-8 sm:h-8 rounded-full backdrop-blur-md border border-white/30 items-center justify-center transition-colors shadow-lg ${
+                                                        isInWishlist(item.id) 
+                                                            ? 'bg-white text-[#E91E63]' 
+                                                            : 'bg-white/40 text-white hover:bg-white hover:text-[#E91E63]'
+                                                    }`}
                                                 >
-                                                    {item.tag}
-                                                </motion.div>
-                                            )}
-                                        </div>
-                                        <button 
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                toggleWishlist(item);
-                                                if (isInWishlist(item.id)) {
-                                                    showToast("Removed from wishlist");
-                                                } else {
-                                                    showToast("Added to wishlist");
-                                                }
-                                            }}
-                                            className={`flex w-6 h-6 sm:w-8 sm:h-8 rounded-full backdrop-blur-md border border-white/30 items-center justify-center transition-colors shadow-lg ${
-                                                isInWishlist(item.id) 
-                                                    ? 'bg-white text-[#E91E63]' 
-                                                    : 'bg-white/40 text-white hover:bg-white hover:text-[#E91E63]'
-                                            }`}
-                                        >
-                                            <Heart size={12} className="sm:w-4 sm:h-4" fill={isInWishlist(item.id) ? "currentColor" : "none"} />
-                                        </button>
-                                    </div>
-
-                                    {/* Content within Image Area */}
-                                    <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-5 translate-y-0 md:translate-y-2 group-hover:translate-y-0 transition-transform duration-500 z-10 leading-tight">
-                                        <p className="text-[#C8E6C9] text-[8px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5 md:mb-1 flex items-center gap-1">
-                                            <Sparkles size={8} className="text-[#A5D6A7]" />
-                                            {item.count}
-                                        </p>
-                                        <h3 className="text-xs sm:text-base md:text-2xl font-display font-bold text-white leading-tight md:leading-none mb-0.5 md:mb-1 group-hover:text-[#E8F5E9] transition-colors shadow-black drop-shadow-md line-clamp-1 md:line-clamp-none">
-                                            {item.name}
-                                        </h3>
-                                        <p className="text-white/80 text-xs font-medium line-clamp-1 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 transform translate-y-2 group-hover:translate-y-0 hidden md:block">
-                                            {item.benefit}
-                                        </p>
-
-                                        {/* Price and CTA */}
-                                        <div className="flex items-center justify-between pt-1 md:pt-3 border-t border-white/20">
-                                            <div>
-                                                <p className="text-white/60 text-[8px] sm:text-[10px] uppercase font-bold tracking-wide">from</p>
-                                                <p className="text-[#A5D6A7] font-bold text-xs sm:text-base">{item.price}</p>
+                                                    <Heart size={12} className="sm:w-4 sm:h-4" fill={isInWishlist(item.id) ? "currentColor" : "none"} />
+                                                </button>
                                             </div>
-                                            <motion.button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    addToCart(item, 1);
-                                                    showToast("Added to cart");
-                                                }}
-                                                whileTap={{ scale: 0.9 }}
-                                                className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-white text-[#122A14] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-110 active:scale-95 transition-transform duration-300"
-                                            >
-                                                <ShoppingBag size={12} className="sm:w-4 sm:h-4 md:w-[18px] md:h-[18px]" />
-                                            </motion.button>
+
+                                            {/* Content within Image Area */}
+                                            <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-5 translate-y-0 md:translate-y-2 group-hover:translate-y-0 transition-transform duration-500 z-10 leading-tight">
+                                                <p className="text-[#C8E6C9] text-[8px] sm:text-[10px] font-bold uppercase tracking-wider mb-0.5 md:mb-1 flex items-center gap-1">
+                                                    <Sparkles size={8} className="text-[#A5D6A7]" />
+                                                    {item.count}
+                                                </p>
+                                                <h3 className="text-xs sm:text-base md:text-2xl font-display font-bold text-white leading-tight md:leading-none mb-0.5 md:mb-1 group-hover:text-[#E8F5E9] transition-colors shadow-black drop-shadow-md line-clamp-1 md:line-clamp-none">
+                                                    {item.name}
+                                                </h3>
+                                                <p className="text-white/80 text-xs font-medium line-clamp-1 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100 transform translate-y-2 group-hover:translate-y-0 hidden md:block">
+                                                    {item.benefit}
+                                                </p>
+
+                                                {/* Price and CTA */}
+                                                <div className="flex items-center justify-between pt-1 md:pt-3 border-t border-white/20">
+                                                    <div>
+                                                        <p className="text-white/60 text-[8px] sm:text-[10px] uppercase font-bold tracking-wide">from</p>
+                                                        <p className="text-[#A5D6A7] font-bold text-xs sm:text-base">{item.price}</p>
+                                                    </div>
+                                                    <motion.button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            addToCart(item, 1);
+                                                            showToast("Added to cart");
+                                                        }}
+                                                        whileTap={{ scale: 0.9 }}
+                                                        className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-white text-[#122A14] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-110 active:scale-95 transition-transform duration-300"
+                                                    >
+                                                        <ShoppingBag size={12} className="sm:w-4 sm:h-4 md:w-[18px] md:h-[18px]" />
+                                                    </motion.button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    </motion.div>
+                                </Link>
                             </motion.div>
-                        </Link>
-                    ))}
-                </motion.div>
+                        ))}
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </div>
     );
