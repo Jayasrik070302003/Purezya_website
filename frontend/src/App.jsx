@@ -12,11 +12,6 @@ import Checkout from './pages/Checkout';
 import Catalogue from './pages/Catalogue';
 import { ToastProvider } from './context/ToastContext';
 import { ShopProvider } from './context/ShopContext';
-import MaltBeverages from './pages/MaltBeverages';
-import OrganicAtta from './pages/OrganicAtta';
-import SnacksAndSweets from './pages/SnacksAndSweets';
-import NoodlesAndPasta from './pages/NoodlesAndPasta';
-import WellnessProducts from './pages/WellnessProducts';
 import ProductDetail from './pages/ProductDetail';
 import Profile from './pages/Profile';
 import OrderHistory from './pages/OrderHistory';
@@ -30,7 +25,6 @@ axios.interceptors.request.use(config => {
   config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
   config.headers['Pragma'] = 'no-cache';
   config.headers['Expires'] = '0';
-  // Add timestamp to query to force browser to treat as new request
   config.params = { ...config.params, _t: Date.now() };
   console.log(`[API] ${config.method.toUpperCase()} request to ${config.url}`);
   return config;
@@ -42,7 +36,6 @@ const AppContent = () => {
   const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
 
   useEffect(() => {
-    // Ping backend on route change to ensure freshness/connectivity
     const logNavigation = async () => {
       try {
         await axios.get(`${API_URL}/products?ping=true&limit=1`);
@@ -60,15 +53,15 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Public Routes (Accessible by all visitors freely) */}
+        {/* Public Storefront Routes */}
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/catalogue" element={<Catalogue />} />
-        <Route path="/malt-beverages" element={<MaltBeverages />} />
-        <Route path="/organic-atta" element={<OrganicAtta />} />
-        <Route path="/snacks-sweets" element={<SnacksAndSweets />} />
-        <Route path="/noodles-pasta" element={<NoodlesAndPasta />} />
-        <Route path="/wellness-products" element={<WellnessProducts />} />
+        <Route path="/malt-beverages" element={<Navigate to="/catalogue?category=Malt%20Beverages" replace />} />
+        <Route path="/organic-atta" element={<Navigate to="/catalogue?category=Organic%20Atta" replace />} />
+        <Route path="/snacks-sweets" element={<Navigate to="/catalogue?category=Snacks%20%26%20Sweets" replace />} />
+        <Route path="/noodles-pasta" element={<Navigate to="/catalogue?category=Noodles%20%26%20Pasta" replace />} />
+        <Route path="/wellness-products" element={<Navigate to="/catalogue?category=Wellness%20Products" replace />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />

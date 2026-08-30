@@ -27,39 +27,42 @@ const Catalogue = () => {
         fetchProducts();
     }, []);
 
-    const [activeFilter, setActiveFilter] = useState('All');
     const [searchParams] = useSearchParams();
+    const categoryParam = searchParams.get('category');
+    const [activeFilter, setActiveFilter] = useState('All');
     const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
 
-    const allowedTags = ['Malt', 'Atta', 'Snacks', 'Wellness'];
+    useEffect(() => {
+        const cat = searchParams.get('category');
+        if (cat) {
+            if (cat.toLowerCase().includes('malt')) setActiveFilter('Malt');
+            else if (cat.toLowerCase().includes('atta')) setActiveFilter('Atta');
+            else if (cat.toLowerCase().includes('snack') || cat.toLowerCase().includes('sweet')) setActiveFilter('Snacks & Sweets');
+            else if (cat.toLowerCase().includes('noodle') || cat.toLowerCase().includes('pasta')) setActiveFilter('Noodles & Pasta');
+            else if (cat.toLowerCase().includes('wellness')) setActiveFilter('Wellness');
+        }
+    }, [searchParams]);
 
     const filteredCategories = categories.filter(item => {
-        // robust property access
-        const name = item.name || item.title || '';
-        const description = item.description || item.benefit || '';
-        const category = item.category || item.tag || '';
+        const name = (item.name || item.title || '').toLowerCase();
+        const description = (item.description || item.benefit || '').toLowerCase();
+        const category = (item.category || item.tag || '').toLowerCase();
 
-        // Global Filter: Must match one of the allowed types
-        const matchesGlobal = allowedTags.some(tag =>
-            name.toLowerCase().includes(tag.toLowerCase()) ||
-            category.toLowerCase().includes(tag.toLowerCase()) ||
-            (tag === 'Snacks' && category.toLowerCase().includes('sweets')) // Handle Snacks & Sweets
-        );
+        const matchesSearch = !searchQuery ||
+            name.includes(searchQuery.toLowerCase()) ||
+            description.includes(searchQuery.toLowerCase()) ||
+            category.includes(searchQuery.toLowerCase());
 
-        if (!matchesGlobal) return false;
+        if (!matchesSearch) return false;
 
-        const matchesSearch =
-            name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            category.toLowerCase().includes(searchQuery.toLowerCase());
+        if (activeFilter === 'All') return true;
+        if (activeFilter === 'Malt' || activeFilter === 'Malt Beverages') return category.includes('malt') || name.includes('malt');
+        if (activeFilter === 'Atta' || activeFilter === 'Organic Atta') return category.includes('atta') || name.includes('atta');
+        if (activeFilter === 'Snacks' || activeFilter === 'Snacks & Sweets') return category.includes('snack') || category.includes('sweet') || name.includes('halwa') || name.includes('laddu');
+        if (activeFilter === 'Noodles' || activeFilter === 'Noodles & Pasta') return category.includes('noodle') || category.includes('pasta') || name.includes('noodle') || name.includes('pasta');
+        if (activeFilter === 'Wellness' || activeFilter === 'Wellness Products') return category.includes('wellness') || name.includes('amla') || name.includes('gulkand');
 
-        const matchesCategory = activeFilter === 'All' ||
-            (item.category && item.category === activeFilter) ||
-            (item.tag && item.tag === activeFilter) ||
-            (item.name && item.name.includes(activeFilter)) ||
-            (activeFilter === 'Snacks' && (category.toLowerCase().includes('snacks') || category.toLowerCase().includes('sweets')));
-
-        return matchesSearch && matchesCategory;
+        return true;
     });
 
     // Animation Variants
@@ -264,7 +267,7 @@ const Catalogue = () => {
                             <span>Filters</span>
                         </button>
                         <div className="hidden md:block w-px bg-gray-200 my-2 mx-1" />
-                        {['All', 'Malt', 'Atta', 'Snacks', 'Wellness'].map((filter) => (
+                        {['All', 'Malt', 'Atta', 'Snacks & Sweets', 'Noodles & Pasta', 'Wellness'].map((filter) => (
                             <button
                                 key={filter}
                                 onClick={() => setActiveFilter(filter)}
