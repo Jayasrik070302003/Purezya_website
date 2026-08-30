@@ -31,6 +31,19 @@ const Profile = () => {
         avatar: user?.profile_picture || ''
     });
 
+    // Synchronize userData when auth user loads/updates
+    useEffect(() => {
+        if (user) {
+            setUserData(prev => ({
+                ...prev,
+                name: user.name || '',
+                email: user.email || '',
+                phone: user.phone || '',
+                avatar: user.profile_picture || prev.avatar
+            }));
+        }
+    }, [user]);
+
     // Fetch saved addresses on mount
     useEffect(() => {
         const fetchAddresses = async () => {
@@ -78,9 +91,25 @@ const Profile = () => {
         }
     };
 
-    const handleSave = () => {
-        setIsEditing(false);
-        showToast('Profile updated successfully!');
+    const handleSave = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await axios.put(`${API_URL}/auth/profile`, {
+                name: userData.name,
+                phone: userData.phone
+            }, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.data?.user && updateUser) {
+                updateUser(res.data.user);
+            }
+            setIsEditing(false);
+            showToast('Profile updated successfully!');
+        } catch (err) {
+            console.error('Failed to update profile:', err);
+            showToast('Failed to update profile', 'error');
+        }
     };
 
     const handleAddAddress = async (e) => {

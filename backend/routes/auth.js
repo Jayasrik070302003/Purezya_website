@@ -32,8 +32,12 @@ const upload = multer({
     }
 });
 
+const verifyToken = require('../middleware/auth');
+
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.get('/me', verifyToken, authController.getMe);
+router.put('/profile', verifyToken, authController.updateProfile);
 router.post('/upload-avatar', upload.single('avatar'), authController.uploadAvatar);
 
 module.exports = router;

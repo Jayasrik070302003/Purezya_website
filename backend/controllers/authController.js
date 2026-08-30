@@ -4,24 +4,12 @@ const pool = require('../config/db');
 
 exports.register = async (req, res) => {
     try {
-        console.log('\n=== REGISTRATION REQUEST RECEIVED ===');
-        console.log('Request body:', req.body);
-        console.log('Request headers:', req.headers);
-
         const { name, email, phone, password } = req.body;
         const normalizedEmail = email ? email.trim().toLowerCase() : '';
         const normalizedName = name ? name.trim().toLowerCase() : '';
 
-        console.log('Extracted fields:', {
-            name: name ? `"${name}" (type: ${typeof name})` : 'MISSING',
-            email: email ? `"${email}" (type: ${typeof email})` : 'MISSING',
-            phone: phone ? `"${phone}" (type: ${typeof phone})` : 'MISSING',
-            password: password ? `"${password}" (type: ${typeof password}, length: ${password.length})` : 'MISSING'
-        });
-
         // Validate all required fields
         if (!name || !email || !phone || !password) {
-            console.error('Validation failed: Missing required fields');
             return res.status(400).json({
                 message: 'All fields are required',
                 missing: {
@@ -40,37 +28,31 @@ exports.register = async (req, res) => {
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            console.error('Validation failed: Invalid email format');
             return res.status(400).json({ message: 'Please provide a valid email address' });
         }
 
         // Validate password length
         if (password.length < 6) {
-            console.error('Validation failed: Password too short');
             return res.status(400).json({ message: 'Password must be at least 6 characters long' });
         }
 
         // Check if user exists
-        console.log('Checking if user exists with email:', email);
         const { rows: existingUsers } = await pool.query('SELECT * FROM users WHERE LOWER(email) = LOWER($1)', [email]);
         if (existingUsers.length > 0) {
-            console.error('Validation failed: User already exists');
             return res.status(400).json({ message: 'User already exists with this email' });
         }
 
         // Hash password
-        console.log('Hashing password...');
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create user
-        console.log('Creating user in database...');
         await pool.query(
             'INSERT INTO users (name, email, phone, password_hash) VALUES ($1, $2, $3, $4)',
             [name, email, phone, hashedPassword]
         );
 
-        console.log('✅ User registered successfully!');
+        console.log('✅ User registered successfully with phone:', phone);
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error('❌ Registration error:', error);
@@ -124,6 +106,7 @@ exports.login = async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
+                phone: user.phone || '',
                 profile_picture: user.profile_picture,
                 role: isAdmin ? 'admin' : 'user'
             }
@@ -134,13 +117,64 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.getMe = async (req, res) => {
+    try {
+        const { rows } = await pool.query(
+            'SELECT id, name, email, phone, profile_picture, created_at FROM users WHERE id = $1',
+            [req.user.id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const user = rows[0];
+        const userEmail = (user.email || '').trim().toLowerCase();
+        const isAdmin = userEmail === 'admin@purazya.com' || userEmail === 'admin@gmail.com';
+
+        res.json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone || '',
+            profile_picture: user.profile_picture,
+            role: isAdmin ? 'admin' : 'user'
+        });
+    } catch (error) {
+        console.error('❌ Get user error:', error);
+        res.status(500).json({ message: 'Server error fetching user profile' });
+    }
+};
+
+exports.updateProfile = async (req, res) => {
+    try {
+        const { name, phone } = req.body;
+        const { rows } = await pool.query(
+            'UPDATE users SET name = COALESCE($1, name), phone = COALESCE($2, phone) WHERE id = $3 RETURNING id, name, email, phone, profile_picture',
+            [name, phone, req.user.id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({
+            message: 'Profile updated successfully',
+            user: rows[0]
+        });
+    } catch (error) {
+        console.error('❌ Update profile error:', error);
+        res.status(500).json({ message: 'Server error updating profile' });
+    }
+};
+
 exports.uploadAvatar = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
-        const userId = req.body.userId; // Ensure you send userId from frontend
+        const userId = req.body.userId;
         if (!userId) {
             return res.status(400).json({ message: 'User ID is required' });
         }

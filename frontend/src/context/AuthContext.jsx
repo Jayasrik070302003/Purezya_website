@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../config/api';
 
 const AuthContext = createContext();
 
@@ -9,16 +10,33 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (token) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            const savedUser = localStorage.getItem('user');
-            if (savedUser) {
-                setUser(JSON.parse(savedUser));
+        const initAuth = async () => {
+            if (token) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                const savedUser = localStorage.getItem('user');
+                if (savedUser) {
+                    try {
+                        setUser(JSON.parse(savedUser));
+                    } catch (e) {
+                        console.error('Failed to parse saved user:', e);
+                    }
+                }
+                // Fetch fresh profile from DB including phone
+                try {
+                    const res = await axios.get(`${API_URL}/auth/me`);
+                    if (res.data) {
+                        setUser(res.data);
+                        localStorage.setItem('user', JSON.stringify(res.data));
+                    }
+                } catch (err) {
+                    console.warn('Could not refresh profile from server:', err);
+                }
+            } else {
+                delete axios.defaults.headers.common['Authorization'];
             }
-        } else {
-            delete axios.defaults.headers.common['Authorization'];
-        }
-        setLoading(false);
+            setLoading(false);
+        };
+        initAuth();
     }, [token]);
 
     const login = (userData, userToken) => {
