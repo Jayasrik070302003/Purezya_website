@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { API_URL } from '../config/api';
-import { User, Mail, Phone, MapPin, Camera, Save, ArrowLeft, Leaf, Award, Package, Star, Plus, Home, Briefcase, Tag, Trash2, CheckCircle2 } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Camera, Save, ArrowLeft, Leaf, Award, Package, Star, Plus, Home, Briefcase, Tag, Trash2, CheckCircle2, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -198,15 +198,34 @@ const Profile = () => {
                         className="lg:col-span-1"
                     >
                         <div className="bg-white/80 backdrop-blur-xl rounded-fluid-2xl p-fluid-xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] border border-white/50 relative overflow-hidden text-center sticky top-32 h-full flex flex-col justify-between group/card">
-                            <div className="absolute top-0 left-0 right-0 h-[clamp(7rem,15vw,10rem)] bg-[url('https://images.unsplash.com/photo-1542601906990-24d4c164196e?w=800&q=80')] bg-cover bg-center overflow-hidden">
-                                <div className="absolute inset-0 bg-[#1A2E16]/60 backdrop-blur-sm" />
+                            {/* Header Banner - Rich Organic Botanical Atmosphere */}
+                            <div className="absolute top-0 left-0 right-0 h-[clamp(7.5rem,15vw,10.5rem)] bg-gradient-to-br from-[#0C2413] via-[#174624] to-[#102F19] overflow-hidden">
+                                {/* Ambient Glows */}
+                                <div className="absolute -top-10 -right-10 w-44 h-44 bg-[#69F0AE] rounded-full blur-3xl opacity-20" />
+                                <div className="absolute -bottom-10 -left-10 w-44 h-44 bg-[#A5D6A7] rounded-full blur-3xl opacity-15" />
+
+                                {/* Floating Animated Botanical Elements */}
                                 <motion.div
-                                    animate={{ y: [0, -10, 0], rotate: [0, 10, 0] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute top-4 left-4 text-white/20"
+                                    animate={{ y: [0, -6, 0], rotate: [0, 8, 0] }}
+                                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                                    className="absolute top-3.5 left-4 text-[#A5D6A7]/30"
                                 >
-                                    <Leaf size={24} />
+                                    <Leaf size={26} />
                                 </motion.div>
+
+                                <motion.div
+                                    animate={{ y: [0, 6, 0], rotate: [0, -8, 0] }}
+                                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                                    className="absolute top-3 right-4 text-[#69F0AE]/25"
+                                >
+                                    <Sparkles size={20} />
+                                </motion.div>
+
+                                {/* Organic Member Pill */}
+                                <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3.5 py-1 bg-white/15 backdrop-blur-md rounded-full border border-white/20 text-[10px] font-bold text-[#E8F5E9] tracking-wider shadow-sm">
+                                    <Sparkles size={11} className="text-[#69F0AE] animate-pulse" />
+                                    <span>Delightful Patron</span>
+                                </div>
                             </div>
 
                             <div className="relative z-10 pt-[clamp(3.5rem,7vw,5rem)] mb-fluid-lg">

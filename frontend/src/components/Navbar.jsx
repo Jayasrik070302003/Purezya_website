@@ -9,6 +9,18 @@ const Navbar = () => {
     const { user, logout } = useAuth();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+    const handleLogoutClick = () => {
+        setIsProfileOpen(false);
+        setIsMenuOpen(false);
+        setIsLogoutModalOpen(true);
+    };
+
+    const confirmLogout = () => {
+        setIsLogoutModalOpen(false);
+        logout();
+    };
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-earthy-100 transition-all duration-300">
@@ -62,7 +74,7 @@ const Navbar = () => {
                                 >
                                     <div className="text-right hidden xl:block">
                                         <p className="text-sm font-black text-earthy-900 leading-none">{user.name}</p>
-                                        <p className="text-[10px] font-bold text-organic-600 uppercase tracking-wider mt-1">Verified Member</p>
+                                        <p className="text-[10px] font-bold text-organic-600 tracking-wider mt-1">Delightful Patron ✨</p>
                                     </div>
                                     <div className="w-[clamp(2.5rem,4vw,3rem)] h-[clamp(2.5rem,4vw,3rem)] rounded-fluid-xl bg-[#14261C] flex items-center justify-center text-white border border-earthy-200 group-hover:border-organic-300 group-hover:shadow-md transition-all overflow-hidden relative">
                                         <OrganicAvatar src={user.profile_picture || user.avatar} name={user.name} />
@@ -102,7 +114,7 @@ const Navbar = () => {
                                             <div className="h-px bg-gray-100/50 my-2 mx-4" />
 
                                             <button
-                                                onClick={() => { setIsProfileOpen(false); logout(); }}
+                                                onClick={handleLogoutClick}
                                                 className="w-full px-6 py-4 text-left text-red-500 hover:bg-red-50 rounded-2xl flex items-center gap-4 font-black transition-all group text-sm"
                                             >
                                                 <div className="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition-colors">
@@ -145,12 +157,20 @@ const Navbar = () => {
                             >
                                 <motion.div
                                     animate={isMenuOpen ? "open" : "closed"}
-                                    variants={{
-                                        open: { rotate: 90 },
-                                        closed: { rotate: 0 }
-                                    }}
+                                    className="w-4 h-4 flex flex-col justify-center gap-1 items-center"
                                 >
-                                    {isMenuOpen ? <X size={20} className="group-hover/menu:text-organic-600 transition-colors" /> : <Menu size={20} className="group-hover/menu:text-organic-600 transition-colors" />}
+                                    <motion.span
+                                        variants={{ closed: { rotate: 0, y: 0 }, open: { rotate: 45, y: 5 } }}
+                                        className="w-4 h-0.5 bg-earthy-800 block rounded-full"
+                                    />
+                                    <motion.span
+                                        variants={{ closed: { opacity: 1 }, open: { opacity: 0 } }}
+                                        className="w-4 h-0.5 bg-earthy-800 block rounded-full"
+                                    />
+                                    <motion.span
+                                        variants={{ closed: { rotate: 0, y: 0 }, open: { rotate: -45, y: -5 } }}
+                                        className="w-4 h-0.5 bg-earthy-800 block rounded-full"
+                                    />
                                 </motion.div>
                             </button>
                         </div>
@@ -158,49 +178,35 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Nav Overlay */}
+            {/* Mobile Dropdown Menu */}
             <AnimatePresence>
                 {isMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: -20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="lg:hidden absolute top-[calc(100%+0.5rem)] right-2 sm:right-4 left-auto w-[clamp(16rem,88vw,22rem)] max-w-[calc(100vw-1rem)] bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-[1.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.2)] border border-white/60 z-50 overflow-hidden ring-1 ring-black/5 pb-2"
+                        initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                        transition={{ duration: 0.2 }}
+                        className="lg:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-earthy-100 shadow-xl overflow-hidden px-4 py-3"
                     >
-                        <div className="p-2 space-y-1">
-                            <motion.div
-                                className="space-y-1"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.1 }}
-                            >
-                                <p className="text-[10px] font-black text-earthy-400 uppercase tracking-[0.25em] mb-1 pl-3">Navigation</p>
-                                <Link onClick={() => setIsMenuOpen(false)} to="/dashboard" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                    <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center group-hover:bg-organic-600 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
-                                        <Home size={14} />
-                                    </div>
-                                    <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">Home</span>
-                                </Link>
-                                <Link onClick={() => setIsMenuOpen(false)} to="/catalogue" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                    <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center group-hover:bg-organic-600 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
-                                        <Store size={14} />
-                                    </div>
-                                    <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">Catalogue</span>
-                                </Link>
-                                <Link onClick={() => setIsMenuOpen(false)} to="/wishlist" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                    <div className="w-7 h-7 rounded-full bg-red-50 text-red-500 flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
-                                        <Heart size={14} />
-                                    </div>
-                                    <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">Wishlist</span>
-                                </Link>
-                                <Link onClick={() => setIsMenuOpen(false)} to="/cart" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
-                                    <div className="w-7 h-7 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
-                                        <ShoppingCart size={14} />
-                                    </div>
-                                    <span className="text-sm font-bold text-earthy-900 group-hover:text-organic-900">Cart</span>
-                                </Link>
-                            </motion.div>
+                        <div className="flex flex-col gap-1">
+                            <Link onClick={() => setIsMenuOpen(false)} to="/dashboard" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all font-bold text-earthy-800 text-sm active:scale-98">
+                                <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center shadow-sm flex-shrink-0">
+                                    <Home size={14} />
+                                </div>
+                                Home
+                            </Link>
+                            <Link onClick={() => setIsMenuOpen(false)} to="/catalogue" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all font-bold text-earthy-800 text-sm active:scale-98">
+                                <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center shadow-sm flex-shrink-0">
+                                    <Store size={14} />
+                                </div>
+                                Store
+                            </Link>
+                            <Link onClick={() => setIsMenuOpen(false)} to="/cart" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all font-bold text-earthy-800 text-sm active:scale-98">
+                                <div className="w-7 h-7 rounded-full bg-organic-50 text-organic-600 flex items-center justify-center shadow-sm flex-shrink-0">
+                                    <ShoppingCart size={14} />
+                                </div>
+                                Cart
+                            </Link>
 
                             {user && (
                                 <motion.div
@@ -209,18 +215,14 @@ const Navbar = () => {
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.2 }}
                                 >
-                                    <p className="text-[10px] font-black text-earthy-400 uppercase tracking-[0.25em] mb-1 pl-3">Account</p>
-                                    <Link onClick={() => setIsMenuOpen(false)} to="/profile" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
+                                    <Link onClick={() => setIsMenuOpen(false)} to="/profile" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all font-bold text-earthy-800 text-sm active:scale-98">
                                         <div className="relative flex-shrink-0">
                                             <div className="w-7 h-7 rounded-full bg-[#14261C] flex items-center justify-center text-white shadow-sm border border-earthy-100 overflow-hidden">
                                                 <OrganicAvatar src={user.profile_picture || user.avatar} name={user.name} />
                                             </div>
                                             <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border border-white rounded-full"></div>
                                         </div>
-                                        <div className="flex flex-col min-w-0 flex-1">
-                                            <span className="font-bold text-earthy-900 text-sm">My Profile</span>
-                                            <span className="text-[10px] text-earthy-500 font-medium truncate max-w-[130px] sm:max-w-[160px]">{user.email}</span>
-                                        </div>
+                                        My Profile
                                     </Link>
                                     <Link onClick={() => setIsMenuOpen(false)} to="/orders" className="flex items-center gap-3 px-3 py-2 min-h-[42px] hover:bg-organic-50/50 rounded-xl transition-all group active:scale-98">
                                         <div className="w-7 h-7 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-white transition-colors shadow-sm flex-shrink-0">
@@ -230,27 +232,62 @@ const Navbar = () => {
                                     </Link>
 
                                     <button
-                                        onClick={() => { setIsMenuOpen(false); logout(); }}
+                                        onClick={handleLogoutClick}
                                         className="w-full py-2 min-h-[42px] mt-1 text-red-500 font-bold text-xs bg-red-50 hover:bg-red-500 hover:text-white rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 transition-all shadow-sm border border-red-100 group"
                                     >
                                         <LogOut size={14} className="group-hover:stroke-current" /> Sign Out
                                     </button>
                                 </motion.div>
                             )}
-
-                            {!user && (
-                                <motion.div
-                                    className="grid grid-cols-2 gap-2 mt-1 pt-1.5 border-t border-gray-100/80"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: 0.2 }}
-                                >
-                                    <Link onClick={() => setIsMenuOpen(false)} to="/login" className="w-full py-2 min-h-[42px] flex items-center justify-center text-center font-bold text-earthy-600 bg-earthy-50 hover:bg-earthy-100 rounded-xl sm:rounded-2xl text-xs transition-colors border border-earthy-200">Log In</Link>
-                                    <Link onClick={() => setIsMenuOpen(false)} to="/register" className="w-full py-2 min-h-[42px] flex items-center justify-center text-center font-bold text-white bg-[#1A2E16] hover:bg-[#2F4F2C] rounded-xl sm:rounded-2xl shadow-lg shadow-organic-900/20 text-xs transition-all">Sign Up</Link>
-                                </motion.div>
-                            )}
                         </div>
                     </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Logout Confirmation Modal */}
+            <AnimatePresence>
+                {isLogoutModalOpen && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsLogoutModalOpen(false)}
+                            className="absolute inset-0 bg-[#0F2411]/50 backdrop-blur-md"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+                            className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-sm p-6 sm:p-7 relative z-10 overflow-hidden border border-earthy-100 text-center"
+                        >
+                            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-orange-500 to-red-500" />
+
+                            <div className="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-100">
+                                <LogOut size={26} />
+                            </div>
+
+                            <h3 className="text-xl font-display font-bold text-earthy-900 mb-1">Sign Out?</h3>
+                            <p className="text-xs sm:text-sm text-earthy-600 mb-6 leading-relaxed">
+                                Are you sure you want to end your current session? You'll need to sign back in to access your orders.
+                            </p>
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setIsLogoutModalOpen(false)}
+                                    className="flex-1 py-2.5 sm:py-3 rounded-xl font-bold text-earthy-700 bg-earthy-50 hover:bg-earthy-100 transition-all text-xs sm:text-sm border border-earthy-200"
+                                >
+                                    Stay
+                                </button>
+                                <button
+                                    onClick={confirmLogout}
+                                    className="flex-1 py-2.5 sm:py-3 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 transition-all shadow-md shadow-red-500/25 text-xs sm:text-sm"
+                                >
+                                    Sign Out
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
         </nav>
